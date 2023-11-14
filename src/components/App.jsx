@@ -1,7 +1,10 @@
+import {Container} from "@mui/material";
+import TodoBoard from "./TodoBoard";
+
 
 export default function App() {
   return (
-    <>
-      <h1>Hello World</h1>
-    </>
+    <Container>
+      <TodoBoard />
+    </Container>
   )}

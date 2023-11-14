@@ -1,0 +1,25 @@
+{
+    "notes": [
+        {
+            "title": "Note",
+            "details": "The content of the note",
+            "category": "Todos",
+            "avatar": "",
+            "id": 1
+        },
+        {
+            "title": "Note",
+            "details": "The content of the note",
+            "category": "Todos",
+            "avatar": "",
+            "id": 2
+        },
+        {
+            "title": "Note",
+            "details": "The content of the note",
+            "category": "Todos",
+            "avatar": "",
+            "id": 3
+        }
+    ]
+}
