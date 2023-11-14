@@ -1,8 +1,12 @@
 import React from 'react'
 import Grid  from "@mui/material/Grid";
 
+
+
 import Header from './Header';
 import Page from './Page';
+import ListUsers from './ListUsers'
+
 
 
 function Settings () {
@@ -10,6 +14,7 @@ function Settings () {
     <Grid>
     <Header />
     <Page />
+    <ListUsers />
 
     </Grid>
   )
