@@ -1,10 +1,12 @@
-import {Container} from "@mui/material";
 import TodoBoard from "./TodoBoard";
-
+import { CssBaseline, ThemeProvider } from "@mui/material";
+import theme from "../theme.js";
 
 export default function App() {
   return (
-    <Container>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
       <TodoBoard />
-    </Container>
-  )}
+    </ThemeProvider>
+  );
+}
