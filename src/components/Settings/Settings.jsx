@@ -5,7 +5,6 @@ import Grid  from "@mui/material/Grid";
 import HeaderTitleEdit from './HeaderTitleEdit'
 import HeaderBar from './HeaderBar';
 import HeaderTitle from './HeaderTitle';
-import Page from './Page';
 import ListUsers from './ListUsers'
 
 
@@ -20,7 +19,6 @@ function Settings () {
     <HeaderBar />
     <HeaderTitleEdit />
     <HeaderTitle />
-    <Page />
     <ListUsers />
     </Grid>
     
