@@ -14,7 +14,10 @@ export default function HeaderBar() {
         <Toolbar variant="dense">
           
           <Typography variant="h6" color="inherit" component="div" >
-            Settings
+            
+
+
+            
           </Typography>
         </Toolbar>
       </AppBar>

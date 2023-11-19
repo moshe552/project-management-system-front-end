@@ -2,10 +2,10 @@ import React from 'react'
 
 import Grid  from "@mui/material/Grid";
 
-import HeaderTitleEdit from './HeaderTitleEdit'
-import HeaderBar from './HeaderBar';
-import HeaderTitle from './HeaderTitle';
-import ListUsers from './ListUsers'
+import HeaderTitleEdit from './Settings/HeaderTitleEdit'
+import HeaderBar from './Settings/HeaderBar';
+import HeaderTitle from './Settings/HeaderTitle';
+import ListUsers from './Settings/ListUsers'
 
 
 

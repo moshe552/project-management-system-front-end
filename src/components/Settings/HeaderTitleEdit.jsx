@@ -1,98 +1,69 @@
 import { useState } from "react";
-import * as React from 'react';
-
+import * as React from "react";
 
 import Grid from "@mui/material/Grid";
-import SettingsIcon from "@mui/icons-material/Settings";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
-import Button from '@mui/material/Button';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import SendIcon from '@mui/icons-material/Send';
-import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
-
-
+import TextField from "@mui/material/TextField";
+import SaveAsIcon from "@mui/icons-material/SaveAs";
+import BorderColorIcon from "@mui/icons-material/BorderColor";
 
 function HeaderTitleEdit() {
+  const [titelPage, setTitelPage] = useState('');
+  const [descriptionWrite, setDescriptionWrite] = useState('');
 
-    
-    const [titelPage, setTitelPage] = useState('Enter title')
-    const [descriptionWrite, setDescriptionWrite] = useState('Enter description')
+ 
 
+  const addTextNow = (event) => {
+    const valueName = event.target.name;
+    console.log(valueName);
+    valueName == "title"
+      ? setTitelPage(event.target.value)
+      : setDescriptionWrite(event.target.value);
+  };
 
-    const mySend ="send"
-
-    const addTextNow = (event) => {
-      const valueName = event.target.name;
-      console.log(valueName);
-      (valueName == "title") ?
-      setTitelPage(event.target.value) :
-      setDescriptionWrite(event.target.value);
-    }
-
-  
-
+  const [isDisabled, setIsDisabled] = useState(false);
+  const holderDisabledTrue = () => setIsDisabled(true);
+  const holderDisabledFalse = () => setIsDisabled(false);
 
   return (
-    <Grid bgcolor={"#21213E"} color={"#F6C927"} padding={"20px"} fontSize={"20px"}>
-      <IconButton
-        edge="start"
-        color="inherit"
-        aria-label="menu"
-        sx={{ mr: 2 }}
-      >
-        <PopupState variant="popover" popupId="demo-popup-menu">
-          {(popupState) => (
-            <React.Fragment>
-              <Button sx={{color: "#121231", background: "#F6C927" }} variant="contained" {...bindTrigger(popupState)}>
-                <SettingsIcon />
-              </Button>
-              <Menu {...bindMenu(popupState)}>
+    <Grid
+      bgcolor={"#21213E"}
+      color={"#F6C927"}
+      padding={"20px"}
+      fontSize={"20px"}
+    >
+      <Grid sx={{ color: "#F6C927",colorAdjust:"#F6C927", background: "#ffff" }}>
+        <br />
+        <Grid>
+          <TextField 
+            id="outlined-textarea"
+            label="Title"
+            placeholder="Enter title"
+            multiline
+            disabled={isDisabled}
+            name="title"
+            onChange={addTextNow}
+            value={titelPage}
+          />
+        </Grid>
+        <br />
+        <Grid>
+          <TextField
+            id="outlined-textarea"
+            label="Description"
+            placeholder="Enter description"
+            multiline
+            rows={4}
+            disabled={isDisabled}
+            name="description"
+            onChange={addTextNow}
+            value={descriptionWrite}
+          />
+        </Grid>
+        <br />
+        <SaveAsIcon fontSize="large" onClick={holderDisabledTrue} />
 
-                <MenuItem>
-                <input
-                  type="text" name="title" placeholder="Enter title" 
-                  onChange={addTextNow}
-                  />
-                <Button
-                 size="small" variant="contained" endIcon={<SendIcon />}
-
-                 onClick={popupState.close}
-                 >
-                 {mySend}
-                </Button>
-                </MenuItem>
-
-
-
-                <MenuItem>
-                <input
-                  type="text" name="description" placeholder="Enter description" 
-                  onChange={addTextNow}
-                  />
-                <Button
-                 size="small" variant="contained" endIcon={<SendIcon />}
-                 onClick={popupState.close }
-                 >
-                 {mySend}
-                </Button>
-                </MenuItem>
-                
-              </Menu>
-            </React.Fragment>
-          )}
-        </PopupState>
-      </IconButton>
-
-      
-      <Typography variant="h4" color="inherit" component="h1">
-        {titelPage}
-      </Typography>
-
-      <Typography variant="h6" color="inherit" component="h4">
-       {descriptionWrite}
-      </Typography>
+        <BorderColorIcon fontSize="large" onClick={holderDisabledFalse} />
+      </Grid>
     </Grid>
   );
 }
