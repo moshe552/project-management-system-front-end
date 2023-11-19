@@ -5,7 +5,7 @@ import {
   IconButton,
   Typography,
 } from "@mui/material";
-import SettingsIcon from "@mui/icons-material/Settings";
+import CallMadeIcon from '@mui/icons-material/CallMade';
 
 export default function TodoCard() {
   return (
@@ -14,7 +14,7 @@ export default function TodoCard() {
         <CardHeader
           action={
             <IconButton>
-              <SettingsIcon />
+              <CallMadeIcon sx={{color: "#FFF"}}/>
             </IconButton>
           }
           title={
