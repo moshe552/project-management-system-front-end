@@ -7,10 +7,8 @@ import SaveAsIcon from "@mui/icons-material/SaveAs";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 
 function HeaderTitleEdit() {
-  const [titelPage, setTitelPage] = useState('');
-  const [descriptionWrite, setDescriptionWrite] = useState('');
-
- 
+  const [titelPage, setTitelPage] = useState("");
+  const [descriptionWrite, setDescriptionWrite] = useState("");
 
   const addTextNow = (event) => {
     const valueName = event.target.name;
@@ -31,10 +29,12 @@ function HeaderTitleEdit() {
       padding={"20px"}
       fontSize={"20px"}
     >
-      <Grid sx={{ color: "#F6C927",colorAdjust:"#F6C927", background: "#ffff" }}>
+      <Grid
+        sx={{ color: "#F6C927", colorAdjust: "#F6C927", background: "#ffff" }}
+      >
         <br />
         <Grid>
-          <TextField 
+          <TextField
             id="outlined-textarea"
             label="Title"
             placeholder="Enter title"

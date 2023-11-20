@@ -14,11 +14,9 @@ export default function HeaderBar() {
         <Toolbar variant="dense">
           
           <Typography variant="h6" color="inherit" component="div" >
-            
-
-
-            
+          {/* If you wont title in page, Enter here!*/}
           </Typography>
+
         </Toolbar>
       </AppBar>
     </Box>
