@@ -5,6 +5,11 @@ import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 import SaveAsIcon from "@mui/icons-material/SaveAs";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
+import { ThemeProvider } from "@mui/material/styles";
+import { styleTheme } from "./styleTheme";
+
+
+
 
 function HeaderTitleEdit() {
   const [titelPage, setTitelPage] = useState("");
@@ -23,19 +28,19 @@ function HeaderTitleEdit() {
   const holderDisabledFalse = () => setIsDisabled(false);
 
   return (
+    <ThemeProvider theme={styleTheme}>
     <Grid
       bgcolor={"#21213E"}
       color={"#F6C927"}
       padding={"20px"}
       fontSize={"20px"}
     >
-      <Grid
-        sx={{ color: "#F6C927", colorAdjust: "#F6C927", background: "#ffff" }}
-      >
+      <Grid>
         <br />
-        <Grid>
-          <TextField
+        <Grid >
+          <TextField 
             id="outlined-textarea"
+            
             label="Title"
             placeholder="Enter title"
             multiline
@@ -43,6 +48,12 @@ function HeaderTitleEdit() {
             name="title"
             onChange={addTextNow}
             value={titelPage}
+            InputLabelProps={{
+                style: { color: "#F6C927" },
+              }}
+              InputProps={{
+                style: { color: "#F6C927", background: "#21213E" }, 
+              }}
           />
         </Grid>
         <br />
@@ -52,12 +63,18 @@ function HeaderTitleEdit() {
             label="Description"
             placeholder="Enter description"
             multiline
-            rows={4}
+            rows={3}
             disabled={isDisabled}
             name="description"
             onChange={addTextNow}
             value={descriptionWrite}
-          />
+            InputLabelProps={{
+                style: { color: "#F6C927" },
+              }}
+              InputProps={{
+                style: { color: "#F6C927", background: "#21213E" }, 
+              }}
+            />
         </Grid>
         <br />
         <SaveAsIcon fontSize="large" onClick={holderDisabledTrue} />
@@ -65,6 +82,7 @@ function HeaderTitleEdit() {
         <BorderColorIcon fontSize="large" onClick={holderDisabledFalse} />
       </Grid>
     </Grid>
+    </ThemeProvider>
   );
 }
 

@@ -1,5 +1,3 @@
-
-
 const SettingsData = [
     {id: 1,
     name: "Aviv Taori",

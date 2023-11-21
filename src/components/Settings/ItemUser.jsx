@@ -4,12 +4,15 @@ import ListItemText from "@mui/material/ListItemText";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+
+// Enter image in <Avatar  />  for veiw icon
 
 function ItemUser(props) {
   return (
     <ListItem alignItems="flex-start" sx={{ color: "#FFFFFF" }}>
       <ListItemAvatar>
-        <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+        <Avatar  /> 
       </ListItemAvatar>
       <ListItemText
         primary={props.name}
@@ -32,8 +35,10 @@ function ItemUser(props) {
               {" " + props.text}
             </Typography>
           </React.Fragment>
+
         }
       />
+      <DeleteOutlineIcon onClick={props.deleteUser}/>
     </ListItem>
   );
 }
