@@ -1,8 +1,11 @@
 import * as React from 'react';
+import { useState } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
+import AddCircleSharpIcon from "@mui/icons-material/AddCircleSharp";
+
 
 const style = {
   position: 'absolute',
@@ -16,14 +19,15 @@ const style = {
   p: 4,
 };
 
-export default function ModelUsers() {
-  const [open, setOpen] = React.useState(false);
+export default function ModelUsers(props) {
+  const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
   return (
-    <div>
-      <Button onClick={handleOpen}>Open modal</Button>
+    <Box>
+      
+      <AddCircleSharpIcon onClick={handleOpen}/>
       <Modal
         open={open}
         onClose={handleClose}
@@ -32,13 +36,14 @@ export default function ModelUsers() {
       >
         <Box sx={style}>
           <Typography id="modal-modal-title" variant="h6" component="h2">
-            Text in a modal
+            Add User
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
+                Select a user to add
           </Typography>
+          <Box>{props.listUsers}</Box>
         </Box>
       </Modal>
-    </div>
+    </Box>
   );
 }

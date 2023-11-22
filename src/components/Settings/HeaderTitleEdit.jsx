@@ -5,8 +5,6 @@ import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 import SaveAsIcon from "@mui/icons-material/SaveAs";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
-import { ThemeProvider } from "@mui/material/styles";
-import { styleTheme } from "./styleTheme";
 
 
 
@@ -28,7 +26,7 @@ function HeaderTitleEdit() {
   const holderDisabledFalse = () => setIsDisabled(false);
 
   return (
-    <ThemeProvider theme={styleTheme}>
+    
     <Grid
       bgcolor={"#21213E"}
       color={"#F6C927"}
@@ -82,7 +80,7 @@ function HeaderTitleEdit() {
         <BorderColorIcon fontSize="large" onClick={holderDisabledFalse} />
       </Grid>
     </Grid>
-    </ThemeProvider>
+    
   );
 }
 

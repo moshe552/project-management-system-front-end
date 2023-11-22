@@ -4,7 +4,7 @@ import ListItemText from "@mui/material/ListItemText";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+
 
 // Enter image in <Avatar  />  for veiw icon
 
@@ -38,7 +38,7 @@ function ItemUser(props) {
 
         }
       />
-      <DeleteOutlineIcon onClick={props.deleteUser}/>
+      {props.FunctionType}
     </ListItem>
   );
 }
