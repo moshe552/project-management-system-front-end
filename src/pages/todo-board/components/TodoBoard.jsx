@@ -4,6 +4,7 @@ import SettingsTwoToneIcon from "@mui/icons-material/SettingsTwoTone";
 import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { useState } from "react";
+import { NavLink } from "react-router-dom";
 
 const tasksData = [
   {
@@ -92,11 +93,6 @@ export default function TodoBoard() {
     );
     const droppedCard = sourceList.tasks[cardIndex];
 
-  console.log("Dropped Card:", droppedCard);
-  console.log("Source List:", sourceList);
-  console.log("Target List:", targetList);
-
-
     // Update the listId of the dropped card
     droppedCard.listId = targetListId;
 
@@ -105,8 +101,6 @@ export default function TodoBoard() {
 
     // Add the card to the destination list
     targetList.tasks.push(droppedCard);
-
-    console.log("Updated Task Board:", taskBoard);
 
     // Update the state to move the card to the new location
     setTaskBoard([...taskBoard]);
@@ -121,9 +115,11 @@ export default function TodoBoard() {
         height={"5%"}
         mb={2}
       >
+        <NavLink to={"/todo-board/settings"}>
         <IconButton>
           <SettingsTwoToneIcon sx={{ color: "#D3D3D3" }} fontSize="mid" />
         </IconButton>
+        </NavLink>
       </Grid>
 
       <Grid

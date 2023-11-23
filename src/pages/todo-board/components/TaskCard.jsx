@@ -7,7 +7,7 @@ import {
 } from "@mui/material";
 import LaunchIcon from '@mui/icons-material/Launch';
 import { useDrag } from "react-dnd";
-import itemTypes from "../../utils/itemType";
+import itemTypes from "../../../../utils/itemType";
 
 export default function TaskCard({ id, name, task, date, listId }) {
 

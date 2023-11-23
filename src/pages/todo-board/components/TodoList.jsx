@@ -1,7 +1,7 @@
 import { Card, CardHeader, Typography, Container, Stack } from "@mui/material";
 import TaskCard from "./TaskCard";
 import { useDrop } from "react-dnd";
-import itemTypes from "../../utils/itemType";
+import itemTypes from "../../../../utils/itemType";
 
 export default function TodoList({ id, status, tasks, onCardDrop }) {
   const [{ isOver }, drop] = useDrop({
