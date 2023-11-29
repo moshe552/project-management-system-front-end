@@ -2,9 +2,9 @@ import { Grid, IconButton, Typography } from "@mui/material";
 import TodoList from "./TodoList";
 import SettingsTwoToneIcon from "@mui/icons-material/SettingsTwoTone";
 import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
+import TaskFilter from "./TaskFilter";
 
 const tasksData = [
   {
@@ -88,9 +88,7 @@ export default function TodoBoard() {
     const targetList = taskBoard.find((list) => list.id === targetListId);
 
     // Find the dropped card in the source list
-    const cardIndex = sourceList.tasks.findIndex(
-      (card) => card.id === cardId
-    );
+    const cardIndex = sourceList.tasks.findIndex((card) => card.id === cardId);
     const droppedCard = sourceList.tasks[cardIndex];
 
     // Update the listId of the dropped card
@@ -116,9 +114,9 @@ export default function TodoBoard() {
         mb={2}
       >
         <NavLink to={"/todo-board/settings"}>
-        <IconButton>
-          <SettingsTwoToneIcon sx={{ color: "#D3D3D3" }} fontSize="mid" />
-        </IconButton>
+          <IconButton>
+            <SettingsTwoToneIcon sx={{ color: "#D3D3D3" }} fontSize="mid" />
+          </IconButton>
         </NavLink>
       </Grid>
 
@@ -154,23 +152,7 @@ export default function TodoBoard() {
               {filter.title}
             </Typography>
           </Grid>
-          <Grid
-            container
-            bgcolor={"secondary.main"}
-            borderRadius={2}
-            direction="row"
-            justifyContent="space-between"
-            alignItems="flex-start"
-          >
-            <Grid m={2}>
-              <Typography variant="p" sx={{ color: "#FFF", fontSize: "1.8vh" }}>
-                {filter.type}
-              </Typography>
-            </Grid>
-            <IconButton>
-              <KeyboardArrowDownIcon fontSize="large" sx={{ color: "#FFF" }} />
-            </IconButton>
-          </Grid>
+          <TaskFilter filtering={filter.type} />
         </Grid>
       ))}
       {taskBoard.map((list) => (
