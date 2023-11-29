@@ -1,4 +1,11 @@
-import { Card, CardHeader, Typography, Container, Stack } from "@mui/material";
+import {
+  Card,
+  CardHeader,
+  Typography,
+  Container,
+  Stack,
+  Button,
+} from "@mui/material";
 import TaskCard from "./TaskCard";
 import { useDrop } from "react-dnd";
 import itemTypes from "../../../../utils/itemType";
@@ -23,7 +30,7 @@ export default function TodoList({ id, status, tasks, onCardDrop }) {
         flexDirection: "column",
         justifyContent: "flex-start",
         alignItems: "center",
-        height:"100vh",
+        height: "100vh",
       }}
     >
       <Stack>
@@ -35,6 +42,13 @@ export default function TodoList({ id, status, tasks, onCardDrop }) {
               </Typography>
             }
           />
+        </Card>
+        <Card sx={{ bgcolor: "primary.main", mb: 2 }}>
+          <Button fullWidth>
+            <Typography variant="p" sx={{ color: "#FFF" }}>
+              Add task
+            </Typography>
+          </Button>
         </Card>
         {tasks.map((task) => (
           <TaskCard key={task.id} listId={id} {...task} />
