@@ -65,12 +65,16 @@ export default function ListProject() {
                 <Button sx={{ color: "#F6C927" }}>
                     <AddIcon />
                 </Button>
-            </NavLink>
+            </NavLink >
             {projectsList.map((item, index) => (
                 <Project
                     key={item._id}
                     id={item._id}
-                    title={item.name}
+                    title={
+                    <NavLink 
+                    to={"/todo-board"}
+                    style={{color:  "#F6C927"}}
+                    > {item.name} </NavLink>}
                     description={item.description}
                     time={item.creationDate}
                     deleteItem={handleDeleteItem}

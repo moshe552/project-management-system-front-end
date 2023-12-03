@@ -54,25 +54,31 @@ export default function CreateProject() {
         }
     }
     function handleDeleteItem(id) {
-        api.delete(`http://localhost:3000/board/${id}/delete`, {headers})
-        .then(() => {
-            alert("the project has been deleted")
-           setSaved(false)
-        })
-        .catch(error => {
-            console.error('Error fetching JSON file:', error);
-        })
+        api.delete(`http://localhost:3000/board/${id}/delete`, { headers })
+            .then(() => {
+                alert("the project has been deleted")
+                setSaved(false)
+            })
+            .catch(error => {
+                console.error('Error fetching JSON file:', error);
+            })
     }
 
 
     return (isSaved ?
         <Project
             id={contect._id}
-            title= {<NavLink to={"/todo-board"}>{contect.name}</NavLink>}
+            title={
+                <NavLink
+                    to={"/todo-board"}
+                    style={{ color: "#F6C927" }}
+                >
+                    {contect.name}
+                </NavLink>}
             description={contect.description}
             time={contect.creationDate}
             deleteItem={handleDeleteItem}
-           />:
+        /> :
         <form onSubmit={handleSaveClick}>
             <Header title="Add new project" />
             <Card sx={{ m: 3, background: "#121231", color: "#CDCDCD", textAlign: "center" }}>
@@ -104,6 +110,6 @@ export default function CreateProject() {
             >
                 Save
             </Button>
-        </form> 
+        </form>
     );
 }
