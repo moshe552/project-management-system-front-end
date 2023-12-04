@@ -4,7 +4,7 @@ import SettingsTwoToneIcon from "@mui/icons-material/SettingsTwoTone";
 import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useParams } from "react-router-dom";
 
 const tasksData = [
   {
@@ -79,7 +79,13 @@ const listData = [
   },
 ];
 
+
+
 export default function TodoBoard() {
+
+  const {id} = useParams();
+  console.log(id);
+
   const [taskBoard, setTaskBoard] = useState(listData);
 
   function handelCardDrop(cardId, sourceListId, targetListId) {

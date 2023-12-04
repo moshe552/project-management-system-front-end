@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import AddIcon from '@mui/icons-material/Add';
 import { Button } from "@mui/material";
 import { Project } from "./Project";
-import { NavLink } from "react-router-dom";
+import { NavLink, useParams } from "react-router-dom";
 import Header from "./header";
 import { Grid } from "@mui/material";
 import api from "../../../api/posts";
@@ -17,6 +17,9 @@ const headers = {
 
 
 export default function ListProject() {
+
+    // const { param } = useParams();
+    // console.log(param);
 
     const [projectsList, setProjectsList] = useState([]);
 
@@ -44,10 +47,6 @@ export default function ListProject() {
         .catch(error => {
             console.error('Error fetching JSON file:', error);
         })
-        // #########################
-        // setProjectsList(prevProjectsList => {
-        //     return prevProjectsList.filter((item, index) => index !== id);
-        // });
     }
 
 
@@ -72,7 +71,7 @@ export default function ListProject() {
                     id={item._id}
                     title={
                     <NavLink 
-                    to={"/todo-board"}
+                    to={`/todo-board/${item._id}`}
                     style={{color:  "#F6C927"}}
                     > {item.name} </NavLink>}
                     description={item.description}

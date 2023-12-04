@@ -1,8 +1,8 @@
 import { Card, TextareaAutosize, Typography, Input } from "@mui/material";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import SaveIcon from '@mui/icons-material/Save';
 import Button from '@mui/material/Button';
-import { NavLink } from "react-router-dom";
+import { NavLink, useParams  } from "react-router-dom";
 import Header from "../../Porjects/components/header";
 import api from "../../../api/posts";
 import { Project } from "../../Porjects/components/Project";
@@ -14,6 +14,9 @@ const headers = {
 };
 
 export default function CreateProject() {
+    
+    const { id } = useParams();
+    console.log(id);
 
     const [isSaved, setSaved] = useState(false)
 
@@ -43,7 +46,7 @@ export default function CreateProject() {
                 .then(response => {
                     setContect(response.data)
                     setSaved(true)
-                    // history.push('/todo-board');
+                    history.push('/todo-board');
                 })
                 .catch(error => {
                     console.error('Error creating project:', error);
@@ -70,7 +73,7 @@ export default function CreateProject() {
             id={contect._id}
             title={
                 <NavLink
-                    to={"/todo-board"}
+                to={`/todo-board/${contect._id}`}
                     style={{ color: "#F6C927" }}
                 >
                     {contect.name}
@@ -85,21 +88,15 @@ export default function CreateProject() {
                 <Typography color="#F6C927" >Title</Typography>
                 <TextareaAutosize
                     style={{ color: "#CDCDCD", background: "#21213E", width: '200px' }}
-                    defaultValue="project name"
                     name="name"
                     value={contect.name}
                     onChange={handleChange}
                 />
                 <br />
                 <br />
-            {/* </Card> */}
-            {/* <Card  */}
-            {/* sx={{ m: 3, background: "#121231", color: "#CDCDCD", textAlign: "center" }} */}
-            {/* > */}
                 <Typography color="#F6C927">Description</Typography>
                 <TextareaAutosize
                     minRows={4}
-                    // color="#CDCDCD"
                     style={{ color: "#CDCDCD", background: "#21213E", width: '200px' }}
                     name="description"
                     value={contect.description}
@@ -110,7 +107,7 @@ export default function CreateProject() {
             <Button
                 variant="contained"
                 endIcon={<SaveIcon />}
-                sx={{ m: 3, background: "#21213E", color: "#CDCDCD", textAlign: "center" }}
+                sx={{ m: 3 }}
                 type="submit"
             >
                 Save
