@@ -21,17 +21,17 @@ function Project(props) {
                     id="panel1a-header"
                     sx={{ background: "#121231", color: "#CDCDCD" }}
                 >
-                    <Typography variant="subtitle1">
+                    <Typography variant="h6">
                         <a href={props.URL}>{props.title}</a>
                     </Typography>
                 </AccordionSummary>
 
-                <AccordionDetails>
+                <AccordionDetails sx={{ background: "#121231", color: "#CDCDCD" }}>
                     <Typography variant="subyitle">
                         <hr />
-                        <h5 >Description</h5>
+                        <h5 style={{color:  "#F6C927"}}>Description</h5>
                         {props.description}
-                        <p>{props.time}</p>
+                        <p style={{fontSize: '10px'}}>{props.time}</p>
                     </Typography>
                     <IconButton
                         color="inherit"
