@@ -9,18 +9,30 @@ import {
 import TaskCard from "./TaskCard";
 import { useDrop } from "react-dnd";
 import itemTypes from "../../../../utils/itemType";
+import TaskModal from "./TaskModal";
+import { useState } from "react";
 
-export default function TodoList({ id, status, tasks, onCardDrop }) {
+export default function TodoList({ status, tasks, onCardDrop, fetchData }) {
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleOpenModal = () => {
+    setIsModalOpen(true)
+  }
+
   const [{ isOver }, drop] = useDrop({
     accept: itemTypes.CARD,
     drop: (item) => {
-      const targetListId = id;
-      onCardDrop(item.id, item.listId, targetListId);
+      const targetListStatus = status;
+      onCardDrop(item.id, targetListStatus);
     },
     collect: (monitor) => ({
       isOver: monitor.isOver(),
     }),
   });
+
+  const filteredTasks = tasks.filter((task) => task.status.name === status);
+
   return (
     <Container
       ref={drop}
@@ -44,15 +56,21 @@ export default function TodoList({ id, status, tasks, onCardDrop }) {
           />
         </Card>
         <Card sx={{ bgcolor: "primary.main", mb: 2 }}>
-          <Button fullWidth>
+          <Button onClick={handleOpenModal} fullWidth>
             <Typography variant="p" sx={{ color: "#FFF" }}>
-              Add task
+              + Add task
             </Typography>
           </Button>
         </Card>
-        {tasks.map((task) => (
-          <TaskCard key={task.id} listId={id} {...task} />
+        {filteredTasks && filteredTasks.map((task) => (
+          <TaskCard key={task._id} {...task} />
         ))}
+        <TaskModal
+          isModalOpen={isModalOpen}
+          setIsModalOpen={setIsModalOpen}
+          listStatus={status}
+          fetchData={fetchData}
+        />
       </Stack>
     </Container>
   );

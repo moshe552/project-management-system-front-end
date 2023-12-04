@@ -9,16 +9,20 @@ import LaunchIcon from '@mui/icons-material/Launch';
 import { useDrag } from "react-dnd";
 import itemTypes from "../../../../utils/itemType";
 
-export default function TaskCard({ id, name, task, date, listId }) {
+export default function TaskCard({ _id, name, description, creationDate }) {
 
-  const [collected, drag, dragPreview] = useDrag(() => ({
+  const [{ isDragging }, drag, preview] = useDrag(() => ({
     type: itemTypes.CARD,
-    item: { id, listId }
-  }))
-  return collected.isDragging ? (
-    <div ref={dragPreview} /> 
+    item: { id: _id },
+    collect: (monitor) => ({
+      isDragging: !!monitor.isDragging(),
+    }),
+  }));
+
+  return isDragging ? (
+    <div ref={preview} />
   ) : (
-      <Card ref={drag} {...collected} sx={{ mt: 1, mb: 2, bgcolor: "primary.main" }}>
+      <Card ref={drag} sx={{ mt: 1, mb: 2, bgcolor: "primary.main" }}>
         <CardHeader
           action={
             <IconButton>
@@ -32,11 +36,11 @@ export default function TaskCard({ id, name, task, date, listId }) {
               </Typography>
               <br />
               <Typography variant="p" sx={{ color: "#FFF" }}>
-                {task}
+                {description}
               </Typography>
               <br />
               <Typography variant="p" sx={{ color: "#FFF", fontSize: "1.3vh" }}>
-                {date}
+                {creationDate}
               </Typography>
             </>
           }
