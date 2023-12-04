@@ -1,5 +1,6 @@
-import { Card, TextareaAutosize, Typography, Input } from "@mui/material";
-import { useState, useEffect } from "react";
+
+import { Card, TextField } from "@mui/material";
+import { useState } from "react";
 import SaveIcon from '@mui/icons-material/Save';
 import Button from '@mui/material/Button';
 import { NavLink } from "react-router-dom";
@@ -81,32 +82,48 @@ export default function CreateProject() {
         /> :
         <form onSubmit={handleSaveClick}>
             <Header title="Add new project" />
+
+            <Grid >
             <Card sx={{ m: 3, background: "#121231", color: "#CDCDCD", textAlign: "center" }}>
-                <Typography color="#F6C927" >Title</Typography>
-                <TextareaAutosize
-                    style={{ color: "#CDCDCD", background: "#21213E", width: '200px' }}
-                    defaultValue="project name"
-                    name="name"
-                    value={contect.name}
-                    onChange={handleChange}
-                />
-                <br />
-                <br />
-            {/* </Card> */}
-            {/* <Card  */}
-            {/* sx={{ m: 3, background: "#121231", color: "#CDCDCD", textAlign: "center" }} */}
-            {/* > */}
-                <Typography color="#F6C927">Description</Typography>
-                <TextareaAutosize
-                    minRows={4}
-                    // color="#CDCDCD"
-                    style={{ color: "#CDCDCD", background: "#21213E", width: '200px' }}
-                    name="description"
-                    value={contect.description}
-                    onChange={handleChange}
-                />
-                <br />
-           
+          <TextField 
+            id="outlined-textarea"
+            label="Title"
+            placeholder="Enter title"
+            multiline
+            name="name"
+            onChange={handleChange}
+            value={contect.name}
+            InputLabelProps={{
+                style: { color: "#F6C927" },
+              }}
+              InputProps={{
+                style: { color: "#F6C927", background: "#21213E" }, 
+              }}
+          />
+          </Card>
+        </Grid>
+        <br />
+        <Card sx={{ m: 3, background: "#121231", color: "#CDCDCD", textAlign: "center" }}>
+        <Grid>
+          <TextField
+            id="outlined-textarea"
+            label="Description"
+            placeholder="Enter description"
+            multiline
+            minRows={4}
+            disabled={isDisabled}
+            name="description"
+            onChange={handleChange}
+            value={contect.description}
+            InputLabelProps={{
+                style: { color: "#F6C927" },
+              }}
+              InputProps={{
+                style: { color: "#F6C927", background: "#21213E" }, 
+              }}
+            />
+        </Grid>
+        </Card>         
             <Button
                 variant="contained"
                 endIcon={<SaveIcon />}
@@ -115,7 +132,6 @@ export default function CreateProject() {
             >
                 Save
             </Button>
-            </Card >
         </form>
     );
 }
