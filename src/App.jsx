@@ -16,8 +16,8 @@ export default function App() {
           <CssBaseline />
           <main>
             <Routes>
-              <Route path="/todo-board" element={<TodoBoard />} />
-              <Route path="/todo-board/settings" element={<Settings />} />
+              <Route path="/Projects/todo-board/:id" element={<TodoBoard />} />
+              <Route path="/Projects/todo-board/settings" element={<Settings />} />
               <Route path="/Projects" element={<ListProject/>} />
               <Route path="/Projects/creatProject" element={<CreateProject/>} />
             </Routes>
