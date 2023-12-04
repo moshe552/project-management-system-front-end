@@ -1,65 +1,86 @@
-import { useState } from "react";
+import { useState , useEffect } from "react";
 import * as React from "react";
 
 import HeaderUsers from "./HeaderUsers";
 import ItemUser from "./ItemUser";
 
-import SettingsData from "./SettingsData";// Data outside
-import DataRandom from "./DataRandom";// Data outside
+import dataAllUsers from "./DataAllUsers";
 
 import List from "@mui/material/List";
 import Grid from "@mui/material/Grid";
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import AddCircleSharpIcon from "@mui/icons-material/AddCircleSharp";
 
+
+const styleList = {
+          width: "100%",
+          maxWidth: "100%",
+          bgcolor: "#21213E",
+          color: "#FFFFFF",
+          overflow: 'auto',
+          position: 'relative',
+          maxHeight: 300
+};
+
+
 function ListUsers() {
 
-  const listDataView = SettingsData //check if not need! after
-  const [dataView, setDataView] = useState(listDataView)
+  const [dataModel, setDataModel] = useState([])
 
-  const listDataModel = DataRandom //check if not need! after
-  const [dataModel, setDataModel] = useState(listDataModel)
+  const [dataView, setDataView] = useState([])
+  
+    
+  useEffect(() => {
+    async function getUsers() {
+      const users =  await dataAllUsers();
+      console.log(users)
+      setDataModel(users)
+    }
+    getUsers()
+  },[])
+ 
 
+  function deleteUser(currentIdDelete) {
+    const  listAdd = [...dataModel]
+    const listDelete = [...dataView]
+    
+    // alert("Your add user")
+    
+    const indexUserInList = dataView.findIndex(
+      (currentUser) => (currentUser._id === currentIdDelete))
+      console.log(currentIdDelete)
+    console.log(indexUserInList)
 
-  function deleteUser(index) {
-    const newList = [...dataView]
-    const newListAdd = [...dataModel]
-    console.log(index)
+    const userAdd = dataView[indexUserInList]
+    console.log(userAdd)
 
-      function checkObjectUser(objectUser) {
-        return objectUser.id === index;
-      }
+    listDelete.splice(indexUserInList,1)
+    setDataView(listDelete)
 
-      const indexUserDelete = dataView.findIndex(checkObjectUser)
-      const userAdd = newList[indexUserDelete]
-      console.log(indexUserDelete)
-
-      newList.splice(indexUserDelete,1)
-      setDataView(newList)
-
-      newListAdd.splice(newListAdd.length,0,userAdd)
-      setDataModel(newListAdd)    
+    listAdd.splice(listAdd.length,0,userAdd)
+     setDataModel(listAdd)  
   }
 
+// Add func //////////////////////////
+  function addUser(currentId) {
+    const listAdd = [...dataView]
+    const listDelete = [...dataModel]
+    
+    // alert("Your add user")
+    
+    const indexUserInList = dataModel.findIndex(
+      (currentUser) => (currentUser._id === currentId))
 
-  function addUser(index) {
-    const newListAdd = [...dataView]
-    const newList = [...dataModel]
-    console.log(index)
+    console.log(indexUserInList)
 
-      function checkObjectUser(objectUser) {
-        return objectUser.id === index;
-      }
+    const userAdd = dataModel[indexUserInList]
+    console.log(userAdd)
 
-      const indexUserDelete = dataModel.findIndex(checkObjectUser)
-      const userAdd = newList[indexUserDelete]
-      console.log(indexUserDelete)
+    listDelete.splice(indexUserInList,1)
+    setDataModel(listDelete)
 
-      newList.splice(indexUserDelete,1)
-      setDataModel(newList)
-
-      newListAdd.splice(newListAdd.length,0,userAdd)
-      setDataView(newListAdd)    
+    listAdd.splice(listAdd.length,0,userAdd)
+    setDataView(listAdd)     
   }
 
   //Functions list!!!! view 1)
@@ -67,11 +88,12 @@ function ListUsers() {
     
     return (
       <ItemUser
-        key={user.id}
-        name={user.name}
-        age={user.id} // The original => age={user.age}. Now test (view change)
-        text={user.text}
-        FunctionType={<DeleteOutlineIcon onClick={() => deleteUser(user.id)}/>}
+        key={user._id}
+        firstName={user.firstName}
+        lastName={user.lastName}
+        email={user.email} 
+        title={user.title}
+        FunctionType={<DeleteOutlineIcon onClick={() => deleteUser(user._id)}/>}
         
       />
     );
@@ -83,18 +105,8 @@ function ListUsers() {
   // Functions view 3)
   function viewList (dataList){
     return(
-      <List
-        sx={{
-          width: "100%",
-          maxWidth: "100%",
-          bgcolor: "#21213E",
-          color: "#FFFFFF",
-          overflow: 'auto',
-          position: 'relative',
-          maxHeight: 300
-        }}
-      >
-        {viewMap(dataList)}
+      <List sx={styleList}>
+            {viewMap(dataList)}
       </List>
     )
   }
@@ -102,41 +114,33 @@ function ListUsers() {
 
 
 
-  //Functions Model!!!! view 1)
+  //Functions Model!!!!  1)
   function createUserModel(user) {
     return (
       <ItemUser
-        key={user.id}
-        name={user.name}
-        age={user.id} // The original => age={user.age}. Now test (view change)
-        text={user.text}
-        FunctionType={<AddCircleSharpIcon onClick={() => addUser(user.id)}/>}
+        key={user._id}
+        firstName={user.firstName}
+        lastName={user.lastName }
+        title={user.title}
+        email={user.email}
+        FunctionType={<AddCircleSharpIcon onClick={() => addUser(user._id)}/>}
         
       />
     );
   }
-  //Functions view 2)
+  //Functions Model 2)
   function viewMapModel (listUser){
     return(listUser.map(createUserModel))
   }
-  // Functions view 3)
+  // Functions Model 3)
   function viewListModel (dataList){
     return(
-      <List
-        sx={{
-          width: "100%",
-          maxWidth: "100%",
-          bgcolor: "#21213E",
-          color: "#FFFFFF",
-          overflow: 'auto',
-          position: 'relative',
-          maxHeight: 300
-        }}
-      >
+      <List sx={styleList}>
         {viewMapModel(dataList)}
       </List>
     )
   }
+  
 
   return (
     <Grid>

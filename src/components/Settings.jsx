@@ -1,7 +1,7 @@
 import React from 'react'
 
 import Grid  from "@mui/material/Grid";
-import HeaderTitleEdit from './Settings/HeaderTitleEdit'
+import HeaderTitle from './Settings/HeaderTitle'
 import HeaderBar from './Settings/HeaderBar';
 import ListUsers from './Settings/ListUsers';
 
@@ -11,7 +11,7 @@ export default function Settings () {
     <Grid>
     <HeaderBar />
 
-    <HeaderTitleEdit />
+    <HeaderTitle />
     
     <ListUsers />
     </Grid>   

@@ -1,18 +1,26 @@
-import { useState } from "react";
-import * as React from "react";
+import { useState , useEffect } from "react";
+import { startPage , updateData } from "./DataBoard" //import func data
 
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 import SaveAsIcon from "@mui/icons-material/SaveAs";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
-
+import SendIcon from '@mui/icons-material/Send';
 
 
 
 function HeaderTitleEdit() {
+
   const [titelPage, setTitelPage] = useState("");
   const [descriptionWrite, setDescriptionWrite] = useState("");
 
+  useEffect(() => {
+    startPage(setTitelPage, setDescriptionWrite )
+  },[])
+  
+ const sendData = () => updateData(titelPage, descriptionWrite)
+  
+  
   const addTextNow = (event) => {
     const valueName = event.target.name;
     console.log(valueName);
@@ -74,10 +82,10 @@ function HeaderTitleEdit() {
               }}
             />
         </Grid>
-        <br />
-        <SaveAsIcon fontSize="large" onClick={holderDisabledTrue} />
-
-        <BorderColorIcon fontSize="large" onClick={holderDisabledFalse} />
+          <br />
+            <SaveAsIcon fontSize="large" sx={{marginRight: 2}} onClick={holderDisabledTrue} />
+            <BorderColorIcon fontSize="large" sx={{marginRight: 2}} onClick={holderDisabledFalse} />
+            <SendIcon fontSize="large" sx={{marginRight: 2}} onClick={ sendData}/>
       </Grid>
     </Grid>
     

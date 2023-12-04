@@ -15,7 +15,8 @@ function ItemUser(props) {
         <Avatar  /> 
       </ListItemAvatar>
       <ListItemText
-        primary={props.name}
+        primary={<Typography>{props.firstName} {props.lastName} </Typography>}
+        
         secondary={
           <React.Fragment>
             <Typography
@@ -24,7 +25,7 @@ function ItemUser(props) {
               variant="body2"
               color="#FFFFFF"
             >
-              {props.age}
+              {props.title}
             </Typography>
             <Typography
               sx={{ display: "inline" }}
@@ -32,10 +33,9 @@ function ItemUser(props) {
               variant="body2"
               color="#FFFFFF"
             >
-              {" " + props.text}
+              {" - " + props.email}
             </Typography>
           </React.Fragment>
-
         }
       />
       {props.FunctionType}
