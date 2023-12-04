@@ -7,7 +7,9 @@ import Header from "./header";
 import { Grid } from "@mui/material";
 import api from "../../../api/posts";
 
-const UrlDataBoard = 'http://localhost:3000/board/user/3242r42rf/read';
+const userID = '3242r42rf'
+
+const UrlDataBoard = `http://localhost:3000/board/user/${userID}/read`;
 
 // Define the custom header
 const headers = {
