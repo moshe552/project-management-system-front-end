@@ -3,11 +3,12 @@ import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
 
-export default function TaskModal({
+export default function AddTaskModal({
   isModalOpen,
   setIsModalOpen,
   listStatus,
   fetchData,
+  boardId,
 }) {
   const handleCloseModal = () => {
     setIsModalOpen(false);
@@ -25,8 +26,6 @@ export default function TaskModal({
   // Rendering the newTask hook with the new value making the input changes visible
   const handleTaskDetailsChange = (field, value) => {
 
-    console.log("handleTaskDetailsChange", newTask);
-
     setNewTask((prevDetails) => ({
       ...prevDetails,
       status: listStatus,
@@ -36,8 +35,6 @@ export default function TaskModal({
 
   const handleAddTask = async () => {
    
-    const boardId = "655f156e9fc4230d941fd2b8";
-
     const headers = {
       "Content-Type": "application/json",
       Authorization: "Bearer YOUR_ACCESS_TOKEN",

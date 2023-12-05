@@ -55,8 +55,6 @@ const listsData = [
   },
 ];
 
-
-
 export default function TodoBoard() {
   const { boardId } = useParams();
 
@@ -75,7 +73,7 @@ export default function TodoBoard() {
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        `http://127.0.0.1:3000/board/${id}/read`,
+        `http://127.0.0.1:3000/board/${boardId}/read`,
         { headers }
       );
       console.log("API Response:", response);
@@ -96,7 +94,7 @@ export default function TodoBoard() {
     const petchData = async () => {
       try {
         const response = await axios.patch(
-          `http://127.0.0.1:3000/board/${id}/task/${cardId}/update/status`,
+          `http://127.0.0.1:3000/board/${boardId}/task/${cardId}/update/status`,
           { status: targetListStatus },
           { headers }
         );
@@ -120,7 +118,7 @@ export default function TodoBoard() {
         height={"5%"}
         mb={2}
       >
-        <NavLink to={"/Projects/todo-board/settings"}>
+        <NavLink to={`/Projects/todo-board/settings/${boardId}`}>
           <IconButton>
             <SettingsTwoToneIcon sx={{ color: "#D3D3D3" }} fontSize="mid" />
           </IconButton>
@@ -159,23 +157,7 @@ export default function TodoBoard() {
               {filter.title}
             </Typography>
           </Grid>
-          <Grid
-            container
-            bgcolor={"secondary.main"}
-            borderRadius={2}
-            direction="row"
-            justifyContent="space-between"
-            alignItems="flex-start"
-          >
-            <Grid m={2}>
-              <Typography variant="p" sx={{ color: "#FFF", fontSize: "1.8vh" }}>
-                {filter.type}
-              </Typography>
-            </Grid>
-            <IconButton>
-              <KeyboardArrowDownIcon fontSize="large" sx={{ color: "#FFF" }} />
-            </IconButton>
-          </Grid>
+          <TaskFilter filtering={filter.type} />
         </Grid>
       ))}
       {boardData &&
@@ -183,6 +165,7 @@ export default function TodoBoard() {
           <Grid item key={list.id} pb={4} xs={12} sm={6} lg={3}>
             <TodoList
               {...list}
+              boardId={boardId}
               tasks={boardData.tasks}
               onCardDrop={handelCardDrop}
               fetchData={fetchData}
