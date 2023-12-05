@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import TaskFilter from "./TaskFilter";
 import axios from "axios";
-// import { useParams } from "react-router-dom/dist";
+import { useParams } from "react-router-dom/dist";
 
 const filterData = [
   {
@@ -55,13 +55,13 @@ const listsData = [
 ];
 
 export default function TodoBoard() {
-  // const { param } = useParams();
-  // console.log(param);
+  const { boardId } = useParams();
+  console.log(boardId);
 
   const [boardData, setBoardData] = useState(null);
   // const [tasks, setTasks] = useState(null);
 
-  const id = "655f156e9fc4230d941fd2b8";
+  // const id = "655f156e9fc4230d941fd2b8";
 
   const headers = {
     "Content-Type": "application/json",
@@ -71,7 +71,7 @@ export default function TodoBoard() {
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        `http://127.0.0.1:3000/board/${id}/read`,
+        `http://127.0.0.1:3000/board/${boardId}/read`,
         { headers }
       );
       console.log("API Response:", response);
@@ -92,7 +92,7 @@ export default function TodoBoard() {
     const petchData = async () => {
       try {
         const response = await axios.patch(
-          `http://127.0.0.1:3000/board/${id}/task/${cardId}/update/status`,
+          `http://127.0.0.1:3000/board/${boardId}/task/${cardId}/update/status`,
           { status: targetListStatus },
           { headers }
         );
@@ -116,7 +116,7 @@ export default function TodoBoard() {
         height={"5%"}
         mb={2}
       >
-        <NavLink to={"/Projects/todo-board/settings"}>
+        <NavLink to={`/Projects/todo-board/settings/${boardId}`}>
           <IconButton>
             <SettingsTwoToneIcon sx={{ color: "#D3D3D3" }} fontSize="mid" />
           </IconButton>
@@ -163,6 +163,7 @@ export default function TodoBoard() {
           <Grid item key={list.id} pb={4} xs={12} sm={6} lg={3}>
             <TodoList
               {...list}
+              boardId={boardId}
               tasks={boardData.tasks}
               onCardDrop={handelCardDrop}
               fetchData={fetchData}

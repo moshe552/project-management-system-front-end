@@ -8,6 +8,7 @@ export default function AddTaskModal({
   setIsModalOpen,
   listStatus,
   fetchData,
+  boardId,
 }) {
   const handleCloseModal = () => {
     setIsModalOpen(false);
@@ -25,8 +26,6 @@ export default function AddTaskModal({
   // Rendering the newTask hook with the new value making the input changes visible
   const handleTaskDetailsChange = (field, value) => {
 
-    console.log("handleTaskDetailsChange", newTask);
-
     setNewTask((prevDetails) => ({
       ...prevDetails,
       status: listStatus,
@@ -36,8 +35,6 @@ export default function AddTaskModal({
 
   const handleAddTask = async () => {
    
-    const boardId = "655f156e9fc4230d941fd2b8";
-
     const headers = {
       "Content-Type": "application/json",
       Authorization: "Bearer YOUR_ACCESS_TOKEN",
