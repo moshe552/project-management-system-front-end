@@ -1,13 +1,8 @@
-import * as React from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { useState } from 'react';
-
-
-
-
 
 export default function HeaderBar() {
   const [nameTitle, setNameTitle] = useState("The page is loading..")
@@ -15,7 +10,6 @@ export default function HeaderBar() {
     function() {
       setNameTitle("")
     }, 500)
-  
   
   return (
     <Box sx={{ flexGrow: 1 }}>

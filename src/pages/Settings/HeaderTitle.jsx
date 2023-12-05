@@ -1,5 +1,5 @@
 import { useState , useEffect } from "react";
-import { startPage , updateData } from "./DataBoard" //import func data
+import { dataStartPage , updateData } from "./DataBoardcopy" //import func data
 
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
@@ -7,18 +7,28 @@ import SaveAsIcon from "@mui/icons-material/SaveAs";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import SendIcon from '@mui/icons-material/Send';
 
-
-
-function HeaderTitleEdit() {
+function HeaderTitleEdit(props) {
 
   const [titelPage, setTitelPage] = useState("");
   const [descriptionWrite, setDescriptionWrite] = useState("");
 
   useEffect(() => {
-    startPage(setTitelPage, setDescriptionWrite )
+    
+    async function getDataBoard() {
+      const theData = await dataStartPage(props.idBoard)
+      setTitelPage(theData.name)
+      setDescriptionWrite(theData.description)
+    }
+    getDataBoard()
   },[])
+
+  async function updateDataBoard() {
+    const theData = await updateData(props.idBoard ,titelPage ,descriptionWrite)
+  }
   
- const sendData = () => updateData(titelPage, descriptionWrite)
+
+  
+ const sendData = () => updateDataBoard()
   
   
   const addTextNow = (event) => {

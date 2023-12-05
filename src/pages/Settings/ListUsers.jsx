@@ -33,7 +33,6 @@ function ListUsers() {
   useEffect(() => {
     async function getUsers() {
       const users =  await dataAllUsers();
-      console.log(users)
       setDataModel(users)
     }
     getUsers()
