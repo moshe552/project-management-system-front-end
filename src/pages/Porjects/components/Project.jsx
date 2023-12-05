@@ -13,16 +13,26 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 function Project(props) {
 
     return (
-        <Card sx={{m:2}}>
-        <Accordion>
-            <AccordionSummary
-                expandIcon={<ExpandMoreIcon sx={{color:"#CDCDCD" }}/>}
-                aria-controls="panel1a-content"
-                id="panel1a-header"
-                sx={{background: "#121231", color: "#CDCDCD"}}
-            >
-                <Typography variant="subtitle1">
-                    <a href={props.URL}>{props.title}{props.time}</a>
+        <Card sx={{ m: 2 }}>
+            <Accordion>
+                <AccordionSummary
+                    expandIcon={<ExpandMoreIcon sx={{ color: "#CDCDCD" }} />}
+                    aria-controls="panel1a-content"
+                    id="panel1a-header"
+                    sx={{ background: "#121231", color: "#CDCDCD" }}
+                >
+                    <Typography variant="h6">
+                        <a href={props.URL}>{props.title}</a>
+                    </Typography>
+                </AccordionSummary>
+
+                <AccordionDetails sx={{ background: "#121231", color: "#CDCDCD" }}>
+                    <Typography variant="subyitle">
+                        <hr />
+                        <h5 style={{color:  "#F6C927"}}>Description</h5>
+                        {props.description}
+                        <p style={{fontSize: '10px'}}>{props.time}</p>
+                    </Typography>
                     <IconButton
                         color="inherit"
                         edge="end"
@@ -32,17 +42,8 @@ function Project(props) {
                     >
                         <DeleteIcon />
                     </IconButton>
-                </Typography>
-            </AccordionSummary>
-
-            <AccordionDetails>
-                <Typography variant="subyitle">
-                <hr />
-                    <h5 >Description</h5>
-                    {props.description}
-                </Typography>
-            </AccordionDetails>
-        </Accordion>
+                </AccordionDetails>
+            </Accordion>
         </Card>
     )
 }

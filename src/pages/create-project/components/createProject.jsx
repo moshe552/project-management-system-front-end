@@ -1,22 +1,32 @@
-import { Card, Typography } from "@mui/material";
+import { Card, TextareaAutosize, Typography, Input } from "@mui/material";
 import { useState } from "react";
 import SaveIcon from '@mui/icons-material/Save';
 import Button from '@mui/material/Button';
-import { NavLink } from "react-router-dom";
+import { NavLink, useParams  } from "react-router-dom";
 import Header from "../../Porjects/components/header";
-import Input from '@mui/material/Input';
+import api from "../../../api/posts";
+import { Project } from "../../Porjects/components/Project";
 
-
-
-
-
+const UrlDataBoard = 'http://localhost:3000/board/create';
+const headers = {
+    'Authorization': 'Happy',
+    'Content-Type': 'application/json; charset=utf-8'
+};
 
 export default function CreateProject() {
+    
+    const { id } = useParams();
+    console.log(id);
 
-    var [contect, setContect] = useState({
-        title: "",
-        description: ""
-    })
+    const [isSaved, setSaved] = useState(false)
+
+    const [contect, setContect] = useState({
+        "name": "",
+        "description": "",
+        "users": ['3242r42rf'],
+        "isSprint": false,
+        'sprintLength': null
+    });
 
     function handleChange(event) {
         const { name, value } = event.target;
@@ -24,70 +34,85 @@ export default function CreateProject() {
             return {
                 ...prevValue,
                 [name]: value
-            }
+            };
         });
     }
-    var [newContect, setNewContect] = useState({
-        ...contect,
-        title: "Title",
-    });
+
     function handleSaveClick(event) {
-        if (contect.title.trim().length > 0 && contect.description.trim().length > 0) {
-            setNewContect(prevContect => ({ ...prevContect, ...contect }));
-            setContect({
-                title: "",
-                description: ""
-            });
+        event.preventDefault();
+
+        if (contect.name.trim().length > 0 && contect.description.trim().length > 0) {
+            api.post(UrlDataBoard, contect, { headers })
+                .then(response => {
+                    setContect(response.data)
+                    setSaved(true)
+                    history.push('/todo-board');
+                })
+                .catch(error => {
+                    console.error('Error creating project:', error);
+                });
+
         } else {
             alert("You need to enter a project name and description");
-
         }
-
-        event.preventDefault();
+    }
+    function handleDeleteItem(id) {
+        api.delete(`http://localhost:3000/board/${id}/delete`, { headers })
+            .then(() => {
+                alert("the project has been deleted")
+                setSaved(false)
+            })
+            .catch(error => {
+                console.error('Error fetching JSON file:', error);
+            })
     }
 
 
-    return (
-
-
+    return (isSaved ?
+        <Project
+            id={contect._id}
+            title={
+                <NavLink
+                to={`/Projects/todo-board/${contect._id}`}
+                    style={{ color: "#F6C927" }}
+                >
+                    {contect.name}
+                </NavLink>}
+            description={contect.description}
+            time={contect.creationDate}
+            deleteItem={handleDeleteItem}
+        /> :
         <form onSubmit={handleSaveClick}>
             <Header title="Add new project" />
-            <Card sx={{ m: 3, background: "#121231", color: "#CDCDCD",textAlign: "center" }}>
-                <Typography
-                    color="#F6C927"
-                    variant="h6"
-                >
-                    {newContect.title}
-                </Typography>
-                <Input
-                    sx={{ color: "#CDCDCD", background: "#21213E"}}
-                    defaultValue="Hello world"
-                    name="title"
-                    value={contect.title}
+            <Card sx={{ m: 3, background: "#121231", color: "#CDCDCD", textAlign: "center" }}>
+                <Typography color="#F6C927" >Title</Typography>
+                <TextareaAutosize
+                    style={{ color: "#CDCDCD", background: "#21213E", width: '200px' }}
+                    name="name"
+                    value={contect.name}
                     onChange={handleChange}
                 />
-            </Card>
-            <Card sx={{ m: 3, background: "#121231", color: "#CDCDCD" ,textAlign: "center" }}>
+                <br />
+                <br />
                 <Typography color="#F6C927">Description</Typography>
-                <p><Input
-                    sx={{ color: "#CDCDCD" , background: "#21213E" }}
-                    defaultValue="Hello world"
+                <TextareaAutosize
+                    minRows={4}
+                    style={{ color: "#CDCDCD", background: "#21213E", width: '200px' }}
                     name="description"
                     value={contect.description}
                     onChange={handleChange}
-                /></p>
-                <p>{newContect.description}</p>
+                />
+                <br />
            
-                <NavLink to={"/todo-board"}>
-                    <Button
-                     variant="contained" 
-                     endIcon={<SaveIcon />}
-                     sx={{ m: 3, background: "#21213E", color: "#CDCDCD",textAlign: "center"  }}>
-                        save
-                    </Button>
-                </NavLink>
-            </Card>
+            <Button
+                variant="contained"
+                endIcon={<SaveIcon />}
+                sx={{ m: 3 }}
+                type="submit"
+            >
+                Save
+            </Button>
+            </Card >
         </form>
-
-    )
+    );
 }
