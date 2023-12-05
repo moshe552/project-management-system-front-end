@@ -2,36 +2,11 @@ import { Grid, IconButton, Typography } from "@mui/material";
 import TodoList from "./TodoList";
 import SettingsTwoToneIcon from "@mui/icons-material/SettingsTwoTone";
 import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import { useState } from "react";
-import { NavLink, useParams } from "react-router-dom";
-
-const tasksData = [
-  {
-    id: 5,
-    name: "Moshe",
-    task: "Todo board",
-    date: "20/11/23",
-  },
-  {
-    id: 6,
-    name: "Netanel",
-    task: "Server",
-    date: "20/11/23",
-  },
-  {
-    id: 7,
-    name: "Yosi",
-    task: "Drag and Drap",
-    date: "20/11/23",
-  },
-  {
-    id: 8,
-    name: "Aviv",
-    task: "Settings",
-    date: "20/11/23",
-  },
-];
+import { useState, useEffect } from "react";
+import { NavLink } from "react-router-dom";
+import TaskFilter from "./TaskFilter";
+import axios from "axios";
+// import { useParams } from "react-router-dom/dist";
 
 const filterData = [
   {
@@ -56,61 +31,83 @@ const filterData = [
   },
 ];
 
-const listData = [
+const listsData = [
   {
     id: 1,
-    status: "Open Project",
-    tasks: tasksData,
+    status: "Open",
+    // tasks: tasksData,
   },
   {
     id: 2,
-    status: "In Progress Project",
-    tasks: [],
+    status: "In Progress",
+    // tasks: [],
   },
   {
     id: 3,
-    status: "Resolved Project",
-    tasks: [],
+    status: "Resolved",
+    // tasks: [],
   },
   {
     id: 4,
-    status: "Closed Project",
-    tasks: [],
+    status: "Closed",
+    // tasks: [],
   },
 ];
 
 
 
 export default function TodoBoard() {
+  // const { param } = useParams();
+  // console.log(param);
 
-  const {id} = useParams();
-  console.log(id);
+  const [boardData, setBoardData] = useState(null);
+  // const [tasks, setTasks] = useState(null);
 
-  const [taskBoard, setTaskBoard] = useState(listData);
+  const id = "655f156e9fc4230d941fd2b8";
 
-  function handelCardDrop(cardId, sourceListId, targetListId) {
-    // Find the source and destination lists
-    const sourceList = taskBoard.find((list) => list.id === sourceListId);
-    const targetList = taskBoard.find((list) => list.id === targetListId);
+  const headers = {
+    "Content-Type": "application/json",
+    Authorization: "Bearer YOUR_ACCESS_TOKEN",
+  };
 
-    // Find the dropped card in the source list
-    const cardIndex = sourceList.tasks.findIndex(
-      (card) => card.id === cardId
-    );
-    const droppedCard = sourceList.tasks[cardIndex];
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(
+        `http://127.0.0.1:3000/board/${id}/read`,
+        { headers }
+      );
+      console.log("API Response:", response);
+      if (response.data) {
+        setBoardData(response.data);
+      }
+    } catch (error) {
+      console.error("Error could not fetch JSON file", error);
+    }
+  };
 
-    // Update the listId of the dropped card
-    droppedCard.listId = targetListId;
+  useEffect(() => {
+    fetchData();
+  }, []);
 
-    // Remove the card from the source list
-    sourceList.tasks.splice(cardIndex, 1);
-
-    // Add the card to the destination list
-    targetList.tasks.push(droppedCard);
-
-    // Update the state to move the card to the new location
-    setTaskBoard([...taskBoard]);
-  }
+  const handelCardDrop = (cardId, targetListStatus) => {
+  
+    const petchData = async () => {
+      try {
+        const response = await axios.patch(
+          `http://127.0.0.1:3000/board/${id}/task/${cardId}/update/status`,
+          { status: targetListStatus },
+          { headers }
+        );
+        if (response) {
+          fetchData();
+        }
+      } catch (error) {
+        console.error("Error could not petch JSON file", error);
+      }
+    };
+    petchData();
+  };
+  
   return (
     <Grid container height={"100%"} padding={5} spacing={2}>
       <Grid
@@ -121,10 +118,10 @@ export default function TodoBoard() {
         height={"5%"}
         mb={2}
       >
-        <NavLink to={"/todo-board/settings"}>
-        <IconButton>
-          <SettingsTwoToneIcon sx={{ color: "#D3D3D3" }} fontSize="mid" />
-        </IconButton>
+        <NavLink to={"/Projects/todo-board/settings"}>
+          <IconButton>
+            <SettingsTwoToneIcon sx={{ color: "#D3D3D3" }} fontSize="mid" />
+          </IconButton>
         </NavLink>
       </Grid>
 
@@ -138,7 +135,7 @@ export default function TodoBoard() {
       >
         <Grid ml={2}>
           <Typography variant="h6" sx={{ m: 2, color: "#FFF" }}>
-            Innovasol (INNOVA)
+            {boardData ? boardData.name : "Loading..."}
           </Typography>
         </Grid>
         <Grid mr={2}>
@@ -179,11 +176,17 @@ export default function TodoBoard() {
           </Grid>
         </Grid>
       ))}
-      {taskBoard.map((list) => (
-        <Grid item key={list.id} pb={4} xs={12} sm={6} lg={3}>
-          <TodoList {...list} onCardDrop={handelCardDrop} />
-        </Grid>
-      ))}
+      {boardData &&
+        listsData.map((list) => (
+          <Grid item key={list.id} pb={4} xs={12} sm={6} lg={3}>
+            <TodoList
+              {...list}
+              tasks={boardData.tasks}
+              onCardDrop={handelCardDrop}
+              fetchData={fetchData}
+            />
+          </Grid>
+        ))}
     </Grid>
   );
 }
