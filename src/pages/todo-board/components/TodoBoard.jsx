@@ -54,8 +54,6 @@ const listsData = [
   },
 ];
 
-
-
 export default function TodoBoard() {
   // const { param } = useParams();
   // console.log(param);
@@ -157,23 +155,7 @@ export default function TodoBoard() {
               {filter.title}
             </Typography>
           </Grid>
-          <Grid
-            container
-            bgcolor={"secondary.main"}
-            borderRadius={2}
-            direction="row"
-            justifyContent="space-between"
-            alignItems="flex-start"
-          >
-            <Grid m={2}>
-              <Typography variant="p" sx={{ color: "#FFF", fontSize: "1.8vh" }}>
-                {filter.type}
-              </Typography>
-            </Grid>
-            <IconButton>
-              <KeyboardArrowDownIcon fontSize="large" sx={{ color: "#FFF" }} />
-            </IconButton>
-          </Grid>
+          <TaskFilter filtering={filter.type} />
         </Grid>
       ))}
       {boardData &&
