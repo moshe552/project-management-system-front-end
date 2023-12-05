@@ -6,7 +6,8 @@ import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import TaskFilter from "./TaskFilter";
 import axios from "axios";
-// import { useParams } from "react-router-dom/dist";
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import { useParams } from "react-router-dom/dist";
 
 const filterData = [
   {
@@ -57,13 +58,14 @@ const listsData = [
 
 
 export default function TodoBoard() {
-  // const { param } = useParams();
-  // console.log(param);
+  const { boardId } = useParams();
 
   const [boardData, setBoardData] = useState(null);
   // const [tasks, setTasks] = useState(null);
 
-  const id = "655f156e9fc4230d941fd2b8";
+  // const id = "655f156e9fc4230d941fd2b8";
+  const id = boardId;
+
 
   const headers = {
     "Content-Type": "application/json",
