@@ -73,7 +73,7 @@ export default function CreateProject() {
             id={contect._id}
             title={
                 <NavLink
-                to={`/todo-board/${contect._id}`}
+                to={`/Projects/todo-board/${contect._id}`}
                     style={{ color: "#F6C927" }}
                 >
                     {contect.name}

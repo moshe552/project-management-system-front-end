@@ -73,7 +73,7 @@ export default function ListProject() {
                     id={item._id}
                     title={
                     <NavLink 
-                    to={`/todo-board/${item._id}`}
+                    to={`/Projects/todo-board/${item._id}`}
                     style={{color:  "#F6C927"}}
                     > {item.name} </NavLink>}
                     description={item.description}
