@@ -9,7 +9,7 @@ import {
 import TaskCard from "./TaskCard";
 import { useDrop } from "react-dnd";
 import itemTypes from "../../../../utils/itemType";
-import TaskModal from "./TaskModal";
+import AddTaskModal from "./AddTaskModal";
 import { useState } from "react";
 
 export default function TodoList({ status, tasks, onCardDrop, fetchData }) {
@@ -65,7 +65,7 @@ export default function TodoList({ status, tasks, onCardDrop, fetchData }) {
         {filteredTasks && filteredTasks.map((task) => (
           <TaskCard key={task._id} {...task} />
         ))}
-        <TaskModal
+        <AddTaskModal
           isModalOpen={isModalOpen}
           setIsModalOpen={setIsModalOpen}
           listStatus={status}
