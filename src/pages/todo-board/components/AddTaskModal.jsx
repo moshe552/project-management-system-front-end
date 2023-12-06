@@ -9,7 +9,6 @@ export default function AddTaskModal({
   listStatus,
   boardId,
   setTasks,
-  tasks,
 }) {
   const handleCloseModal = () => {
     setIsModalOpen(false);
@@ -19,23 +18,24 @@ export default function AddTaskModal({
     _id: uuidv4(),
     name: "",
     description: "",
-    creationDate: Date.now(),
-    users: ["Moshe"],
-    status: "", 
+    status: "",
   });
 
   // Rendering the newTask hook with the new value making the input changes visible
   const handleTaskDetailsChange = (field, value) => {
     setNewTask((prevDetails) => ({
-      ...prevDetails,
-      status: listStatus,
-      [field]: value,
-    }));
+        ...prevDetails,
+        status: { name: listStatus },
+        users: ["Moshe"],
+        creationDate: new Date().toISOString(),
+        [field]: value,
+      })
+    );
   };
 
   const handleAddTask = async () => {
-    setTasks(prevTasks => [...prevTasks, newTask]);
-    console.log(tasks, newTask);
+
+    setTasks((prevTasks) => [...prevTasks, newTask]);
 
     const headers = {
       "Content-Type": "application/json",
@@ -43,14 +43,11 @@ export default function AddTaskModal({
     };
     const addTask = async () => {
       try {
-        const response = await axios.post(
+        await axios.post(
           `http://127.0.0.1:3000/board/${boardId}/task/create`,
           newTask,
           { headers }
         );
-        if (response.data) {
-          console.log(response.data);
-        }
       } catch (error) {
         console.error("Error could not fetch JSON file", error);
       }
@@ -72,11 +69,7 @@ export default function AddTaskModal({
   };
 
   return (
-    <Modal
-      open={isModalOpen}
-      onClose={handleCloseModal}
-      closeAfterTransition
-    >
+    <Modal open={isModalOpen} onClose={handleCloseModal} closeAfterTransition>
       <Fade in={isModalOpen}>
         <Box
           sx={{
