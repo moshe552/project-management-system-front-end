@@ -12,7 +12,7 @@ import itemTypes from "../../../../utils/itemType";
 import AddTaskModal from "./AddTaskModal";
 import { useState } from "react";
 
-export default function TodoList({ boardId, status, tasks, onCardDrop, fetchData }) {
+export default function TodoList({ boardId, status, onCardDrop, fetchData, setTasks, tasks }) {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -71,6 +71,8 @@ export default function TodoList({ boardId, status, tasks, onCardDrop, fetchData
           listStatus={status}
           fetchData={fetchData}
           boardId={boardId}
+          setTasks={setTasks}
+          tasks={tasks}
         />
       </Stack>
     </Container>
