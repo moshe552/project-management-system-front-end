@@ -1,51 +1,27 @@
 import axios from "axios";
 
-let id = "6565fd5270c020b6ee023877"
-  // Define the URL of the JSON file
-  const jsonUrlDataBoard = 'http://localhost:3000/board/';
-    
-  // Define the custom header
-  const headers = {
-    'Authorization': 'Happy', 
-    'Content-Type': 'application/json; charset=utf-8'
-  };
-  
 
-//   Read!
-  function startPage(theTitle,theDesc)  {
-  // Make the GET request with Axios
-  axios.get(jsonUrlDataBoard + id + "/read", { headers })
-    .then(response => {
-      // Handle the JSON data
-      theTitle(response.data.name)
-      theDesc(response.data.description)
-      
-    })
-    .catch(error => {
-      // Handle errors
-      console.error('Error fetching JSON file:', error);
-    })}
+const jsonUrlDataBoard = "http://localhost:3000/board/";
+const headers = {
+  Authorization: "Happy",
+  "Content-Type": "application/json; charset=utf-8",
+};
 
-
-
-
+// Read!
+async function dataStartPage(idBoard) {
+  const response = await axios.get(jsonUrlDataBoard + idBoard + "/read",
+   {headers});
+  return response.data;
+}
 
 //  Update
-function updateData(theTitle, theDesc) {
-    // Make the PATCH request with Axios
-    axios.patch(jsonUrlDataBoard + id + "/update", {
-      name: theTitle,
-      description: theDesc,
-    }, { headers })
-      .then(response => {
-        // Handle the response data
-        console.log('Data updated successfully:', response.data);
-      })
-      .catch(error => {
-        // Handle errors
-        console.error('Error updating data:', error);
-      });
-  }
+async function updateData(idBoard , theTitle, theDesc) {
+  const response = await axios.patch(jsonUrlDataBoard + idBoard + "/update",
+  { name: theTitle,
+    description: theDesc,},
+   {headers});
+  console.log("Data updated successfully:", response.data);
+}
 
 
-export {startPage , updateData} ; 
+export { dataStartPage , updateData };
