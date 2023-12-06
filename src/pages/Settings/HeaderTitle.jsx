@@ -1,35 +1,37 @@
 import { useState , useEffect } from "react";
-import { dataStartPage , updateData } from "./DataBoardcopy" //import func data
+import { useParams } from "react-router-dom";
+
+import { dataStartPage , updateData } from "./DataBoard" //import func data
 
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 import SaveAsIcon from "@mui/icons-material/SaveAs";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
+import IconButton from '@mui/material/IconButton';
 import SendIcon from '@mui/icons-material/Send';
 
-function HeaderTitleEdit(props) {
 
+function HeaderTitleEdit() {
+  const {boardId} = useParams()
+  
   const [titelPage, setTitelPage] = useState("");
   const [descriptionWrite, setDescriptionWrite] = useState("");
 
   useEffect(() => {
     
     async function getDataBoard() {
-      const theData = await dataStartPage(props.idBoard)
+      const theData = await dataStartPage(boardId)
       setTitelPage(theData.name)
       setDescriptionWrite(theData.description)
     }
     getDataBoard()
-  },[])
+  },[boardId])
 
   async function updateDataBoard() {
-    const theData = await updateData(props.idBoard ,titelPage ,descriptionWrite)
+    await updateData(boardId ,titelPage ,descriptionWrite)
   }
   
-
-  
  const sendData = () => updateDataBoard()
-  
   
   const addTextNow = (event) => {
     const valueName = event.target.name;
@@ -68,7 +70,7 @@ function HeaderTitleEdit(props) {
                 style: { color: "#F6C927" },
               }}
               InputProps={{
-                style: { color: "#F6C927", background: "#21213E" }, 
+                style: { color: "#F6C927" }, 
               }}
           />
         </Grid>
@@ -88,14 +90,22 @@ function HeaderTitleEdit(props) {
                 style: { color: "#F6C927" },
               }}
               InputProps={{
-                style: { color: "#F6C927", background: "#21213E" }, 
+                style: { color: "#F6C927" }, 
               }}
             />
         </Grid>
           <br />
-            <SaveAsIcon fontSize="large" sx={{marginRight: 2}} onClick={holderDisabledTrue} />
-            <BorderColorIcon fontSize="large" sx={{marginRight: 2}} onClick={holderDisabledFalse} />
-            <SendIcon fontSize="large" sx={{marginRight: 2}} onClick={ sendData}/>
+          <IconButton onClick={holderDisabledTrue} >
+            <SaveAsIcon fontSize="large"  sx={{marginRight: 2 ,color: "#F6C927"}}  />
+          </IconButton>
+
+          <IconButton onClick={holderDisabledFalse} >
+            <BorderColorIcon fontSize="large" sx={{marginRight: 2 ,color: "#F6C927"}} />
+          </IconButton>
+
+          <IconButton onClick={ sendData}>
+            <SendIcon fontSize="large" sx={{marginRight: 2 ,color: "#F6C927"}} />
+          </IconButton>
       </Grid>
     </Grid>
     

@@ -1,10 +1,15 @@
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
+
+import { useParams } from "react-router-dom";
 import ModelUsers from "./ModelUsers";
 
 
 function HeaderUsers(props) {
+
+  const {boardId} = useParams()
+  
   
   return (
     <Grid
