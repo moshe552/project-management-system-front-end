@@ -12,13 +12,18 @@ import itemTypes from "../../../../utils/itemType";
 import AddTaskModal from "./AddTaskModal";
 import { useState } from "react";
 
-export default function TodoList({ boardId, status, onCardDrop, fetchData, setTasks, tasks }) {
-
+export default function TodoList({
+  boardId,
+  status,
+  onCardDrop,
+  setTasks,
+  tasks,
+}) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleOpenModal = () => {
-    setIsModalOpen(true)
-  }
+    setIsModalOpen(true);
+  };
 
   const [{ isOver }, drop] = useDrop({
     accept: itemTypes.CARD,
@@ -32,7 +37,7 @@ export default function TodoList({ boardId, status, onCardDrop, fetchData, setTa
   });
 
   const filteredTasks = tasks.filter((task) => task.status.name === status);
-
+  // console.log("filterdTask:", filteredTasks, tasks);
   return (
     <Container
       ref={drop}
@@ -62,17 +67,22 @@ export default function TodoList({ boardId, status, onCardDrop, fetchData, setTa
             </Typography>
           </Button>
         </Card>
-        {filteredTasks && filteredTasks.map((task) => (
-          <TaskCard key={task._id} {...task} />
-        ))}
+        {filteredTasks &&
+          filteredTasks.map((task) => (
+            <TaskCard
+              key={task._id}
+              {...task}
+              boardId={boardId}
+              tasks={tasks}
+              setTasks={setTasks}
+            />
+          ))}
         <AddTaskModal
           isModalOpen={isModalOpen}
           setIsModalOpen={setIsModalOpen}
           listStatus={status}
-          fetchData={fetchData}
           boardId={boardId}
           setTasks={setTasks}
-          tasks={tasks}
         />
       </Stack>
     </Container>
