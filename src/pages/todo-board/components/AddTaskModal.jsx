@@ -1,4 +1,4 @@
-import { Modal, Backdrop, Fade, TextField, Button, Box } from "@mui/material";
+import { Modal, Fade, TextField, Button, Box } from "@mui/material";
 import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
@@ -7,25 +7,25 @@ export default function AddTaskModal({
   isModalOpen,
   setIsModalOpen,
   listStatus,
-  fetchData,
   boardId,
+  setTasks,
+  tasks,
 }) {
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
 
-
   const [newTask, setNewTask] = useState({
-    id: uuidv4(),
+    _id: uuidv4(),
     name: "",
     description: "",
-    status: "", // Set the initial status of the new task based on the list
+    creationDate: Date.now(),
     users: ["Moshe"],
+    status: "", 
   });
 
   // Rendering the newTask hook with the new value making the input changes visible
   const handleTaskDetailsChange = (field, value) => {
-
     setNewTask((prevDetails) => ({
       ...prevDetails,
       status: listStatus,
@@ -34,12 +34,13 @@ export default function AddTaskModal({
   };
 
   const handleAddTask = async () => {
-   
+    setTasks(prevTasks => [...prevTasks, newTask]);
+    console.log(tasks, newTask);
+
     const headers = {
       "Content-Type": "application/json",
       Authorization: "Bearer YOUR_ACCESS_TOKEN",
     };
-
     const addTask = async () => {
       try {
         const response = await axios.post(
@@ -47,20 +48,19 @@ export default function AddTaskModal({
           newTask,
           { headers }
         );
-        if (response.data){
-          fetchData();
-        } 
-        
+        if (response.data) {
+          console.log(response.data);
+        }
       } catch (error) {
         console.error("Error could not fetch JSON file", error);
       }
     };
 
-    addTask()
+    addTask();
 
     // Clear the form
     setNewTask({
-      id: uuidv4(),
+      _id: uuidv4(),
       name: "",
       description: "",
       status: "",
@@ -76,10 +76,6 @@ export default function AddTaskModal({
       open={isModalOpen}
       onClose={handleCloseModal}
       closeAfterTransition
-      BackdropComponent={Backdrop}
-      BackdropProps={{
-        timeout: 500,
-      }}
     >
       <Fade in={isModalOpen}>
         <Box

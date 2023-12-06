@@ -56,12 +56,8 @@ const listsData = [
 
 export default function TodoBoard() {
   const { boardId } = useParams();
-  console.log(boardId);
-
   const [boardData, setBoardData] = useState(null);
-  // const [tasks, setTasks] = useState(null);
-
-  // const id = "655f156e9fc4230d941fd2b8";
+  const [tasks, setTasks] = useState([]);
 
   const headers = {
     "Content-Type": "application/json",
@@ -74,38 +70,38 @@ export default function TodoBoard() {
         `http://127.0.0.1:3000/board/${boardId}/read`,
         { headers }
       );
-      console.log("API Response:", response);
       if (response.data) {
         setBoardData(response.data);
+        setTasks(response.data.tasks);
       }
     } catch (error) {
       console.error("Error could not fetch JSON file", error);
     }
   };
-
   useEffect(() => {
     fetchData();
   }, []);
 
   const handelCardDrop = (cardId, targetListStatus) => {
-  
+
+    const dropedCard = tasks.find((task) => task._id === cardId);
+    dropedCard.status.name = targetListStatus;
+    setTasks([...tasks]);
+
     const petchData = async () => {
       try {
-        const response = await axios.patch(
+        await axios.patch(
           `http://127.0.0.1:3000/board/${boardId}/task/${cardId}/update/status`,
           { status: targetListStatus },
           { headers }
         );
-        if (response) {
-          fetchData();
-        }
       } catch (error) {
         console.error("Error could not petch JSON file", error);
       }
     };
     petchData();
   };
-  
+
   return (
     <Grid container height={"100%"} padding={5} spacing={2}>
       <Grid
@@ -164,7 +160,8 @@ export default function TodoBoard() {
             <TodoList
               {...list}
               boardId={boardId}
-              tasks={boardData.tasks}
+              setTasks={setTasks}
+              tasks={tasks}
               onCardDrop={handelCardDrop}
               fetchData={fetchData}
             />
