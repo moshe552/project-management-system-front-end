@@ -1,7 +1,7 @@
 import axios from "axios";
 
 
-const jsonUrlDataBoard = "http://localhost:3000/board/";
+const jsonUrlDataBoard = `${import.meta.env.VITE_SERVER_URL}/board/`;
 const headers = {
   Authorization: "Happy",
   "Content-Type": "application/json; charset=utf-8",
