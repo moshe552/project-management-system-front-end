@@ -67,12 +67,18 @@ export default function TodoBoard() {
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        `http://127.0.0.1:3000/board/${boardId}/read`,
+        `${import.meta.env.VITE_SERVER_URL}/board/${boardId}/read`,
         { headers }
       );
       if (response.data) {
         setBoardData(response.data);
         setTasks(response.data.tasks);
+
+
+
+        console.log("Tasks:", response.data.tasks);
+
+
       }
     } catch (error) {
       console.error("Error could not fetch JSON file", error);
@@ -91,7 +97,7 @@ export default function TodoBoard() {
     const petchData = async () => {
       try {
         await axios.patch(
-          `http://127.0.0.1:3000/board/${boardId}/task/${cardId}/update/status`,
+          `${import.meta.env.VITE_SERVER_URL}/board/${boardId}/task/${cardId}/update/status`,
           { status: targetListStatus },
           { headers }
         );

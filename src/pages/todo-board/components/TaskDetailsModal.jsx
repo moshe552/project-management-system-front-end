@@ -1,4 +1,4 @@
-import { Modal, Fade, Button, Box } from "@mui/material";
+import { Modal, Fade, Button, Box, Typography, TextField } from "@mui/material";
 import axios from "axios";
 import DeleteIcon from "@mui/icons-material/Delete";
 
@@ -27,7 +27,7 @@ export default function TaskDetailsModal({
     const deleteFromDB = async () => {
       try {
         await axios.delete(
-          `http://127.0.0.1:3000/board/${boardId}/task/${taskId}/delete`,
+          `${import.meta.env.VITE_SERVER_URL}/board/${boardId}/task/${taskId}/delete`,
           { headers }
         );
         {
@@ -44,8 +44,8 @@ export default function TaskDetailsModal({
   };
 
   return (
-    <Modal open={isModalOpen} onClose={handleCloseModal} closeAfterTransition>
-      <Fade in={isModalOpen}>
+    <Modal open={isModalOpen} onClose={handleCloseModal}>
+      <Fade in={isModalOpen} timeout={500}>
         <Box
           sx={{
             position: "absolute",
@@ -58,11 +58,27 @@ export default function TaskDetailsModal({
             width: 400,
           }}
         >
-          <h2>{name}</h2>
-          <p>{description}</p>
-          {comments.map((comment) => (
-            <p>{comment}</p>
+          <Typography variant="h5">{description}</Typography>
+          <Typography variant="h7">Assignees to: {name}</Typography>
+          <br/>
+          <Typography variant="h7">Details:</Typography>
+          <br/>
+          {comments && comments.map((comment) => (
+            <Typography variant="p" key={comment}>
+             {comment}
+             </Typography>
           ))}
+          <br/>
+          <TextField
+            label="comments"
+            fullWidth
+            // value={newTask.comments}
+            onChange={(e) =>
+              handleCommentChange("comments", [e.target.value])
+            }
+            sx={{ mb: 2 }}
+          />
+          <br/>
           <Button variant="contained" onClick={deleteTask}>
             <DeleteIcon></DeleteIcon>
           </Button>

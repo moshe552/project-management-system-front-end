@@ -1,6 +1,5 @@
 import { Modal, Fade, TextField, Button, Box } from "@mui/material";
 import { useState } from "react";
-import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
 
 export default function AddTaskModal({
@@ -15,19 +14,15 @@ export default function AddTaskModal({
   };
 
   const [newTask, setNewTask] = useState({
-    _id: uuidv4(),
     name: "",
     description: "",
-    status: "",
   });
 
-  // Rendering the newTask hook with the new value making the input changes visible
   const handleTaskDetailsChange = (field, value) => {
     setNewTask((prevDetails) => ({
         ...prevDetails,
         status: { name: listStatus },
         users: ["Moshe"],
-        creationDate: new Date().toISOString(),
         [field]: value,
       })
     );
@@ -35,19 +30,20 @@ export default function AddTaskModal({
 
   const handleAddTask = async () => {
 
-    setTasks((prevTasks) => [...prevTasks, newTask]);
-
     const headers = {
       "Content-Type": "application/json",
       Authorization: "Bearer YOUR_ACCESS_TOKEN",
     };
     const addTask = async () => {
       try {
-        await axios.post(
-          `http://127.0.0.1:3000/board/${boardId}/task/create`,
+        const response = await axios.post(
+          `${import.meta.env.VITE_SERVER_URL}/board/${boardId}/task/create`,
           newTask,
           { headers }
         );
+        if (response.data) {
+          setTasks((prevTasks) => [...prevTasks, response.data]);
+        }
       } catch (error) {
         console.error("Error could not fetch JSON file", error);
       }
@@ -57,7 +53,6 @@ export default function AddTaskModal({
 
     // Clear the form
     setNewTask({
-      _id: uuidv4(),
       name: "",
       description: "",
       status: "",
@@ -69,8 +64,8 @@ export default function AddTaskModal({
   };
 
   return (
-    <Modal open={isModalOpen} onClose={handleCloseModal} closeAfterTransition>
-      <Fade in={isModalOpen}>
+    <Modal open={isModalOpen} onClose={handleCloseModal}>
+      <Fade in={isModalOpen} timeout={500}>
         <Box
           sx={{
             position: "absolute",
@@ -95,7 +90,7 @@ export default function AddTaskModal({
             label="Task Description"
             fullWidth
             multiline
-            rows={4}
+            rows={2}
             value={newTask.description}
             onChange={(e) =>
               handleTaskDetailsChange("description", e.target.value)
