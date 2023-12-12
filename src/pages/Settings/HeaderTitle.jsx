@@ -5,7 +5,7 @@ import { dataStartPage , updateData } from "./DataBoard" //import func data
 
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
-import SaveAsIcon from "@mui/icons-material/SaveAs";
+import EditOffIcon from '@mui/icons-material/EditOff';
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import IconButton from '@mui/material/IconButton';
 import SendIcon from '@mui/icons-material/Send';
@@ -96,7 +96,7 @@ function HeaderTitleEdit() {
         </Grid>
           <br />
           <IconButton onClick={holderDisabledTrue} >
-            <SaveAsIcon fontSize="large"  sx={{marginRight: 2 ,color: "#F6C927"}}  />
+            <EditOffIcon fontSize="large"  sx={{marginRight: 2 ,color: "#F6C927"}}  />
           </IconButton>
 
           <IconButton onClick={holderDisabledFalse} >
