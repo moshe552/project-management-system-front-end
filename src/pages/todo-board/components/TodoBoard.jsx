@@ -35,22 +35,22 @@ const listsData = [
   {
     id: 1,
     status: "Open",
-    // tasks: tasksData,
+    color: '#36B176',
   },
   {
     id: 2,
     status: "In Progress",
-    // tasks: [],
+    color: '#3685B1',
   },
   {
     id: 3,
     status: "Resolved",
-    // tasks: [],
+    color: '#EE786C',
   },
   {
     id: 4,
     status: "Closed",
-    // tasks: [],
+    color: '#F6C927',
   },
 ];
 
@@ -73,11 +73,6 @@ export default function TodoBoard() {
       if (response.data) {
         setBoardData(response.data);
         setTasks(response.data.tasks);
-
-
-
-        console.log("Tasks:", response.data.tasks);
-
 
       }
     } catch (error) {

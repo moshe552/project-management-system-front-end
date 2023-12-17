@@ -14,6 +14,7 @@ import { useState } from "react";
 export default function TaskCard({
   _id,
   name,
+  users,
   description,
   creationDate,
   comments,
@@ -48,11 +49,11 @@ export default function TaskCard({
         title={
           <>
             <Typography variant="p" sx={{ color: "#F6C927", fontSize: "2vh" }}>
-              {name}
+              { users[0] }
             </Typography>
             <br />
             <Typography variant="p" sx={{ color: "#FFF" }}>
-              {description}
+              {name}
             </Typography>
             <br />
             <Typography variant="p" sx={{ color: "#FFF", fontSize: "1.3vh" }}>
@@ -70,8 +71,9 @@ export default function TaskCard({
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
         comments={comments}
-        name={name}
+        title={name}
         description={description}
+        user={users[0]}
         taskId={_id}
         boardId={boardId}
         tasks={tasks}
