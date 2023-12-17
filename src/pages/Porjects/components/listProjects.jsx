@@ -7,8 +7,17 @@ import Header from "./header";
 import { Grid } from "@mui/material";
 import {api} from "../../../api/posts";
 
-const userID = '4123r243f'
+
 const token = localStorage.getItem("authToken");
+
+const userID = '4123r243f'
+// const userID1 =  api.post(?, { token })
+// .then(response => {
+//   console.log('user id:', response.data.username);
+// })
+// .catch(error => {
+//   console.error('error: ', error.message);
+// });
 
 
 const UrlDataBoard = `http://localhost:3000/board/user/${userID}/read`;
@@ -24,6 +33,8 @@ const { headers, headersInfra } = [
       'Content-Type': 'application/json; charset=utf-8',
     }
   ];
+
+
   
 
 export default function ListProject() {
