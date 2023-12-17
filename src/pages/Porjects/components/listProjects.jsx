@@ -5,18 +5,26 @@ import { Project } from "./Project";
 import { NavLink, useParams } from "react-router-dom";
 import Header from "./header";
 import { Grid } from "@mui/material";
-import api from "../../../api/posts";
+import {api} from "../../../api/posts";
 
-const userID = '3242r42rf'
+const userID = '4123r243f'
+const token = localStorage.getItem("authToken");
+
 
 const UrlDataBoard = `http://localhost:3000/board/user/${userID}/read`;
 
 // Define the custom header
-const headers = {
-    'Authorization': 'Happy',
-    'Content-Type': 'application/json; charset=utf-8'
-};
-
+const { headers, headersInfra } = [
+    {
+      'Authorization': 'Happy',
+      'Content-Type': 'application/json; charset=utf-8',
+    },
+    {
+      'Authorization': token,
+      'Content-Type': 'application/json; charset=utf-8',
+    }
+  ];
+  
 
 export default function ListProject() {
 
@@ -74,7 +82,7 @@ export default function ListProject() {
                     title={
                     <NavLink 
                     to={`/Projects/todo-board/${item._id}`}
-                    style={{color:  "#F6C927"}}
+                    style={{color:  "#F6C927", textDecoration: "none"}}
                     > {item.name} </NavLink>}
                     description={item.description}
                     time={item.creationDate}

@@ -4,7 +4,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import Button from '@mui/material/Button';
 import { NavLink, useParams  } from "react-router-dom";
 import Header from "../../Porjects/components/header";
-import api from "../../../api/posts";
+import {api} from "../../../api/posts";
 import { Project } from "../../Porjects/components/Project";
 
 const UrlDataBoard = 'http://localhost:3000/board/create';

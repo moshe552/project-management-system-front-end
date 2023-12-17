@@ -22,7 +22,7 @@ function Project(props) {
                     sx={{ background: "#121231", color: "#CDCDCD" }}
                 >
                     <Typography variant="h6">
-                        <a href={props.URL}>{props.title}</a>
+                            {props.title}
                     </Typography>
                 </AccordionSummary>
 
