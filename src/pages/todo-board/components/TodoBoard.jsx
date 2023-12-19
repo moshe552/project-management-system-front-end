@@ -36,34 +36,30 @@ const listsData = [
   {
     id: 1,
     status: "Open",
-    // tasks: tasksData,
+    color: '#36B176',
   },
   {
     id: 2,
     status: "In Progress",
-    // tasks: [],
+    color: '#3685B1',
   },
   {
     id: 3,
     status: "Resolved",
-    // tasks: [],
+    color: '#EE786C',
   },
   {
     id: 4,
     status: "Closed",
-    // tasks: [],
+    color: '#F6C927',
   },
 ];
 
 export default function TodoBoard() {
   const { boardId } = useParams();
-
+  
   const [boardData, setBoardData] = useState(null);
-  // const [tasks, setTasks] = useState(null);
-
-  // const id = "655f156e9fc4230d941fd2b8";
-  const id = boardId;
-
+  const [tasks, setTasks] = useState([]);
 
   const headers = {
     "Content-Type": "application/json",
@@ -73,41 +69,42 @@ export default function TodoBoard() {
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        `http://127.0.0.1:3000/board/${boardId}/read`,
+        `${import.meta.env.VITE_SERVER_URL}/board/${boardId}/read`,
         { headers }
       );
-      console.log("API Response:", response);
       if (response.data) {
         setBoardData(response.data);
+        setTasks(response.data.tasks);
+
       }
     } catch (error) {
       console.error("Error could not fetch JSON file", error);
     }
   };
-
   useEffect(() => {
     fetchData();
   }, []);
 
   const handelCardDrop = (cardId, targetListStatus) => {
-  
+
+    const dropedCard = tasks.find((task) => task._id === cardId);
+    dropedCard.status.name = targetListStatus;
+    setTasks([...tasks]);
+
     const petchData = async () => {
       try {
-        const response = await axios.patch(
-          `http://127.0.0.1:3000/board/${boardId}/task/${cardId}/update/status`,
+        await axios.patch(
+          `${import.meta.env.VITE_SERVER_URL}/board/${boardId}/task/${cardId}/update/status`,
           { status: targetListStatus },
           { headers }
         );
-        if (response) {
-          fetchData();
-        }
       } catch (error) {
         console.error("Error could not petch JSON file", error);
       }
     };
     petchData();
   };
-  
+
   return (
     <Grid container height={"100%"} padding={5} spacing={2}>
       <Grid
@@ -166,7 +163,8 @@ export default function TodoBoard() {
             <TodoList
               {...list}
               boardId={boardId}
-              tasks={boardData.tasks}
+              setTasks={setTasks}
+              tasks={tasks}
               onCardDrop={handelCardDrop}
               fetchData={fetchData}
             />

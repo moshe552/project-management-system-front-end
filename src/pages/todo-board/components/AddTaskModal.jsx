@@ -1,87 +1,90 @@
-import { Modal, Backdrop, Fade, TextField, Button, Box } from "@mui/material";
+import {
+  Modal,
+  Fade,
+  TextField,
+  Button,
+  Box,
+  Grid,
+  Typography,
+} from "@mui/material";
 import { useState } from "react";
-import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
+import CloseIcon from "@mui/icons-material/Close";
 
 export default function AddTaskModal({
   isModalOpen,
   setIsModalOpen,
   listStatus,
-  fetchData,
   boardId,
+  setTasks,
 }) {
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-  };
-
+    const [nameError, setNameError] = useState(false);
+  const [descriptionError, setDescriptionError] = useState(false);
 
   const [newTask, setNewTask] = useState({
-    id: uuidv4(),
-    name: "",
-    description: "",
-    status: "", // Set the initial status of the new task based on the list
-    users: ["Moshe"],
+    name: '',
+    description: '',
   });
 
-  // Rendering the newTask hook with the new value making the input changes visible
-  const handleTaskDetailsChange = (field, value) => {
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setDescriptionError(false);
+    setNameError(false);
+    setNewTask({
+      name: '',
+      description: '',
+      status: '',
+      users: '',
+    });
+  };
 
+  const handleTaskDetailsChange = (field, value) => {
     setNewTask((prevDetails) => ({
       ...prevDetails,
-      status: listStatus,
+      status: { name: listStatus },
+      users: ["Moshe"],
       [field]: value,
     }));
+    if (field === "name") {
+      setNameError(false);
+    }
+    if (field === "description") {
+      setDescriptionError(false)
+    }
   };
 
   const handleAddTask = async () => {
-   
+
+    if (!newTask.name || !newTask.description) {
+      setNameError(!newTask.name);
+      setDescriptionError(!newTask.description);
+      return;
+    }
     const headers = {
       "Content-Type": "application/json",
       Authorization: "Bearer YOUR_ACCESS_TOKEN",
     };
-
     const addTask = async () => {
       try {
         const response = await axios.post(
-          `http://127.0.0.1:3000/board/${boardId}/task/create`,
+          `${import.meta.env.VITE_SERVER_URL}/board/${boardId}/task/create`,
           newTask,
           { headers }
         );
-        if (response.data){
-          fetchData();
-        } 
-        
+        if (response.data) {
+          setTasks((prevTasks) => [...prevTasks, response.data]);
+        }
       } catch (error) {
         console.error("Error could not fetch JSON file", error);
       }
     };
-
-    addTask()
-
-    // Clear the form
-    setNewTask({
-      id: uuidv4(),
-      name: "",
-      description: "",
-      status: "",
-      users: "",
-    });
-
-    // Close the modal after adding the task
+    addTask();
     handleCloseModal();
   };
 
   return (
-    <Modal
-      open={isModalOpen}
-      onClose={handleCloseModal}
-      closeAfterTransition
-      BackdropComponent={Backdrop}
-      BackdropProps={{
-        timeout: 500,
-      }}
-    >
-      <Fade in={isModalOpen}>
+    <Modal open={isModalOpen} onClose={handleCloseModal}>
+      <Fade in={isModalOpen} timeout={500}>
         <Box
           sx={{
             position: "absolute",
@@ -94,24 +97,41 @@ export default function AddTaskModal({
             width: 400,
           }}
         >
-          <h2>New Task</h2>
+          <Grid
+            container
+            direction="row"
+            justifyContent="space-between"
+            alignItems="flex-start"
+            mb={3}
+          >
+            <Typography variant="h5">New Task</Typography>
+            <Button onClick={handleCloseModal}>
+              <CloseIcon />
+            </Button>
+          </Grid>
+
           <TextField
             label="Task Name"
             fullWidth
             value={newTask.name}
             onChange={(e) => handleTaskDetailsChange("name", e.target.value)}
-            sx={{ mb: 2 }}
+            sx={{ mb: 4 }}
+            error={nameError}
+            helperText={nameError ? "Task Name is required" : ""}
+            autoComplete="off"
           />
           <TextField
             label="Task Description"
             fullWidth
             multiline
-            rows={4}
+            rows={2}
             value={newTask.description}
             onChange={(e) =>
               handleTaskDetailsChange("description", e.target.value)
             }
-            sx={{ mb: 2 }}
+            error={descriptionError}
+            helperText={descriptionError ? "Description is required" : ""}
+            sx={{ mb: 3 }}
           />
           <Button variant="contained" onClick={handleAddTask}>
             Add Task
