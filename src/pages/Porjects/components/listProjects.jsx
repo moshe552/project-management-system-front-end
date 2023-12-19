@@ -5,37 +5,40 @@ import { Project } from "./Project";
 import { NavLink, useParams } from "react-router-dom";
 import Header from "./header";
 import { Grid } from "@mui/material";
-import {api} from "../../../api/posts";
+import { api } from "../../../api/posts";
 
 
 const token = localStorage.getItem("authToken");
+console.log("token: " + token)
 
-const userID = '4123r243f'
-// const userID1 =  api.post(?, { token })
-// .then(response => {
-//   console.log('user id:', response.data.username);
-// })
-// .catch(error => {
-//   console.error('error: ', error.message);
-// });
+const { headers } = [
+    {
+        'Authorization': 'Happy',
+        'Content-Type': 'application/json; charset=utf-8',
+    }
+];
+
+let userID = ''
+// const userID = '4123r243f'
+
+try {
+    const response = await api.get(`http://localhost:3000/users/self`,
+    {
+        headers: {
+            'Authorization': token,
+            'Content-Type': 'application/json; charset=utf-8',
+        }
+    })
+        console.log('user id:', response.data.result[0]._id);
+        userID = response.data.result[0]._id;}
+    catch(error) {
+        console.error('error: ', error.message);
+    };
+    console.log('userID: ' + userID)
 
 
 const UrlDataBoard = `http://localhost:3000/board/user/${userID}/read`;
-
-// Define the custom header
-const { headers, headersInfra } = [
-    {
-      'Authorization': 'Happy',
-      'Content-Type': 'application/json; charset=utf-8',
-    },
-    {
-      'Authorization': token,
-      'Content-Type': 'application/json; charset=utf-8',
-    }
-  ];
-
-
-  
+console.log(UrlDataBoard)
 
 export default function ListProject() {
 
@@ -45,7 +48,7 @@ export default function ListProject() {
     const [projectsList, setProjectsList] = useState([]);
 
 
-    useEffect(() =>{
+    useEffect(() => {
         fetchProjects();
     }, [])
 
@@ -61,13 +64,13 @@ export default function ListProject() {
     }
 
     function handleDeleteItem(id) {
-        api.delete(`http://localhost:3000/board/${id}/delete`, {headers})
-        .then(() => {
-            fetchProjects();
-        })
-        .catch(error => {
-            console.error('Error fetching JSON file:', error);
-        })
+        api.delete(`http://localhost:3000/board/${id}/delete`, { headers })
+            .then(() => {
+                fetchProjects();
+            })
+            .catch(error => {
+                console.error('Error fetching JSON file:', error);
+            })
     }
 
 
@@ -91,10 +94,10 @@ export default function ListProject() {
                     key={item._id}
                     id={item._id}
                     title={
-                    <NavLink 
-                    to={`/Projects/todo-board/${item._id}`}
-                    style={{color:  "#F6C927", textDecoration: "none"}}
-                    > {item.name} </NavLink>}
+                        <NavLink
+                            to={`/Projects/todo-board/${item._id}`}
+                            style={{ color: "#F6C927", textDecoration: "none" }}
+                        > {item.name} </NavLink>}
                     description={item.description}
                     time={item.creationDate}
                     deleteItem={handleDeleteItem}

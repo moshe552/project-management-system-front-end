@@ -12,6 +12,25 @@ const headers = {
     'Authorization': 'Happy',
     'Content-Type': 'application/json; charset=utf-8'
 };
+const token = localStorage.getItem("authToken");
+console.log("token: " + token)
+
+let userID = ''
+// const userID = '4123r243f'
+
+try {
+    const response = await api.get(`http://localhost:3000/users/self`,
+    {
+        headers: {
+            'Authorization': token,
+            'Content-Type': 'application/json; charset=utf-8',
+        }
+    })
+        console.log('user id:', response.data.result[0]._id);
+        userID = response.data.result[0]._id;}
+    catch(error) {
+        console.error('error: ', error.message);
+    };
 
 export default function CreateProject() {
     
@@ -23,7 +42,7 @@ export default function CreateProject() {
     const [contect, setContect] = useState({
         "name": "",
         "description": "",
-        "users": ['3242r42rf'],
+        "users": [userID],
         "isSprint": false,
         'sprintLength': null
     });
@@ -74,7 +93,7 @@ export default function CreateProject() {
             title={
                 <NavLink
                 to={`/Projects/todo-board/${contect._id}`}
-                    style={{ color: "#F6C927" }}
+                    style={{ color: "#F6C927", textDecoration: "none"}}
                 >
                     {contect.name}
                 </NavLink>}
