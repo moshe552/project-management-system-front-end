@@ -6,8 +6,9 @@ import { NavLink, useParams  } from "react-router-dom";
 import Header from "../../Porjects/components/header";
 import {api} from "../../../api/posts";
 import { Project } from "../../Porjects/components/Project";
+import axios from "axios";
 
-const UrlDataBoard = 'http://localhost:3000/board/create';
+const UrlDataBoard = `${api}/board/create`;
 const headers = {
     'Authorization': 'Happy',
     'Content-Type': 'application/json; charset=utf-8'
@@ -15,19 +16,18 @@ const headers = {
 const token = localStorage.getItem("authToken");
 console.log("token: " + token)
 
-let userID = ''
-// const userID = '4123r243f'
+let userID = '';
 
 try {
-    const response = await api.get(`http://localhost:3000/users/self`,
+    const response = await axios.get(`${api}/users/self`,
     {
         headers: {
             'Authorization': token,
             'Content-Type': 'application/json; charset=utf-8',
         }
     })
-        console.log('user id:', response.data.result[0]._id);
-        userID = response.data.result[0]._id;}
+        // console.log('user id:', response.data.result[0]._id);
+        userID = response.data.data.result[0]._id;}
     catch(error) {
         console.error('error: ', error.message);
     };
@@ -61,7 +61,7 @@ export default function CreateProject() {
         event.preventDefault();
 
         if (contect.name.trim().length > 0 && contect.description.trim().length > 0) {
-            api.post(UrlDataBoard, contect, { headers })
+            axios.post(UrlDataBoard, contect, { headers })
                 .then(response => {
                     setContect(response.data)
                     setSaved(true)
@@ -76,7 +76,7 @@ export default function CreateProject() {
         }
     }
     function handleDeleteItem(id) {
-        api.delete(`http://localhost:3000/board/${id}/delete`, { headers })
+        axios.delete(`${api}/board/${id}/delete`, { headers })
             .then(() => {
                 alert("the project has been deleted")
                 setSaved(false)
@@ -131,7 +131,7 @@ export default function CreateProject() {
             >
                 Save
             </Button>
-            </Card >
+            </Card>
         </form>
     );
 }
