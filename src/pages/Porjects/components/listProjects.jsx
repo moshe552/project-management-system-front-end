@@ -6,6 +6,7 @@ import { NavLink, useParams } from "react-router-dom";
 import Header from "./header";
 import { Grid } from "@mui/material";
 import { api } from "../../../api/posts";
+import axios from "axios";
 
 
 const token = localStorage.getItem("authToken");
@@ -22,22 +23,23 @@ let userID = ''
 
 
 try {
-    const response = await api.get(`${import.meta.env.VITE_SERVER_URL}/users/self`,
+    const response = await axios.get(`${api}/users/self`,
     {
         headers: {
             'Authorization': token,
             'Content-Type': 'application/json; charset=utf-8',
         }
     })
-        console.log('user id:', response.data.result[0]._id);
-        userID = response.data.result[0]._id;}
+        console.log(response)
+        console.log('user id:', response.data.data.result[0]._id);
+        userID = response.data.data.result[0]._id;}
     catch(error) {
         console.error('error: ', error.message);
     };
 
 
 
-const UrlDataBoard = `${import.meta.env.VITE_SERVER_URL}/board/user/${userID}/read`;
+const UrlDataBoard = `${api}/board/user/${userID}/read`;
 console.log(UrlDataBoard)
 
 export default function ListProject() {
@@ -51,7 +53,7 @@ export default function ListProject() {
     }, [])
 
     const fetchProjects = () => {
-        api.get(UrlDataBoard, { headers })
+        axios.get(UrlDataBoard, { headers })
             .then(response => {
                 setProjectsList(response.data)
 
@@ -62,7 +64,7 @@ export default function ListProject() {
     }
 
     function handleDeleteItem(id) {
-        api.delete(`${import.meta.env.VITE_SERVER_URL}/board/${id}/delete`, { headers })
+        axios.delete(`${api}/board/${id}/delete`, { headers })
             .then(() => {
                 fetchProjects();
             })

@@ -1,8 +1,4 @@
-import axios from 'axios';
-
-const api = axios.create({
-  baseURL: 'https://bb-projects-db-api-mego-program1.vercel.app',
-});
+const api = import.meta.env.VITE_SERVER_URL
 
 export {api} ;
 
