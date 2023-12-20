@@ -26,7 +26,7 @@ try {
             'Content-Type': 'application/json; charset=utf-8',
         }
     })
-        // console.log('user id:', response.data.result[0]._id);
+        console.log('user id:', response.data..data.result[0]._id);
         userID = response.data.data.result[0]._id;}
     catch(error) {
         console.error('error: ', error.message);
