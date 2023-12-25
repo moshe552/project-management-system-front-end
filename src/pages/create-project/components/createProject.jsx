@@ -7,7 +7,7 @@ import Header from "../../Porjects/components/header";
 import {api} from "../../../api/posts";
 import { Project } from "../../Porjects/components/Project";
 
-const UrlDataBoard = 'http://localhost:3000/board/create';
+const UrlDataBoard = `${import.meta.env.VITE_SERVER_URL}/board/create`;
 const headers = {
     'Authorization': 'Happy',
     'Content-Type': 'application/json; charset=utf-8'
@@ -19,7 +19,7 @@ let userID = ''
 // const userID = '4123r243f'
 
 try {
-    const response = await api.get(`http://localhost:3000/users/self`,
+    const response = await api.get(`${import.meta.env.VITE_SERVER_URL}/users/self`,
     {
         headers: {
             'Authorization': token,
@@ -76,7 +76,7 @@ export default function CreateProject() {
         }
     }
     function handleDeleteItem(id) {
-        api.delete(`http://localhost:3000/board/${id}/delete`, { headers })
+        api.delete(`${import.meta.env.VITE_SERVER_URL}/board/${id}/delete`, { headers })
             .then(() => {
                 alert("the project has been deleted")
                 setSaved(false)
@@ -131,7 +131,7 @@ export default function CreateProject() {
             >
                 Save
             </Button>
-            </Card >
+            </Card>
         </form>
     );
 }

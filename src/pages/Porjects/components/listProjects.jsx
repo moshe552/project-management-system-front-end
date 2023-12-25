@@ -22,7 +22,7 @@ let userID = ''
 // const userID = '4123r243f'
 
 try {
-    const response = await api.get(`http://localhost:3000/users/self`,
+    const response = await api.get(`${import.meta.env.VITE_SERVER_URL}/users/self`,
     {
         headers: {
             'Authorization': token,
@@ -37,7 +37,7 @@ try {
     console.log('userID: ' + userID)
 
 
-const UrlDataBoard = `http://localhost:3000/board/user/${userID}/read`;
+const UrlDataBoard = `${import.meta.env.VITE_SERVER_URL}/board/user/${userID}/read`;
 console.log(UrlDataBoard)
 
 export default function ListProject() {
@@ -64,7 +64,7 @@ export default function ListProject() {
     }
 
     function handleDeleteItem(id) {
-        api.delete(`http://localhost:3000/board/${id}/delete`, { headers })
+        api.delete(`${import.meta.env.VITE_SERVER_URL}/board/${id}/delete`, { headers })
             .then(() => {
                 fetchProjects();
             })
@@ -88,7 +88,7 @@ export default function ListProject() {
                 <Button sx={{ color: "#F6C927" }}>
                     <AddIcon />
                 </Button>
-            </NavLink >
+            </NavLink>
             {projectsList.map((item, index) => (
                 <Project
                     key={item._id}
