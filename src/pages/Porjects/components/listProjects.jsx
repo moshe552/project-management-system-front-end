@@ -6,10 +6,11 @@ import { NavLink, useParams } from "react-router-dom";
 import Header from "./header";
 import { Grid } from "@mui/material";
 import { api } from "../../../api/posts";
+import axios from "axios";
 
 
 const token = localStorage.getItem("authToken");
-console.log("token: " + token)
+// console.log("token: " + token)
 
 const { headers } = [
     {
@@ -19,7 +20,7 @@ const { headers } = [
 ];
 
 let userID = ''
-// const userID = '4123r243f'
+
 
 try {
     const response = await api.get(`${import.meta.env.VITE_SERVER_URL}/users/self`,
@@ -29,21 +30,17 @@ try {
             'Content-Type': 'application/json; charset=utf-8',
         }
     })
-        console.log('user id:', response.data.result[0]._id);
-        userID = response.data.result[0]._id;}
+        console.log(response)
+        console.log('user id:', response.data.data.result[0]._id);
+        userID = response.data.data.result[0]._id;}
     catch(error) {
-        console.error('error: ', error.message);
+        console.error('error: ', error);
     };
-    console.log('userID: ' + userID)
-
 
 const UrlDataBoard = `${import.meta.env.VITE_SERVER_URL}/board/user/${userID}/read`;
-console.log(UrlDataBoard)
 
 export default function ListProject() {
 
-    // const { param } = useParams();
-    // console.log(param);
 
     const [projectsList, setProjectsList] = useState([]);
 
@@ -53,7 +50,7 @@ export default function ListProject() {
     }, [])
 
     const fetchProjects = () => {
-        api.get(UrlDataBoard, { headers })
+        axios.get(UrlDataBoard, { headers })
             .then(response => {
                 setProjectsList(response.data)
 

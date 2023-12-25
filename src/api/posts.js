@@ -1,11 +1,4 @@
-import axios from 'axios';
+const api = import.meta.env.VITE_SERVER_URL
 
-const api = axios.create({
-  baseURL: 'http://127.0.0.1:3000',
-});
-const apiInpra = axios.create({
-  baseURL: 'http://127.0.0.1:5000'
-})
-
-export {api, apiInpra} ;
+export {api} ;
 
