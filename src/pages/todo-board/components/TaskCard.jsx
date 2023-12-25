@@ -14,7 +14,7 @@ import { useState } from "react";
 export default function TaskCard({
   _id,
   name,
-  users,
+  user,
   description,
   creationDate,
   comments,
@@ -49,7 +49,7 @@ export default function TaskCard({
         title={
           <>
             <Typography variant="p" sx={{ color: "#F6C927", fontSize: "2vh" }}>
-              { users[0] }
+              { user }
             </Typography>
             <br />
             <Typography variant="p" sx={{ color: "#FFF" }}>
@@ -73,7 +73,7 @@ export default function TaskCard({
         comments={comments}
         title={name}
         description={description}
-        user={users[0]}
+        user={user}
         taskId={_id}
         boardId={boardId}
         tasks={tasks}
