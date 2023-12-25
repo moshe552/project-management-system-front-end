@@ -23,6 +23,7 @@ export default function AddTaskModal({
   const [newTask, setNewTask] = useState({
     name: '',
     description: '',
+    user: 'Moshe',
   });
 
   const handleCloseModal = () => {
@@ -32,14 +33,13 @@ export default function AddTaskModal({
     setNewTask({
       name: '',
       description: '',
-      users: '',
+      user: 'Moshe',
     });
   };
 
   const handleTaskDetailsChange = (field, value) => {
     setNewTask((prevDetails) => ({
       ...prevDetails,
-      users: "Moshe",
       [field]: value,
     }));
     if (field === "name") {
@@ -58,18 +58,23 @@ export default function AddTaskModal({
       return;
     }
     const headers = {
-      // "Content-Type": "application/json",
+      "Content-Type": "application/json",
       Authorization: "Bearer YOUR_ACCESS_TOKEN",
     };
     const addTask = async () => {
       try {
-        console.log("new task:", newTask);
         const response = await axios.post(
           `${import.meta.env.VITE_SERVER_URL}/board/${boardId}/task/create`,
           newTask,
           { headers }
         );
         if (response.data) {
+
+
+          console.log("response.data", response.data);
+
+
+
           setTasks((prevTasks) => [...prevTasks, response.data]);
         }
       } catch (error) {
