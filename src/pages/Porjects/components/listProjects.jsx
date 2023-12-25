@@ -23,7 +23,7 @@ let userID = ''
 
 
 try {
-    const response = await axios.get(`${api}/users/self`,
+    const response = await api.get(`${import.meta.env.VITE_SERVER_URL}/users/self`,
     {
         headers: {
             'Authorization': token,
@@ -37,10 +37,7 @@ try {
         console.error('error: ', error);
     };
 
-
-
-const UrlDataBoard = `${api}/board/user/${userID}/read`;
-console.log(UrlDataBoard)
+const UrlDataBoard = `${import.meta.env.VITE_SERVER_URL}/board/user/${userID}/read`;
 
 export default function ListProject() {
 
@@ -64,7 +61,7 @@ export default function ListProject() {
     }
 
     function handleDeleteItem(id) {
-        axios.delete(`${api}/board/${id}/delete`, { headers })
+        api.delete(`${import.meta.env.VITE_SERVER_URL}/board/${id}/delete`, { headers })
             .then(() => {
                 fetchProjects();
             })

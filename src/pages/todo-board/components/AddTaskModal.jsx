@@ -14,7 +14,6 @@ import CloseIcon from "@mui/icons-material/Close";
 export default function AddTaskModal({
   isModalOpen,
   setIsModalOpen,
-  listStatus,
   boardId,
   setTasks,
 }) {
@@ -33,7 +32,6 @@ export default function AddTaskModal({
     setNewTask({
       name: '',
       description: '',
-      status: '',
       users: '',
     });
   };
@@ -41,8 +39,7 @@ export default function AddTaskModal({
   const handleTaskDetailsChange = (field, value) => {
     setNewTask((prevDetails) => ({
       ...prevDetails,
-      status: { name: listStatus },
-      users: ["Moshe"],
+      users: "Moshe",
       [field]: value,
     }));
     if (field === "name") {
@@ -61,11 +58,12 @@ export default function AddTaskModal({
       return;
     }
     const headers = {
-      "Content-Type": "application/json",
+      // "Content-Type": "application/json",
       Authorization: "Bearer YOUR_ACCESS_TOKEN",
     };
     const addTask = async () => {
       try {
+        console.log("new task:", newTask);
         const response = await axios.post(
           `${import.meta.env.VITE_SERVER_URL}/board/${boardId}/task/create`,
           newTask,

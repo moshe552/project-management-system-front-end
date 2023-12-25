@@ -8,7 +8,7 @@ import {api} from "../../../api/posts";
 import { Project } from "../../Porjects/components/Project";
 import axios from "axios";
 
-const UrlDataBoard = `${api}/board/create`;
+const UrlDataBoard = `${import.meta.env.VITE_SERVER_URL}/board/create`;
 const headers = {
     'Authorization': 'Happy',
     'Content-Type': 'application/json; charset=utf-8'
@@ -19,7 +19,7 @@ console.log("token: " + token)
 let userID = '';
 
 try {
-    const response = await axios.get(`${api}/users/self`,
+    const response = await api.get(`${import.meta.env.VITE_SERVER_URL}/users/self`,
     {
         headers: {
             'Authorization': token,
@@ -76,7 +76,7 @@ export default function CreateProject() {
         }
     }
     function handleDeleteItem(id) {
-        axios.delete(`${api}/board/${id}/delete`, { headers })
+        api.delete(`${import.meta.env.VITE_SERVER_URL}/board/${id}/delete`, { headers })
             .then(() => {
                 alert("the project has been deleted")
                 setSaved(false)
