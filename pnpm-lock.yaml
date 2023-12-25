@@ -32,6 +32,9 @@ dependencies:
   '@mui/system':
     specifier: ^5.14.18
     version: 5.14.18(@emotion/react@11.11.1)(@emotion/styled@11.11.0)(@types/react@18.2.42)(react@18.2.0)
+  '@originjs/vite-plugin-federation':
+    specifier: ^1.3.3
+    version: 1.3.3
   axios:
     specifier: ^1.6.2
     version: 1.6.2
@@ -59,6 +62,9 @@ dependencies:
   uuid:
     specifier: ^9.0.1
     version: 9.0.1
+  vite-plugin-federation:
+    specifier: ^0.0.1
+    version: 0.0.1
 
 devDependencies:
   '@types/react':
@@ -794,7 +800,6 @@ packages:
 
   /@jridgewell/sourcemap-codec@1.4.15:
     resolution: {integrity: sha512-eF2rxCRulEKXHTRiDrDy6erMYWqNw4LPdQ8UQA4huuxaQsVeRPFl2oM8oDGxMFhJUWZf9McpLtJasDDZb/Bpeg==}
-    dev: true
 
   /@jridgewell/trace-mapping@0.3.20:
     resolution: {integrity: sha512-R8LcPeWZol2zR8mmH3JeKQ6QRCFb7XgUhV9ZlGhHLGyg4wpPiPZNQOOWhFZhxKw8u//yTbNGI42Bx/3paXEQ+Q==}
@@ -1243,6 +1248,14 @@ packages:
       fastq: 1.15.0
     dev: true
 
+  /@originjs/vite-plugin-federation@1.3.3:
+    resolution: {integrity: sha512-EJedGCEB1vZatougqF3A+DwbcNpaAfFjlLxp/BbxpwO36vQ/WMjvtlpfkiyeIolTbFgu85OcXAc98Q2CXtCfJQ==}
+    engines: {node: '>=14.0.0', pnpm: '>=7.0.1'}
+    dependencies:
+      estree-walker: 3.0.3
+      magic-string: 0.27.0
+    dev: false
+
   /@popperjs/core@2.11.8:
     resolution: {integrity: sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==}
     dev: false
@@ -1388,6 +1401,10 @@ packages:
     dependencies:
       '@babel/types': 7.23.3
     dev: true
+
+  /@types/estree@1.0.5:
+    resolution: {integrity: sha512-/kYRxGDLWzHOB7q+wtSUQlFrtcdUccpfy+X+9iMBpHK8QLLhx2wIPYuS5DYtR9Wa/YlZAbIovy7qVdB1Aq6Lyw==}
+    dev: false
 
   /@types/parse-json@4.0.2:
     resolution: {integrity: sha512-dISoDXWWQwUquiKsyZ4Ng+HX2KsPL7LyHKHQwgGFEA3IaKac4Obd+h2a/a6waisAoepJlBcx9paWqjA8/HVjCw==}
@@ -2082,6 +2099,12 @@ packages:
     engines: {node: '>=4.0'}
     dev: true
 
+  /estree-walker@3.0.3:
+    resolution: {integrity: sha512-7RUKfXgSMMkzt6ZuXmqapOurLGPPfgj6l9uRZ7lRGolvk0y2yocc35LdcxKC5PQZdn2DMqioAQ2NoWcrTKmm6g==}
+    dependencies:
+      '@types/estree': 1.0.5
+    dev: false
+
   /esutils@2.0.3:
     resolution: {integrity: sha512-kVscqXk4OCp68SZ0dkgEKVi6/8ij300KBWTJq32P/dYeWTSwK41WyTxalN1eRmA5Z9UU/LX9D7FWSmV9SAYx6g==}
     engines: {node: '>=0.10.0'}
@@ -2672,6 +2695,13 @@ packages:
     dependencies:
       yallist: 3.1.1
     dev: true
+
+  /magic-string@0.27.0:
+    resolution: {integrity: sha512-8UnnX2PeRAPZuN12svgR9j7M1uWMovg/CEnIwIG0LFkXSJJe4PdfUGiTGl8V9bsBHFUtfVINcSyYxd7q+kx9fA==}
+    engines: {node: '>=12'}
+    dependencies:
+      '@jridgewell/sourcemap-codec': 1.4.15
+    dev: false
 
   /material-ui-popup-state@5.0.10(@emotion/react@11.11.1)(@emotion/styled@11.11.0)(@types/react@18.2.42)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-gd0DI8skwCSdth/j/yndoIwNkS2eDusosTe5hyPZ3jbrMzDkbQBs+tBbwapQ9hLfgiVLwICd1mwyerUV9Y5Elw==}
@@ -3366,6 +3396,10 @@ packages:
   /uuid@9.0.1:
     resolution: {integrity: sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==}
     hasBin: true
+    dev: false
+
+  /vite-plugin-federation@0.0.1:
+    resolution: {integrity: sha512-qwCUtAbS/T1v50y98zd/3fLrCprlSL9h2vIgDi/Fi7JztTNt2FigcAkA/eml05zlADAXivh4Y59UM3yyK4mm+w==}
     dev: false
 
   /vite@5.0.5:

@@ -14,7 +14,6 @@ import CloseIcon from "@mui/icons-material/Close";
 export default function AddTaskModal({
   isModalOpen,
   setIsModalOpen,
-  listStatus,
   boardId,
   setTasks,
 }) {
@@ -24,6 +23,7 @@ export default function AddTaskModal({
   const [newTask, setNewTask] = useState({
     name: '',
     description: '',
+    user: 'Moshe',
   });
 
   const handleCloseModal = () => {
@@ -33,16 +33,13 @@ export default function AddTaskModal({
     setNewTask({
       name: '',
       description: '',
-      status: '',
-      users: '',
+      user: 'Moshe',
     });
   };
 
   const handleTaskDetailsChange = (field, value) => {
     setNewTask((prevDetails) => ({
       ...prevDetails,
-      status: { name: listStatus },
-      users: ["Moshe"],
       [field]: value,
     }));
     if (field === "name") {
@@ -72,6 +69,12 @@ export default function AddTaskModal({
           { headers }
         );
         if (response.data) {
+
+
+          console.log("response.data", response.data);
+
+
+
           setTasks((prevTasks) => [...prevTasks, response.data]);
         }
       } catch (error) {
