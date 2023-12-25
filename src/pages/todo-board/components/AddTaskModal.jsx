@@ -63,11 +63,6 @@ export default function AddTaskModal({
     };
     const addTask = async () => {
       try {
-
-
-        console.log("new task:", newTask);
-
-
         const response = await axios.post(
           `${import.meta.env.VITE_SERVER_URL}/board/${boardId}/task/create`,
           newTask,
