@@ -30,9 +30,9 @@ try {
             'Content-Type': 'application/json; charset=utf-8',
         }
     })
-        console.log(response)
-        console.log('user id:', response.data.data.result[0]._id);
-        userID = response.data.data.result[0]._id;}
+        // console.log(response)
+        // console.log('user id:', response.data.result[0]._id);
+        userID = response.data.result[0]._id;}
     catch(error) {
         console.error('error: ', error.message);
     };
@@ -56,6 +56,7 @@ export default function ListProject() {
         axios.get(UrlDataBoard, { headers })
             .then(response => {
                 setProjectsList(response.data)
+                // console.log("Mendy", response.data)
 
             })
             .catch(error => {

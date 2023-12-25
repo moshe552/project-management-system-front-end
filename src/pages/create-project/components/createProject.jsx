@@ -9,12 +9,13 @@ import { Project } from "../../Porjects/components/Project";
 import axios from "axios";
 
 const UrlDataBoard = `${api}/board/create`;
+
 const headers = {
     'Authorization': 'Happy',
     'Content-Type': 'application/json; charset=utf-8'
 };
 const token = localStorage.getItem("authToken");
-console.log("token: " + token)
+// console.log("token: " + token)
 
 let userID = '';
 
@@ -27,7 +28,7 @@ try {
         }
     })
         // console.log('user id:', response.data.result[0]._id);
-        userID = response.data.data.result[0]._id;}
+        userID = response.data.result[0]._id;}
     catch(error) {
         console.error('error: ', error.message);
     };
@@ -35,7 +36,7 @@ try {
 export default function CreateProject() {
     
     const { id } = useParams();
-    console.log(id);
+    // console.log(id);
 
     const [isSaved, setSaved] = useState(false)
 
