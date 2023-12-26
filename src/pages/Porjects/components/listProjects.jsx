@@ -34,13 +34,10 @@ try {
         // console.log('user id:', response.data.result[0]._id);
         userID = response.data.result[0]._id;}
     catch(error) {
-        console.error('error: ', error.message);
+        console.error('error: ', error);
     };
 
-
-
 const UrlDataBoard = `${api}/board/user/${userID}/read`;
-console.log(UrlDataBoard)
 
 export default function ListProject() {
 
