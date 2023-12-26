@@ -6,8 +6,8 @@ import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import TaskFilter from "./TaskFilter";
 import axios from "axios";
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { useParams } from "react-router-dom/dist";
+import {api} from "../../../api/posts";
 
 const filterData = [
   {
@@ -69,7 +69,7 @@ export default function TodoBoard() {
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_SERVER_URL}/board/${boardId}/read`,
+        `${api}/board/${boardId}/read`,
         { headers }
       );
       if (response.data) {
@@ -94,7 +94,7 @@ export default function TodoBoard() {
     const petchData = async () => {
       try {
         await axios.patch(
-          `${import.meta.env.VITE_SERVER_URL}/board/${boardId}/task/${cardId}/update/status`,
+          `${api}/board/${boardId}/task/${cardId}/update/status`,
           { status: targetListStatus },
           { headers }
         );

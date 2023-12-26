@@ -6,6 +6,7 @@ import FormControl from "@mui/material/FormControl";
 import Input from "@mui/material/Input";
 import InputLabel from "@mui/material/InputLabel";
 import { useState } from "react";
+import {api} from "../../../api/posts";
 
 export default function TaskDetailsModal({
   isModalOpen,
@@ -45,7 +46,7 @@ export default function TaskDetailsModal({
     const updateTask = async () => {
       try {
         const response = await axios.patch(
-          `${import.meta.env.VITE_SERVER_URL}/board/${boardId}/task/${taskId}/update`,
+          `${api}/board/${boardId}/task/${taskId}/update`,
           task,
           { headers }
         );
@@ -68,7 +69,7 @@ export default function TaskDetailsModal({
     const deleteFromDB = async () => {
       try {
         const response = await axios.delete(
-          `${import.meta.env.VITE_SERVER_URL}/board/${boardId}/task/${taskId}/delete`,
+          `${api}/board/${boardId}/task/${taskId}/delete`,
           { headers }
         );
         if (response) {

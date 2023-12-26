@@ -10,6 +10,7 @@ import {
 import { useState } from "react";
 import axios from "axios";
 import CloseIcon from "@mui/icons-material/Close";
+import {api} from "../../../api/posts";
 
 export default function AddTaskModal({
   isModalOpen,
@@ -64,7 +65,7 @@ export default function AddTaskModal({
     const addTask = async () => {
       try {
         const response = await axios.post(
-          `${import.meta.env.VITE_SERVER_URL}/board/${boardId}/task/create`,
+          `${api}/board/${boardId}/task/create`,
           newTask,
           { headers }
         );
