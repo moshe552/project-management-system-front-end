@@ -114,6 +114,7 @@ export default function AddTaskModal({
           </Grid>
 
           <TextField
+            required
             label="Task Name"
             fullWidth
             value={newTask.name}
@@ -124,6 +125,7 @@ export default function AddTaskModal({
             autoComplete="off"
           />
           <TextField
+            required
             label="Task Description"
             fullWidth
             multiline
