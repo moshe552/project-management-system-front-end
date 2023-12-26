@@ -70,12 +70,6 @@ export default function AddTaskModal({
           { headers }
         );
         if (response.data) {
-
-
-          console.log("response.data", response.data);
-
-
-
           setTasks((prevTasks) => [...prevTasks, response.data]);
         }
       } catch (error) {
