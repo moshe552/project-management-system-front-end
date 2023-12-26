@@ -52,7 +52,6 @@ export default function AddTaskModal({
   };
 
   const handleAddTask = async () => {
-
     if (!newTask.name || !newTask.description) {
       setNameError(!newTask.name);
       setDescriptionError(!newTask.description);
