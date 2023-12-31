@@ -9,10 +9,12 @@ import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ArticleIcon from '@mui/icons-material/Article';
 import Button from '@mui/material/Button';
+import BorderColorIcon from '@mui/icons-material/BorderColor';
 
 
 
 function Project(props) {
+    // console.log('props:', props)
 
     return (
         <Card sx={{ m: 2 }}>
@@ -47,8 +49,18 @@ function Project(props) {
                         aria-label="delete"
                         size="small"
                         onClick={() => { props.deleteItem(props.id), clickAdd }}
+                        
                     >
                         <DeleteIcon />
+                    </IconButton>
+                    <IconButton
+                        color="inherit"
+                        edge="end"
+                        aria-label="editihg"
+                        size="small"
+                        onClick={() => { props.editItem(), clickAdd }}
+                    >
+                        < BorderColorIcon/>
                     </IconButton>
                 </AccordionDetails>
             </Accordion>

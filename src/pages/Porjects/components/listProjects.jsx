@@ -1,49 +1,34 @@
 import React, { useEffect, useState } from "react";
 import AddIcon from '@mui/icons-material/Add';
-import { Button } from "@mui/material";
+import { Button, DialogActions, Dialog, DialogTitle, DialogContent, TextField } from "@mui/material";
 import { Project } from "./Project";
-import { NavLink, useParams } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import Header from "./header";
 import { Grid } from "@mui/material";
-import { api } from "../../../api/posts";
 import axios from "axios";
+import {api, token, headers} from "../../../api/posts";
 
 
-const token = localStorage.getItem("authToken");
-// console.log("token: " + token)
-
-const { headers } = [
-    {
-        'Authorization': 'Happy',
-        'Content-Type': 'application/json; charset=utf-8',
-    }
-];
-
-let userID = ''
-
+let userID = '';
 
 try {
-    const response = await axios.get(`${api}/users/self`,
-    {
+    const response = await axios.get(`${api}/users/self`, {
         headers: {
             'Authorization': token,
             'Content-Type': 'application/json; charset=utf-8',
         }
-    })
-        // console.log(response)
-        // console.log('user id:', response.data.result[0]._id);
-        userID = response.data.result[0]._id;}
-    catch(error) {
-        console.error('error: ', error);
-    };
+    });
+    userID = response.data.result[0]._id;
+} catch (error) {
+    console.error('error: ', error);
+}
 
 const UrlDataBoard = `${api}/board/user/${userID}/read`;
 
 export default function ListProject() {
-
-
     const [projectsList, setProjectsList] = useState([]);
-
+    const [editingProject, setEditingProject] = useState(null);
+    const [editDialogOpen, setEditDialogOpen] = useState(false);
 
     useEffect(() => {
         fetchProjects();
@@ -52,16 +37,14 @@ export default function ListProject() {
     const fetchProjects = () => {
         axios.get(UrlDataBoard, { headers })
             .then(response => {
-                setProjectsList(response.data)
-                // console.log("Mendy", response.data)
-
+                setProjectsList(response.data);
             })
             .catch(error => {
                 console.error('Error fetching JSON file:', error);
             })
     }
 
-    function handleDeleteItem(id) {
+    const handleDeleteItem = (id) => {
         axios.delete(`${api}/board/${id}/delete`, { headers })
             .then(() => {
                 fetchProjects();
@@ -71,16 +54,47 @@ export default function ListProject() {
             })
     }
 
+    const handleEditItem = (project) => {
+        setEditingProject(project);
+        setEditDialogOpen(true);
+    }
+
+    const handleSaveEdit = (id, newName, newDescription) => {
+        axios.patch(
+            `${api}/board/${id}/update`,
+            {
+                name: newName,
+                description: newDescription
+            },
+            {
+                headers: {
+                    'Authorization': token,
+                    'Content-Type': 'application/json; charset=utf-8',
+                },
+            }
+        )
+        .then(response => {
+            console.log('Edit successful', response.data);
+            setEditDialogOpen(false);
+            fetchProjects();
+        })
+        .catch(error => {
+            console.error('Error editing project:', error);
+        });
+    }
+
+    const handleCloseEditDialog = () => {
+        setEditingProject(null);
+        setEditDialogOpen(false);
+    }
 
     return (
-
         <Grid
             container
             direction="column"
             justifyContent="flex-start"
             alignItems="stretch"
         >
-
             <Header title="Projects" />
             <NavLink to={"/Projects/creatProject"}>
                 <Button sx={{ color: "#F6C927" }}>
@@ -97,10 +111,36 @@ export default function ListProject() {
                             style={{ color: "#F6C927", textDecoration: "none" }}
                         > {item.name} </NavLink>}
                     description={item.description}
-                    time={item.creationDate}
+                    time={new Date(item.creationDate).toLocaleString()}
                     deleteItem={handleDeleteItem}
+                    editItem={() => handleEditItem(item)}
                 />
             ))}
+            <Dialog open={editDialogOpen} onClose={handleCloseEditDialog}>
+                <DialogTitle>Edit Project</DialogTitle>
+                <DialogContent>
+                    <TextField
+                        label="Project Name"
+                        value={editingProject?.name || ""}
+                        onChange={(e) => setEditingProject(prev => ({ ...prev, name: e.target.value }))}
+                        fullWidth
+                    />
+                    <TextField
+                        label="Description"
+                        value={editingProject?.description || ""}
+                        onChange={(e) => setEditingProject(prev => ({ ...prev, description: e.target.value }))}
+                        fullWidth
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseEditDialog} color="primary">
+                        Cancel
+                    </Button>
+                    <Button onClick={() => handleSaveEdit(editingProject?._id, editingProject?.name, editingProject?.description)} color="primary">
+                        Save
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </Grid>
     );
 }

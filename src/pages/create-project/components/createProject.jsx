@@ -99,7 +99,7 @@ export default function CreateProject() {
                     {contect.name}
                 </NavLink>}
             description={contect.description}
-            time={contect.creationDate}
+            time={new Date(item.creationDate).toLocaleString()}
             deleteItem={handleDeleteItem}
         /> :
         <form onSubmit={handleSaveClick}>
