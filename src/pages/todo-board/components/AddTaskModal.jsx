@@ -10,6 +10,7 @@ import {
 import { useState } from "react";
 import axios from "axios";
 import CloseIcon from "@mui/icons-material/Close";
+import {api} from "../../../api/posts";
 
 export default function AddTaskModal({
   isModalOpen,
@@ -51,7 +52,6 @@ export default function AddTaskModal({
   };
 
   const handleAddTask = async () => {
-
     if (!newTask.name || !newTask.description) {
       setNameError(!newTask.name);
       setDescriptionError(!newTask.description);
@@ -64,17 +64,11 @@ export default function AddTaskModal({
     const addTask = async () => {
       try {
         const response = await axios.post(
-          `${import.meta.env.VITE_SERVER_URL}/board/${boardId}/task/create`,
+          `${api}/board/${boardId}/task/create`,
           newTask,
           { headers }
         );
         if (response.data) {
-
-
-          console.log("response.data", response.data);
-
-
-
           setTasks((prevTasks) => [...prevTasks, response.data]);
         }
       } catch (error) {
@@ -114,6 +108,7 @@ export default function AddTaskModal({
           </Grid>
 
           <TextField
+            required
             label="Task Name"
             fullWidth
             value={newTask.name}
@@ -124,6 +119,7 @@ export default function AddTaskModal({
             autoComplete="off"
           />
           <TextField
+            required
             label="Task Description"
             fullWidth
             multiline
