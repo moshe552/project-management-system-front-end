@@ -7,6 +7,8 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ArticleIcon from '@mui/icons-material/Article';
+import Button from '@mui/material/Button';
 
 
 
@@ -22,7 +24,13 @@ function Project(props) {
                     sx={{ background: "#121231", color: "#CDCDCD" }}
                 >
                     <Typography variant="h6">
-                            {props.title}
+                    <Button
+                variant="contained"
+                endIcon={<ArticleIcon />}
+                // sx={{  minWidth: 160 }}
+            >
+                {props.title}
+            </Button>      
                     </Typography>
                 </AccordionSummary>
 
