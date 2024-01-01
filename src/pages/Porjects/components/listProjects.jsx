@@ -6,7 +6,7 @@ import { NavLink } from "react-router-dom";
 import Header from "./header";
 import { Grid } from "@mui/material";
 import axios from "axios";
-import {api, token, headers} from "../../../api/posts";
+import { api, token, headers } from "../../../api/posts";
 
 
 let userID = '';
@@ -73,14 +73,14 @@ export default function ListProject() {
                 },
             }
         )
-        .then(response => {
-            console.log('Edit successful', response.data);
-            setEditDialogOpen(false);
-            fetchProjects();
-        })
-        .catch(error => {
-            console.error('Error editing project:', error);
-        });
+            .then(response => {
+                console.log('Edit successful', response.data);
+                setEditDialogOpen(false);
+                fetchProjects();
+            })
+            .catch(error => {
+                console.error('Error editing project:', error);
+            });
     }
 
     const handleCloseEditDialog = () => {
@@ -103,13 +103,10 @@ export default function ListProject() {
             </NavLink>
             {projectsList.map((item, index) => (
                 <Project
+                    NavLink={`/Projects/todo-board/${item._id}`}
                     key={item._id}
                     id={item._id}
-                    title={
-                        <NavLink
-                            to={`/Projects/todo-board/${item._id}`}
-                            style={{ color: "#F6C927", textDecoration: "none" }}
-                        > {item.name} </NavLink>}
+                    title={item.name}
                     description={item.description}
                     time={new Date(item.creationDate).toLocaleString()}
                     deleteItem={handleDeleteItem}
