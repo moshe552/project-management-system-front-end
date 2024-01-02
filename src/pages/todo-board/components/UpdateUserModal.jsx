@@ -52,6 +52,7 @@ export default function UpdateUserModal({
             bgcolor: "secondary.main",
             boxShadow: 24,
             p: 2,
+            overflowY: "auto"
           }}
         >
           <Grid

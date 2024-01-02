@@ -106,7 +106,7 @@ export default function TaskCard({
         }
         avatar={
           <IconButton onClick={handleOpenUsersModal}>
-            <Avatar sx={{ width: 56, height: 56 }} src={user.profilePicture} alt="Avatar image" />
+            <Avatar sx={{ width: 56, height: 56 }} src={user && user.profilePicture} alt="Avatar image" />
           </IconButton>
         }
       />

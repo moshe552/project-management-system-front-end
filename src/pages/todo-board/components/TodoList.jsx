@@ -51,6 +51,7 @@ export default function TodoList({
         justifyContent: "flex-start",
         alignItems: "center",
         height: "100vh",
+        overflowY: "auto"
       }}
     >
       <Stack>
