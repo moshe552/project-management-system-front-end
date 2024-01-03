@@ -20,6 +20,8 @@ export default function TodoList({
   onCardDrop,
   setTasks,
   tasks,
+  users,
+  headers
 }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -49,6 +51,7 @@ export default function TodoList({
         justifyContent: "flex-start",
         alignItems: "center",
         height: "100vh",
+        overflowY: "auto"
       }}
     >
       <Stack>
@@ -88,9 +91,11 @@ export default function TodoList({
             <TaskCard
               key={task._id}
               {...task}
-              boardId={boardId}
+              boardID={boardId}
               tasks={tasks}
               setTasks={setTasks}
+              users={users}
+              headers={headers}
             />
           ))}
         <AddTaskModal

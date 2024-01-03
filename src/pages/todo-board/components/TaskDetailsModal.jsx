@@ -20,6 +20,7 @@ export default function TaskDetailsModal({
   setTasks,
 }) {
   const [isFormModified, setIsFormModified] = useState(false);
+  const [deleteButton, setDeleteButton] = useState("")
   const [task, setTask] = useState({
     name: title,
     description: description,
@@ -51,6 +52,7 @@ export default function TaskDetailsModal({
           { headers }
         );
         if (response.data) {
+          handleCloseModal();
           setTasks(() => [
             ...tasks.filter((task) => task._id !== taskId),
             response.data,
@@ -62,10 +64,10 @@ export default function TaskDetailsModal({
     };
     updateTask();
     setIsFormModified(false);
-    handleCloseModal();
   };
 
-  const deleteTask = () => {
+  const handelDeleteTask = () => {
+    setDeleteButton("Deleting... ");  
     const deleteFromDB = async () => {
       try {
         const response = await axios.delete(
@@ -73,6 +75,7 @@ export default function TaskDetailsModal({
           { headers }
         );
         if (response) {
+          handleCloseModal()
           setTasks(() => [...tasks.filter((task) => task._id !== taskId)]);
         }
       } catch (error) {
@@ -80,7 +83,6 @@ export default function TaskDetailsModal({
       }
     };
     deleteFromDB();
-    handleCloseModal();
   };
 
   return (
@@ -108,7 +110,7 @@ export default function TaskDetailsModal({
               <CloseIcon />
             </Button>
           </Grid>
-          <Typography variant="h7">Assignees: {user}</Typography>
+          <Typography variant="h7">Assignees: {user && user.firstName + " " + user.lastName}</Typography>
           <br />
           <Box
             component="form"
@@ -130,7 +132,6 @@ export default function TaskDetailsModal({
           <Box
             component="form"
             sx={{ "& > :not(style)": { m: 1 } }}
-            // noValidate
             autoComplete="off"
           >
             <FormControl variant="standard" fullWidth>
@@ -160,8 +161,8 @@ export default function TaskDetailsModal({
               >
               Update Task
             </Button>
-            <Button variant="contained" onClick={deleteTask}>
-              <DeleteIcon />
+            <Button variant="contained" onClick={handelDeleteTask}>
+              {deleteButton} <DeleteIcon />
             </Button>
           </Grid>
         </Box>

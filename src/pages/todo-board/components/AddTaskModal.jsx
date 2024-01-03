@@ -18,13 +18,14 @@ export default function AddTaskModal({
   boardId,
   setTasks,
 }) {
-    const [nameError, setNameError] = useState(false);
+  const [nameError, setNameError] = useState(false);
   const [descriptionError, setDescriptionError] = useState(false);
+  const [addTaskButton, setAddTaskButton] = useState("ADD TASK")
 
   const [newTask, setNewTask] = useState({
     name: '',
     description: '',
-    user: 'Moshe',
+    user: '',
   });
 
   const handleCloseModal = () => {
@@ -34,7 +35,6 @@ export default function AddTaskModal({
     setNewTask({
       name: '',
       description: '',
-      user: 'Moshe',
     });
   };
 
@@ -57,6 +57,7 @@ export default function AddTaskModal({
       setDescriptionError(!newTask.description);
       return;
     }
+    setAddTaskButton("ADDING TASK...")
     const headers = {
       "Content-Type": "application/json",
       Authorization: "Bearer YOUR_ACCESS_TOKEN",
@@ -69,6 +70,8 @@ export default function AddTaskModal({
           { headers }
         );
         if (response.data) {
+          handleCloseModal();
+          setAddTaskButton("ADD TASK")
           setTasks((prevTasks) => [...prevTasks, response.data]);
         }
       } catch (error) {
@@ -76,7 +79,7 @@ export default function AddTaskModal({
       }
     };
     addTask();
-    handleCloseModal();
+    
   };
 
   return (
@@ -133,7 +136,7 @@ export default function AddTaskModal({
             sx={{ mb: 3 }}
           />
           <Button variant="contained" onClick={handleAddTask}>
-            Add Task
+            {addTaskButton}
           </Button>
         </Box>
       </Fade>

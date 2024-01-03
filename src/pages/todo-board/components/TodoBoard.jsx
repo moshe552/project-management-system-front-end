@@ -3,11 +3,10 @@ import TodoList from "./TodoList";
 import SettingsTwoToneIcon from "@mui/icons-material/SettingsTwoTone";
 import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
 import { useState, useEffect } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useParams } from "react-router-dom";
 import TaskFilter from "./TaskFilter";
 import axios from "axios";
-import { useParams } from "react-router-dom/dist";
-import {api} from "../../../api/posts";
+import { api } from "../../../api/posts";
 
 const filterData = [
   {
@@ -36,49 +35,72 @@ const listsData = [
   {
     id: 1,
     status: "Open",
-    color: '#36B176',
+    color: "#36B176",
   },
   {
     id: 2,
     status: "In Progress",
-    color: '#3685B1',
+    color: "#3685B1",
   },
   {
     id: 3,
     status: "Resolved",
-    color: '#EE786C',
+    color: "#EE786C",
   },
   {
     id: 4,
     status: "Closed",
-    color: '#F6C927',
+    color: "#F6C927",
   },
 ];
 
 export default function TodoBoard() {
   const { boardId } = useParams();
-  
-  const [boardData, setBoardData] = useState(null);
-  const [tasks, setTasks] = useState([]);
 
+  const [boardData, setBoardData] = useState(null);
+  const [tasks, setTasks] = useState(null);
+  const [users, setUsers] = useState(null);
+
+  const token = localStorage.getItem("authToken");
   const headers = {
     "Content-Type": "application/json",
-    Authorization: "Bearer YOUR_ACCESS_TOKEN",
+    Authorization: token,
   };
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(
-        `${api}/board/${boardId}/read`,
-        { headers }
-      );
+      const response = await axios.get(`${api}/board/${boardId}/read`, {
+        headers,
+      });
       if (response.data) {
         setBoardData(response.data);
-        setTasks(response.data.tasks);
-
+        getUsers(response.data.tasks);
       }
     } catch (error) {
       console.error("Error could not fetch JSON file", error);
+    }
+  };
+
+  const getUsers = async (tasks) => {
+    try {
+      const response = await axios.post(`${api}/users/in`,
+        { boardID: boardId },
+        { headers }
+      );
+      if (response.data) {
+        setUsers(response.data.result);
+        const updatedTasks  = tasks.map((task) => {
+          const taskUser = response.data.result.find(user => task.user === user._id)
+          task.user = taskUser
+          return task
+      })
+      console.log("updatedTasks :", updatedTasks );
+
+
+        setTasks(updatedTasks)
+      }
+    } catch (error) {
+      console.error("Error could not fetch JSON file", error.message);
     }
   };
   useEffect(() => {
@@ -86,9 +108,8 @@ export default function TodoBoard() {
   }, []);
 
   const handelCardDrop = (cardId, targetListStatus) => {
-
-    const dropedCard = tasks.find((task) => task._id === cardId);
-    dropedCard.status.name = targetListStatus;
+    const droppedCard = tasks.find((task) => task._id === cardId);
+    droppedCard.status.name = targetListStatus;
     setTasks([...tasks]);
 
     const petchData = async () => {
@@ -158,6 +179,8 @@ export default function TodoBoard() {
         </Grid>
       ))}
       {boardData &&
+        users &&
+        tasks &&
         listsData.map((list) => (
           <Grid item key={list.id} pb={4} xs={12} sm={6} lg={3}>
             <TodoList
@@ -167,6 +190,7 @@ export default function TodoBoard() {
               tasks={tasks}
               onCardDrop={handelCardDrop}
               fetchData={fetchData}
+              users={users}
             />
           </Grid>
         ))}
