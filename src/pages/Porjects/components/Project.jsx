@@ -10,6 +10,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ArticleIcon from '@mui/icons-material/Article';
 import Button from '@mui/material/Button';
 import BorderColorIcon from '@mui/icons-material/BorderColor';
+import { NavLink } from "react-router-dom";
 
 
 
@@ -26,22 +27,27 @@ function Project(props) {
                     sx={{ background: "#121231", color: "#CDCDCD" }}
                 >
                     <Typography variant="h6">
-                    <Button
-                variant="contained"
-                endIcon={<ArticleIcon />}
-                // sx={{  minWidth: 160 }}
-            >
-                {props.title}
-            </Button>      
+                        <NavLink
+                            to={props.NavLink}
+                            style={{ color: "#F6C927", textDecoration: "none" }}
+                        >
+                            <Button
+                                style={{ color: "#F6C927" }}
+                                variant="contained"
+                                endIcon={<ArticleIcon style={{ color: "#FFFFE0" }}/>}
+                            >
+                                {props.title}
+                            </Button>
+                        </NavLink>
                     </Typography>
                 </AccordionSummary>
 
-                <AccordionDetails sx={{ background: "#121231", color: "#CDCDCD" }}>
+                <AccordionDetails sx={{ background: "#121231", color: "#FFFFE0" }}>
                     <Typography variant="subyitle">
                         <hr />
-                        <h5 style={{color:  "#F6C927"}}>Description</h5>
+                        <h5 style={{ color: "#F6C927" }}>Description</h5>
                         {props.description}
-                        <p style={{fontSize: '10px'}}>{props.time}</p>
+                        <p style={{ fontSize: '10px' }}>{props.time}</p>
                     </Typography>
                     <IconButton
                         color="inherit"
@@ -49,7 +55,7 @@ function Project(props) {
                         aria-label="delete"
                         size="small"
                         onClick={() => { props.deleteItem(props.id), clickAdd }}
-                        
+
                     >
                         <DeleteIcon />
                     </IconButton>
@@ -60,7 +66,7 @@ function Project(props) {
                         size="small"
                         onClick={() => { props.editItem(), clickAdd }}
                     >
-                        < BorderColorIcon/>
+                        < BorderColorIcon />
                     </IconButton>
                 </AccordionDetails>
             </Accordion>
