@@ -1,42 +1,16 @@
-import { Card, TextareaAutosize, Typography, Input } from "@mui/material";
+import { Card, TextareaAutosize, Typography} from "@mui/material";
 import { useState } from "react";
 import SaveIcon from '@mui/icons-material/Save';
 import Button from '@mui/material/Button';
-import { NavLink, useParams  } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import Header from "../../Porjects/components/header";
-import {api} from "../../../api/posts";
+import {api, headers, userID} from "../../../api/posts";
 import { Project } from "../../Porjects/components/Project";
 import axios from "axios";
 
 const UrlDataBoard = `${api}/board/create`;
 
-const headers = {
-    'Authorization': 'Happy',
-    'Content-Type': 'application/json; charset=utf-8'
-};
-const token = localStorage.getItem("authToken");
-// console.log("token: " + token)
-
-let userID = '';
-
-try {
-    const response = await axios.get(`${api}/users/self`,
-    {
-        headers: {
-            'Authorization': token,
-            'Content-Type': 'application/json; charset=utf-8',
-        }
-    })
-        // console.log('user id:', response.data.result[0]._id);
-        userID = response.data.result[0]._id;}
-    catch(error) {
-        console.error('error: ', error.message);
-    };
-
 export default function CreateProject() {
-    
-    const { id } = useParams();
-    // console.log(id);
 
     const [isSaved, setSaved] = useState(false)
 
@@ -99,7 +73,7 @@ export default function CreateProject() {
                     {contect.name}
                 </NavLink>}
             description={contect.description}
-            time={new Date(item.creationDate).toLocaleString()}
+            time={contect.creationDate}
             deleteItem={handleDeleteItem}
         /> :
         <form onSubmit={handleSaveClick}>
