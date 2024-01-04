@@ -12,6 +12,8 @@ import itemTypes from "../../../../utils/itemType";
 import AddTaskModal from "./AddTaskModal";
 import { useState } from "react";
 import CircleIcon from "@mui/icons-material/Circle";
+import { useProjectsContext } from "../../../context/useProjectContext";
+import { useParams } from "react-router-dom";
 
 export default function TodoList({
   boardId,
@@ -23,7 +25,9 @@ export default function TodoList({
   users,
   headers
 }) {
+  const user = useParams();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { projects, dispatchProjects } = useProjectsContext();
 
   const handleOpenModal = () => {
     setIsModalOpen(true);
@@ -39,8 +43,8 @@ export default function TodoList({
       isOver: monitor.isOver(),
     }),
   });
-
-  const filteredTasks = tasks.filter((task) => task.status.name === status);
+  const myTasks = projects.find((p) => p._id === boardId).tasks
+  const filteredTasks = myTasks.filter((task) => task.status.name === status);
   return (
     <Container
       ref={drop}
@@ -96,6 +100,7 @@ export default function TodoList({
               setTasks={setTasks}
               users={users}
               headers={headers}
+              user={user}
             />
           ))}
         <AddTaskModal

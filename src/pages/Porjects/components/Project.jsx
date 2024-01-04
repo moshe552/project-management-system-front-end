@@ -11,12 +11,21 @@ import ArticleIcon from '@mui/icons-material/Article';
 import Button from '@mui/material/Button';
 import BorderColorIcon from '@mui/icons-material/BorderColor';
 import { NavLink } from "react-router-dom";
+import { useUsersContext } from "../../../context/useUsersContext";
+import { useProjectsContext } from "../../../context/useProjectContext";
 
 
 
 function Project(props) {
+    const { allUsers, dispatchUsers } = useUsersContext();
+    const { projects } = useProjectsContext();
+    
     // console.log('props:', props)
-
+    const handleClick = () => {
+        const users = projects.find(p => p._id === props.id).users
+        const projectUsers = users.map((id) => allUsers.find((u) => (u._id === id)))
+        dispatchUsers({type: 'SET_USERS', payload: projectUsers})
+    }
     return (
         <Card sx={{ m: 2 }}>
             <Accordion>
@@ -35,6 +44,7 @@ function Project(props) {
                                 style={{ color: "#F6C927" }}
                                 variant="contained"
                                 endIcon={<ArticleIcon style={{ color: "#FFFFE0" }}/>}
+                                onClick={handleClick}
                             >
                                 {props.title}
                             </Button>

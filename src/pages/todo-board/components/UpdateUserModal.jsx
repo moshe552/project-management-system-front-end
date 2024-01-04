@@ -3,6 +3,7 @@ import axios from "axios";
 import CloseIcon from "@mui/icons-material/Close";
 import { api } from "../../../api/posts";
 import UserCard from "./UserCard";
+import { useProjectsContext } from "../../../context/useProjectContext";
 
 export default function UpdateUserModal({
   isModalOpen,
@@ -15,11 +16,14 @@ export default function UpdateUserModal({
   setTasks
 }) {
 
+  const { previousState, setPreviousState } = useProjectsContext();
+  // console.log(users)
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
 
   const handleUpdateUser = async (user) => {
+    // console.log(user)
     const updateUser = async () => {
       try {
         const response = await axios.patch(
@@ -28,10 +32,17 @@ export default function UpdateUserModal({
           { headers }
         );
         if (response.data) {
+          //  console.log(response.data)
           handleCloseModal();
           const taskToUpdate = tasks.find((task) => task._id === taskId);
           taskToUpdate.user = user;
           setTasks([...tasks]);
+
+          const newProject = previousState
+          const updetedTasks = previousState.tasks.map((task) => task._id === response.data._id ? response.data : task);
+          newProject.tasks = updetedTasks
+          setPreviousState(newProject)
+          // console.log(response.data)
         }
       } catch (error) {
         console.error("Error could not patch JSON file", error);

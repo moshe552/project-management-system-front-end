@@ -6,46 +6,58 @@ import { NavLink } from "react-router-dom";
 import Header from "./header";
 import { Grid } from "@mui/material";
 import axios from "axios";
+import { useProjectsContext } from '../../../context/useProjectContext'
+import { useUsersContext } from '../../../context/useUsersContext'
 import { api, token, headers } from "../../../api/posts";
 
-
-let userID = '';
+let userID = ''
 
 try {
-    const response = await axios.get(`${api}/users/self`, {
-        headers: {
-            'Authorization': token,
-            'Content-Type': 'application/json; charset=utf-8',
-        }
-    });
+    const response = await axios.get(`${api}/users/self`, headers )
     userID = response.data.result[0]._id;
-} catch (error) {
-    console.error('error: ', error);
 }
+catch (error) {
+    console.error('error: ', error);
+};
 
 const UrlDataBoard = `${api}/board/user/${userID}/read`;
 
 export default function ListProject() {
+    const { projects, dispatchProjects } = useProjectsContext();
+    const { setAllUsers } = useUsersContext();
+
     const [projectsList, setProjectsList] = useState([]);
     const [editingProject, setEditingProject] = useState(null);
     const [editDialogOpen, setEditDialogOpen] = useState(false);
 
     useEffect(() => {
         fetchProjects();
+        fetchUsers();
     }, [])
 
     const fetchProjects = () => {
-        axios.get(UrlDataBoard, { headers })
+        axios.get(UrlDataBoard)
             .then(response => {
-                setProjectsList(response.data);
+                setProjectsList(response.data)
+                dispatchProjects({type: 'SET_PROJECTS', payload: response.data})
+
             })
             .catch(error => {
                 console.error('Error fetching JSON file:', error);
             })
+    };
+    const fetchUsers = async () => {
+        try {
+            const response = await axios.get(`${api}/users/all`,  headers )
+            setAllUsers(response.data.result)
+
+        } catch (error) {
+            console.error('Error fetching JSON file:', error);
+        }
     }
 
     const handleDeleteItem = (id) => {
-        axios.delete(`${api}/board/${id}/delete`, { headers })
+        axios.delete(`${api}/board/${id}/delete`)
             .then(() => {
                 fetchProjects();
             })

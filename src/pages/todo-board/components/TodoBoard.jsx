@@ -1,35 +1,16 @@
-import { Grid, IconButton, Typography } from "@mui/material";
+import { Box, Button, Grid, IconButton, Typography, Menu, MenuItem } from "@mui/material";
 import TodoList from "./TodoList";
 import SettingsTwoToneIcon from "@mui/icons-material/SettingsTwoTone";
 import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
 import { useState, useEffect } from "react";
-import { NavLink, useParams } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import TaskFilter from "./TaskFilter";
 import axios from "axios";
-import { api } from "../../../api/posts";
+import { useParams } from "react-router-dom/dist";
+import {api} from "../../../api/posts";
+import { useProjectsContext } from '../../../context/useProjectContext'
+import { useUsersContext } from "../../../context/useUsersContext";
 
-const filterData = [
-  {
-    id: 1,
-    title: "Issue Type",
-    type: "Task",
-  },
-  {
-    id: 2,
-    title: "Category",
-    type: "No Category",
-  },
-  {
-    id: 3,
-    title: "Milestone",
-    type: "No Milestone",
-  },
-  {
-    id: 4,
-    title: "Assignee",
-    type: "Amir Iqbal",
-  },
-];
 
 const listsData = [
   {
@@ -55,63 +36,80 @@ const listsData = [
 ];
 
 export default function TodoBoard() {
-  const { boardId } = useParams();
 
+  const { boardId } = useParams();
   const [boardData, setBoardData] = useState(null);
-  const [tasks, setTasks] = useState(null);
-  const [users, setUsers] = useState(null);
+  const [tasks, setTasks] = useState([]);
+
+  // const [users, setUsers] = useState(null);
 
   const token = localStorage.getItem("authToken");
+
+  const navigate = useNavigate();
+  const { projects, dispatchProjects } = useProjectsContext();
+  const { previousState, setPreviousState } = useProjectsContext();
+  const { users } = useUsersContext();
+
   const headers = {
     "Content-Type": "application/json",
     Authorization: token,
   };
+  // const fetchData = async () => {
+  //   try {
+  //     const response = await axios.get(`${api}/board/${boardId}/read`, {
+  //       headers,
+  //     });
+  //     if (response.data) {
+  //       setBoardData(response.data);
+  //       getUsers(response.data.tasks);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error could not fetch JSON file", error);
+  //   }
+  // };
 
-  const fetchData = async () => {
-    try {
-      const response = await axios.get(`${api}/board/${boardId}/read`, {
-        headers,
-      });
-      if (response.data) {
-        setBoardData(response.data);
-        getUsers(response.data.tasks);
-      }
-    } catch (error) {
-      console.error("Error could not fetch JSON file", error);
-    }
-  };
-
-  const getUsers = async (tasks) => {
-    try {
-      const response = await axios.post(`${api}/users/in`,
-        { boardID: boardId },
-        { headers }
-      );
-      if (response.data) {
-        setUsers(response.data.result);
-        const updatedTasks  = tasks.map((task) => {
-          const taskUser = response.data.result.find(user => task.user === user._id)
-          task.user = taskUser
-          return task
-      })
-      console.log("updatedTasks :", updatedTasks );
+  // const getUsers = async (tasks) => {
+  //   try {
+  //     const response = await axios.post(`${api}/users/in`,
+  //       { boardID: boardId },
+  //       { headers }
+  //     );
+  //     if (response.data) {
+  //       setUsers(response.data.result);
+  //       const updatedTasks  = tasks.map((task) => {
+  //         const taskUser = response.data.result.find(user => task.user === user._id)
+  //         task.user = taskUser
+  //         return task
+  //     })
+  //     console.log("updatedTasks :", updatedTasks );
 
 
-        setTasks(updatedTasks)
-      }
-    } catch (error) {
-      console.error("Error could not fetch JSON file", error.message);
-    }
-  };
+  //       setTasks(updatedTasks)
+  //     }
+  //   } catch (error) {
+  //     console.error("Error could not fetch JSON file", error.message);
+  //   }
+  // };
+  const fetchData = async (boardId) => {
+    const selectedProject = projects.find(p => p._id === boardId);
+    if (selectedProject) {
+      setBoardData(selectedProject);
+      setTasks(selectedProject.tasks);
+      
+    }};
+
   useEffect(() => {
-    fetchData();
-  }, []);
+    fetchData(boardId);
+   
+    setPreviousState(projects.find(p => p._id === boardId))
+  }, [boardId]);
 
   const handelCardDrop = (cardId, targetListStatus) => {
     const droppedCard = tasks.find((task) => task._id === cardId);
     droppedCard.status.name = targetListStatus;
     setTasks([...tasks]);
-
+    dispatchProjects({type:'UPDATE_PROJECT', payload: boardData})
+    
     const petchData = async () => {
       try {
         await axios.patch(
@@ -124,6 +122,20 @@ export default function TodoBoard() {
       }
     };
     petchData();
+  };
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handleButtonClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = (p) => {
+    setAnchorEl(null);
+    dispatchProjects({type:'UPDATE_PROJECT', payload: previousState})
+    if (p._id) {
+      navigate(`../Projects/todo-board/${p._id}`)
+    }
+   
   };
 
   return (
@@ -158,26 +170,26 @@ export default function TodoBoard() {
         </Grid>
         <Grid mr={2}>
           <Typography variant="h6" sx={{ m: 1, color: "#FFF" }}>
+            <Button onClick={handleButtonClick} style={{ background: 'none', border: 'none', cursor: 'pointer', color:'#ffffff' }}>
             Board
-            <IconButton>
               <FilterAltOutlinedIcon
                 fontSize="large"
                 sx={{ color: "#D3D3D3" }}
               />
-            </IconButton>
+            </Button>
           </Typography>
+          <Menu
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={handleClose}
+          >
+            {projects && projects.map((p) => (
+              <MenuItem key={p._id} onClick={() => handleClose(p)}>{p.name}</MenuItem>
+            ))}
+        </Menu>
         </Grid>
       </Grid>
-      {filterData.map((filter) => (
-        <Grid item key={filter.id} xs={12} sm={6} lg={3}>
-          <Grid>
-            <Typography variant="p" sx={{ color: "#FFF" }}>
-              {filter.title}
-            </Typography>
-          </Grid>
-          <TaskFilter filtering={filter.type} />
-        </Grid>
-      ))}
+      <TaskFilter />
       {boardData &&
         users &&
         tasks &&

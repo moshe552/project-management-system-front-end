@@ -10,7 +10,7 @@ const headers = {
 
   export default async function dataAllUsers () {
     const response = await axios.get( urlAllUsers ,{headers})
-    console.log(response.data.result)
+    // console.log(response.data.result)
 
     return response.data.result
 }
