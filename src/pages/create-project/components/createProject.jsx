@@ -2,7 +2,7 @@ import { Card, TextareaAutosize, Typography, Input } from "@mui/material";
 import { useState } from "react";
 import SaveIcon from '@mui/icons-material/Save';
 import Button from '@mui/material/Button';
-import { NavLink, useParams  } from "react-router-dom";
+import { NavLink, useParams, useNavigate } from "react-router-dom";
 import Header from "../../Porjects/components/header";
 import {api} from "../../../api/posts";
 import { Project } from "../../Porjects/components/Project";
@@ -37,7 +37,7 @@ export default function CreateProject() {
     
     const { id } = useParams();
     // console.log(id);
-
+    const navigate = useNavigate();
     const [isSaved, setSaved] = useState(false)
 
     const [contect, setContect] = useState({
@@ -66,7 +66,7 @@ export default function CreateProject() {
                 .then(response => {
                     setContect(response.data)
                     setSaved(true)
-                    history.push('/todo-board');
+                    navigate('/projects');
                 })
                 .catch(error => {
                     console.error('Error creating project:', error);

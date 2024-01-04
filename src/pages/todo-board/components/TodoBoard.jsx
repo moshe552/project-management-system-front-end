@@ -1,36 +1,16 @@
-import { Grid, IconButton, Typography } from "@mui/material";
+import { Box, Button, Grid, IconButton, Typography, Menu, MenuItem } from "@mui/material";
 import TodoList from "./TodoList";
 import SettingsTwoToneIcon from "@mui/icons-material/SettingsTwoTone";
 import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
 import { useState, useEffect } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+
 import TaskFilter from "./TaskFilter";
 import axios from "axios";
 import { useParams } from "react-router-dom/dist";
 import {api} from "../../../api/posts";
+import { useProjectsContext } from '../../../context/useProjectContext'
 
-const filterData = [
-  {
-    id: 1,
-    title: "Issue Type",
-    type: "Task",
-  },
-  {
-    id: 2,
-    title: "Category",
-    type: "No Category",
-  },
-  {
-    id: 3,
-    title: "Milestone",
-    type: "No Milestone",
-  },
-  {
-    id: 4,
-    title: "Assignee",
-    type: "Amir Iqbal",
-  },
-];
 
 const listsData = [
   {
@@ -57,40 +37,37 @@ const listsData = [
 
 export default function TodoBoard() {
   const { boardId } = useParams();
-  
   const [boardData, setBoardData] = useState(null);
   const [tasks, setTasks] = useState([]);
+
+  const navigate = useNavigate();
+  const { projects, dispatchProjects } = useProjectsContext();
+  const { previousState, setPreviousState } = useProjectsContext();
 
   const headers = {
     "Content-Type": "application/json",
     Authorization: "Bearer YOUR_ACCESS_TOKEN",
   };
 
-  const fetchData = async () => {
-    try {
-      const response = await axios.get(
-        `${api}/board/${boardId}/read`,
-        { headers }
-      );
-      if (response.data) {
-        setBoardData(response.data);
-        setTasks(response.data.tasks);
+  const fetchData = async (boardId) => {
+    const selectedProject = projects.find(p => p._id === boardId);
+    if (selectedProject) {
+      setBoardData(selectedProject);
+      setTasks(selectedProject.tasks);
+    }};
 
-      }
-    } catch (error) {
-      console.error("Error could not fetch JSON file", error);
-    }
-  };
   useEffect(() => {
-    fetchData();
-  }, []);
+    fetchData(boardId);
+    setPreviousState(projects.find(p => p._id === boardId))
+  }, [boardId]);
 
   const handelCardDrop = (cardId, targetListStatus) => {
 
     const dropedCard = tasks.find((task) => task._id === cardId);
     dropedCard.status.name = targetListStatus;
     setTasks([...tasks]);
-
+    dispatchProjects({type:'UPDATE_PROJECT', payload: boardData})
+    
     const petchData = async () => {
       try {
         await axios.patch(
@@ -103,6 +80,20 @@ export default function TodoBoard() {
       }
     };
     petchData();
+  };
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handleButtonClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = (p) => {
+    setAnchorEl(null);
+    dispatchProjects({type:'UPDATE_PROJECT', payload: previousState})
+    if (p._id) {
+      navigate(`../Projects/todo-board/${p._id}`)
+    }
+   
   };
 
   return (
@@ -137,26 +128,26 @@ export default function TodoBoard() {
         </Grid>
         <Grid mr={2}>
           <Typography variant="h6" sx={{ m: 1, color: "#FFF" }}>
+            <Button onClick={handleButtonClick} style={{ background: 'none', border: 'none', cursor: 'pointer', color:'#ffffff' }}>
             Board
-            <IconButton>
               <FilterAltOutlinedIcon
                 fontSize="large"
                 sx={{ color: "#D3D3D3" }}
               />
-            </IconButton>
+            </Button>
           </Typography>
+          <Menu
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={handleClose}
+          >
+            {projects && projects.map((p) => (
+              <MenuItem key={p._id} onClick={() => handleClose(p)}>{p.name}</MenuItem>
+            ))}
+        </Menu>
         </Grid>
       </Grid>
-      {filterData.map((filter) => (
-        <Grid item key={filter.id} xs={12} sm={6} lg={3}>
-          <Grid>
-            <Typography variant="p" sx={{ color: "#FFF" }}>
-              {filter.title}
-            </Typography>
-          </Grid>
-          <TaskFilter filtering={filter.type} />
-        </Grid>
-      ))}
+      <TaskFilter />
       {boardData &&
         listsData.map((list) => (
           <Grid item key={list.id} pb={4} xs={12} sm={6} lg={3}>

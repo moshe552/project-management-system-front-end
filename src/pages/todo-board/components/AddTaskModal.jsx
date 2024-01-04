@@ -6,11 +6,17 @@ import {
   Box,
   Grid,
   Typography,
+  InputLabel,
+  FormControl,
+  MenuItem,
+  Select
 } from "@mui/material";
 import { useState } from "react";
 import axios from "axios";
 import CloseIcon from "@mui/icons-material/Close";
 import {api} from "../../../api/posts";
+import { useProjectsContext } from "../../../context/useProjectContext";
+import { useUsersContext } from '../../../context/useUsersContext';
 
 export default function AddTaskModal({
   isModalOpen,
@@ -18,13 +24,21 @@ export default function AddTaskModal({
   boardId,
   setTasks,
 }) {
-    const [nameError, setNameError] = useState(false);
+  const [nameError, setNameError] = useState(false);
   const [descriptionError, setDescriptionError] = useState(false);
+  const [userError, setuserError] = useState(false);
+  const { users } = useUsersContext();
+  const { projects, dispatchProjects} = useProjectsContext();
+  const [selectedUser, setSelectedUser] = useState('')
+
+const handleUserSelectChange = (event) => {
+    setSelectedUser(event.target.value);
+  };
 
   const [newTask, setNewTask] = useState({
     name: '',
     description: '',
-    user: 'Moshe',
+    user: '',
   });
 
   const handleCloseModal = () => {
@@ -68,8 +82,13 @@ export default function AddTaskModal({
           newTask,
           { headers }
         );
+        
         if (response.data) {
+          setSelectedUser('')
           setTasks((prevTasks) => [...prevTasks, response.data]);
+          const updatedProject = projects.find((p) => p._id === boardId)
+          updatedProject.tasks = [...updatedProject.tasks, response.data]
+          dispatchProjects({type:'UPDATE_PROJECT', payload: updatedProject})
         }
       } catch (error) {
         console.error("Error could not fetch JSON file", error);
@@ -132,6 +151,29 @@ export default function AddTaskModal({
             helperText={descriptionError ? "Description is required" : ""}
             sx={{ mb: 3 }}
           />
+          {/* <FormControl 
+          fullWidth 
+          required 
+          error={userError} 
+          helperText={!userError && "User selection is required." }
+          sx={{ mb: 3 }}
+          >
+            <InputLabel id='user'>Select User</InputLabel>
+            <Select
+              labelId="user"
+              id="user"
+              value={selectedUser}
+              onChange={handleUserSelectChange}
+              label="Select User"
+            >
+              {users && users.map((u) => (
+                <MenuItem key={u._id} value={u._id}>
+                  {`${u.firstName} ${u.lastName}`}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl> */}
+          
           <Button variant="contained" onClick={handleAddTask}>
             Add Task
           </Button>

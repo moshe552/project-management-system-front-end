@@ -1,4 +1,5 @@
 import axios from "axios";
+import { useProjectsContext } from '../../context/useProjectContext'
 
 
 const jsonUrlDataBoard = `${import.meta.env.VITE_SERVER_URL}/board/`;
@@ -16,10 +17,12 @@ async function dataStartPage(idBoard) {
 
 //  Update
 async function updateData(idBoard , theTitle, theDesc) {
+  const { projects, dispatchProjects } = useProjectsContext();
   const response = await axios.patch(jsonUrlDataBoard + idBoard + "/update",
   { name: theTitle,
     description: theDesc,},
    {headers});
+   dispatchProjects({type: 'UPDATE_PROJECT', payload: response.data})
   console.log("Data updated successfully:", response.data);
 }
 
