@@ -54,7 +54,7 @@ function Project(props) {
                         edge="end"
                         aria-label="delete"
                         size="small"
-                        onClick={() => { props.deleteItem(props.id), clickAdd }}
+                        onClick={() => { props.deleteItem(props.id) }}
 
                     >
                         <DeleteIcon />
@@ -64,7 +64,7 @@ function Project(props) {
                         edge="end"
                         aria-label="editihg"
                         size="small"
-                        onClick={() => { props.editItem(), clickAdd }}
+                        onClick={() => { props.editItem()}}
                     >
                         < BorderColorIcon />
                     </IconButton>

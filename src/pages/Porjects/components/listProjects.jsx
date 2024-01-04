@@ -6,24 +6,7 @@ import { NavLink } from "react-router-dom";
 import Header from "./header";
 import { Grid } from "@mui/material";
 import axios from "axios";
-import { api, token, headers } from "../../../api/posts";
-
-
-let userID = '';
-
-try {
-    const response = await axios.get(`${api}/users/self`, {
-        headers: {
-            'Authorization': token,
-            'Content-Type': 'application/json; charset=utf-8',
-        }
-    });
-    userID = response.data.result[0]._id;
-} catch (error) {
-    console.error('error: ', error);
-}
-
-const UrlDataBoard = `${api}/board/user/${userID}/read`;
+import { UrlDataBoard, headers, api, token , userID} from "../../../api/posts";
 
 export default function ListProject() {
     const [projectsList, setProjectsList] = useState([]);
@@ -45,14 +28,18 @@ export default function ListProject() {
     }
 
     const handleDeleteItem = (id) => {
-        axios.delete(`${api}/board/${id}/delete`, { headers })
-            .then(() => {
-                fetchProjects();
-            })
-            .catch(error => {
-                console.error('Error fetching JSON file:', error);
-            })
-    }
+        const isConfirmed = window.confirm('Are you sure you want to delete the project?');
+
+        if (isConfirmed) {
+            axios.delete(`${api}/board/${id}/delete`, { headers })
+                .then(() => {
+                    fetchProjects();
+                })
+                .catch(error => {
+                    console.error('Error fetching JSON file:', error);
+                });
+        }
+    };
 
     const handleEditItem = (project) => {
         setEditingProject(project);
