@@ -25,7 +25,7 @@ export default function TaskCard({
   users,
   headers
 }) {
-  console.log(user)
+  // console.log(user)
   const [isDetModalOpen, setDetIsModalOpen] = useState(false);
   const [isUsersModalOpen, setIsUsersModalOpen] = useState(false);
   const [isHovered, setIsHovered] = useState(false);

@@ -9,7 +9,7 @@ export const usersReducer = (state, action) => {
             return {
                 users: action.payload
             }
-        case 'CREATE_USER':
+        case 'ADD_USER':
             return {
                 users: [action.payload, ...state.users]
             }

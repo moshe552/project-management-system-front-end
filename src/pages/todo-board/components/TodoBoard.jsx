@@ -7,7 +7,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import TaskFilter from "./TaskFilter";
 import axios from "axios";
 import { useParams } from "react-router-dom/dist";
-import {api} from "../../../api/posts";
+import {api, headers, token} from "../../../api/posts";
 import { useProjectsContext } from '../../../context/useProjectContext'
 import { useUsersContext } from "../../../context/useUsersContext";
 
@@ -41,8 +41,8 @@ export default function TodoBoard() {
   const [boardData, setBoardData] = useState(null);
   const [tasks, setTasks] = useState([]);
 
-  // const [users, setUsers] = useState(null);
-
+  // const token =  { token }
+  // const headers = { headers }
   const token = localStorage.getItem("authToken");
 
   const navigate = useNavigate();
@@ -54,42 +54,6 @@ export default function TodoBoard() {
     "Content-Type": "application/json",
     Authorization: token,
   };
-  // const fetchData = async () => {
-  //   try {
-  //     const response = await axios.get(`${api}/board/${boardId}/read`, {
-  //       headers,
-  //     });
-  //     if (response.data) {
-  //       setBoardData(response.data);
-  //       getUsers(response.data.tasks);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error could not fetch JSON file", error);
-  //   }
-  // };
-
-  // const getUsers = async (tasks) => {
-  //   try {
-  //     const response = await axios.post(`${api}/users/in`,
-  //       { boardID: boardId },
-  //       { headers }
-  //     );
-  //     if (response.data) {
-  //       setUsers(response.data.result);
-  //       const updatedTasks  = tasks.map((task) => {
-  //         const taskUser = response.data.result.find(user => task.user === user._id)
-  //         task.user = taskUser
-  //         return task
-  //     })
-  //     console.log("updatedTasks :", updatedTasks );
-
-
-  //       setTasks(updatedTasks)
-  //     }
-  //   } catch (error) {
-  //     console.error("Error could not fetch JSON file", error.message);
-  //   }
-  // };
   const fetchData = async (boardId) => {
     const selectedProject = projects.find(p => p._id === boardId);
     if (selectedProject) {
