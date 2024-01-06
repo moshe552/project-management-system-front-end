@@ -1,18 +1,30 @@
-import { Card, TextareaAutosize, Typography} from "@mui/material";
+import { Box, Card, TextareaAutosize, Typography } from "@mui/material";
 import { useState } from "react";
 import SaveIcon from '@mui/icons-material/Save';
-import Button from '@mui/material/Button';
 import { NavLink } from "react-router-dom";
 import Header from "../../Porjects/components/header";
-import {api, headers, userID} from "../../../api/posts";
 import { Project } from "../../Porjects/components/Project";
 import axios from "axios";
+import {  headers, api, token , userID} from "../../../api/posts";
+import { Button, DialogActions, Dialog, DialogTitle, DialogContent, TextField } from "@mui/material";
+import DialogProfect from "../../Porjects/components/Dialog";
+
 
 const UrlDataBoard = `${api}/board/create`;
 
 export default function CreateProject() {
 
     const [isSaved, setSaved] = useState(false)
+
+    const fetchProjects = () => {
+        axios.get(UrlDataBoard, { headers })
+            .then(response => {
+                setProjectsList(response.data);
+            })
+            .catch(error => {
+                console.error('Error fetching JSON file:', error);
+            })
+    }
 
     const [contect, setContect] = useState({
         "name": "",
@@ -50,32 +62,83 @@ export default function CreateProject() {
             alert("You need to enter a project name and description");
         }
     }
-    function handleDeleteItem(id) {
-        axios.delete(`${api}/board/${id}/delete`, { headers })
-            .then(() => {
-                alert("the project has been deleted")
-                setSaved(false)
-            })
-            .catch(error => {
-                console.error('Error fetching JSON file:', error);
-            })
+
+    const handleDeleteItem = (id) => {
+        const isConfirmed = window.confirm('Are you sure you want to delete the project?');
+
+        if (isConfirmed) {
+            axios.delete(`${api}/board/${id}/delete`, { headers })
+                .then(() => {
+                    fetchProjects();
+                })
+                .catch(error => {
+                    console.error('Error fetching JSON file:', error);
+                });
+        }
+    };
+
+    // ################################################
+    // dialog
+    const [editingProject, setEditingProject] = useState(null);
+    const [editDialogOpen, setEditDialogOpen] = useState(false);
+
+    const handleEditItem = (project) => {
+        setEditingProject(project);
+        setEditDialogOpen(true);
     }
 
+    const handleSaveEdit = (id, newName, newDescription) => {
+        axios.patch(
+            `${api}/board/${id}/update`,
+            {
+                name: newName,
+                description: newDescription
+            },
+            {
+                headers: {
+                    'Authorization': token,
+                    'Content-Type': 'application/json; charset=utf-8',
+                },
+            }
+        )
+            .then(response => {
+                console.log('Edit successful', response.data);
+                setEditDialogOpen(false);
+                setContect(response.data);
+            })
+            .catch(error => {
+                console.error('Error editing project:', error);
+            });
+    }
 
+    const handleCloseEditDialog = () => {
+        setEditingProject(null);
+        setEditDialogOpen(false);
+    }
     return (isSaved ?
-        <Project
-            id={contect._id}
-            title={
-                <NavLink
-                to={`/Projects/todo-board/${contect._id}`}
-                    style={{ color: "#F6C927", textDecoration: "none"}}
-                >
-                    {contect.name}
-                </NavLink>}
-            description={contect.description}
-            time={contect.creationDate}
-            deleteItem={handleDeleteItem}
-        /> :
+        <Box>
+            <Project
+                id={contect._id}
+                title={
+                    <NavLink
+                        to={`/Projects/todo-board/${contect._id}`}
+                        style={{ color: "#F6C927", textDecoration: "none" }}
+                    >
+                        {contect.name}
+                    </NavLink>}
+                description={contect.description}
+                time={contect.creationDate}
+                deleteItem={handleDeleteItem}
+                editItem={() => handleEditItem(contect)}
+            />
+            <DialogProfect
+            editDialogOpen={editDialogOpen}
+            handleCloseEditDialog={handleCloseEditDialog}
+            editingProject={editingProject}
+            setEditingProject={setEditingProject}
+            handleSaveEdit={() => handleSaveEdit(editingProject?._id, editingProject?.name, editingProject?.description)}
+            />
+        </Box> :
         <form onSubmit={handleSaveClick}>
             <Header title="Add new project" />
             <Card sx={{ m: 3, background: "#121231", color: "#CDCDCD", textAlign: "center" }}>
@@ -97,15 +160,15 @@ export default function CreateProject() {
                     onChange={handleChange}
                 />
                 <br />
-           
-            <Button
-                variant="contained"
-                endIcon={<SaveIcon />}
-                sx={{ m: 3 }}
-                type="submit"
-            >
-                Save
-            </Button>
+
+                <Button
+                    variant="contained"
+                    endIcon={<SaveIcon />}
+                    sx={{ m: 3 }}
+                    type="submit"
+                >
+                    Save
+                </Button>
             </Card>
         </form>
     );
