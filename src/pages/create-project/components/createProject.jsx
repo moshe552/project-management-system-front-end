@@ -5,12 +5,12 @@ import { NavLink } from "react-router-dom";
 import Header from "../../Porjects/components/header";
 import { Project } from "../../Porjects/components/Project";
 import axios from "axios";
-import { headers, api, token, userID } from "../../../api/posts";
+import { headers, api, token, userID, UrlDataBoard } from "../../../api/posts";
 import { Button } from "@mui/material";
 import DialogProfect from "../../Porjects/components/Dialog";
 
 
-const UrlDataBoard = `${api}/board/create`;
+const UrlDataCreateBoard = `${api}/board/create`;
 
 export default function CreateProject() {
 
@@ -19,7 +19,7 @@ export default function CreateProject() {
     const fetchProjects = () => {
         axios.get(UrlDataBoard, { headers })
             .then(response => {
-                setProjectsList(response.data);
+                setContect(response.data);
             })
             .catch(error => {
                 console.error('Error fetching JSON file:', error);
@@ -29,7 +29,7 @@ export default function CreateProject() {
     const [contect, setContect] = useState({
         "name": "",
         "description": "",
-        "users": [userID],
+        "users": [],
         "isSprint": false,
         'sprintLength': null
     });
@@ -48,7 +48,8 @@ export default function CreateProject() {
         event.preventDefault();
 
         if (contect.name.trim().length > 0 && contect.description.trim().length > 0) {
-            axios.post(UrlDataBoard, contect,
+            console.log("contect:" , contect)
+            axios.post(UrlDataCreateBoard, contect,
                 {
                     headers: {
                         'Authorization': token,
@@ -57,8 +58,9 @@ export default function CreateProject() {
                 })
                 .then(response => {
                     setContect(response.data)
+                    console.log("response.data:  ", response.data)
                     setSaved(true)
-                    history.push('/todo-board');
+                    // history.push('/todo-board');
                 })
                 .catch(error => {
                     console.error('Error creating project:', error);
@@ -71,7 +73,6 @@ export default function CreateProject() {
 
     const handleDeleteItem = (id) => {
         const isConfirmed = window.confirm('Are you sure you want to delete the project?');
-
         if (isConfirmed) {
             axios.delete(`${api}/board/${id}/delete`, { headers })
                 .then(() => {

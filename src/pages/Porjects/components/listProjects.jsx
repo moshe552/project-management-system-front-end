@@ -10,6 +10,8 @@ import { UrlDataBoard, headers, api, token , userID} from "../../../api/posts";
 import DialogProfect from "./Dialog";
 // import { handleDeleteItem } from "../../../api/get";
 
+console.log('UrlDataBoard lp:', UrlDataBoard)
+
 export default function ListProject() {
     const [projectsList, setProjectsList] = useState([]);
     const [editingProject, setEditingProject] = useState(null);
@@ -23,6 +25,7 @@ export default function ListProject() {
         axios.get(UrlDataBoard, { headers })
             .then(response => {
                 setProjectsList(response.data);
+                console.log("response.data:  ", response.data)
             })
             .catch(error => {
                 console.error('Error fetching JSON file:', error);
@@ -90,7 +93,7 @@ export default function ListProject() {
                     <AddIcon />
                 </Button>
             </NavLink>
-            {projectsList.map((item, index) => (
+            {[...projectsList].reverse().map((item, index) => (
                 <Project
                     NavLink={`/Projects/todo-board/${item._id}`}
                     key={item._id}
