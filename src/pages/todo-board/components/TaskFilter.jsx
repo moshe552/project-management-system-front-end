@@ -14,6 +14,7 @@ export default function TaskFilter() {
   const [selectAssignee, setSelectAssignee] = useState(["All"]);
   const [selectDate, setSelectDate] = useState("All");
 
+  // const thisProject = ...projects.find(p => p._id === boardId)
   const handleAssigneeSelectChange = (event) => {
    let selectedList = event.target.value
    if (selectedList.length > 1) {
@@ -47,6 +48,7 @@ export default function TaskFilter() {
   
 
   const renderSelectAssignee = (selected) => {
+    console.log()
     if (selectAssignee.includes('All')) {
       return 'All'
     }
