@@ -5,8 +5,8 @@ import { NavLink } from "react-router-dom";
 import Header from "../../Porjects/components/header";
 import { Project } from "../../Porjects/components/Project";
 import axios from "axios";
-import {  headers, api, token , userID} from "../../../api/posts";
-import { Button, DialogActions, Dialog, DialogTitle, DialogContent, TextField } from "@mui/material";
+import { headers, api, token, userID } from "../../../api/posts";
+import { Button } from "@mui/material";
 import DialogProfect from "../../Porjects/components/Dialog";
 
 
@@ -48,7 +48,13 @@ export default function CreateProject() {
         event.preventDefault();
 
         if (contect.name.trim().length > 0 && contect.description.trim().length > 0) {
-            axios.post(UrlDataBoard, contect, { headers })
+            axios.post(UrlDataBoard, contect,
+                {
+                    headers: {
+                        'Authorization': token,
+                        'Content-Type': 'application/json; charset=utf-8',
+                    }
+                })
                 .then(response => {
                     setContect(response.data)
                     setSaved(true)
@@ -132,11 +138,11 @@ export default function CreateProject() {
                 editItem={() => handleEditItem(contect)}
             />
             <DialogProfect
-            editDialogOpen={editDialogOpen}
-            handleCloseEditDialog={handleCloseEditDialog}
-            editingProject={editingProject}
-            setEditingProject={setEditingProject}
-            handleSaveEdit={() => handleSaveEdit(editingProject?._id, editingProject?.name, editingProject?.description)}
+                editDialogOpen={editDialogOpen}
+                handleCloseEditDialog={handleCloseEditDialog}
+                editingProject={editingProject}
+                setEditingProject={setEditingProject}
+                handleSaveEdit={() => handleSaveEdit(editingProject?._id, editingProject?.name, editingProject?.description)}
             />
         </Box> :
         <form onSubmit={handleSaveClick}>
