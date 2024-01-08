@@ -1,10 +1,12 @@
 import { useState , useEffect } from "react";
 import * as React from "react";
+import { useParams } from "react-router-dom";
+
 
 import HeaderUsers from "./HeaderUsers";
 import ItemUser from "./ItemUser";
 
-import dataAllUsers from "./DataAllUsers";
+import { dataUsersEx , dataUsersIn , usersAdd , usersDelete } from "./DataUsers";
 
 import List from "@mui/material/List";
 import Grid from "@mui/material/Grid";
@@ -25,6 +27,8 @@ const styleList = {
 
 function ListUsers() {
 
+  const {boardId} = useParams()
+
   const [dataModel, setDataModel] = useState([])
 
   const [dataView, setDataView] = useState([])
@@ -32,32 +36,38 @@ function ListUsers() {
     
   useEffect(() => {
     async function getUsers() {
-      const users =  await dataAllUsers();
-      setDataModel(users)
+      const usersIn =  await dataUsersIn(boardId);
+      const usersEx =  await dataUsersEx(boardId);
+
+      setDataView(usersIn)
+      setDataModel(usersEx)
     }
     getUsers()
   },[])
  
 
+// Delete func //////////////////////////
   function deleteUser(currentIdDelete) {
     const  listAdd = [...dataModel]
     const listDelete = [...dataView]
     
-    // alert("Your add user")
+    // alert("Your delete user")
     
     const indexUserInList = dataView.findIndex(
       (currentUser) => (currentUser._id === currentIdDelete))
-      console.log(currentIdDelete)
-    console.log(indexUserInList)
+      
+      const userAdd = dataView[indexUserInList]
+      console.log(userAdd)
 
-    const userAdd = dataView[indexUserInList]
-    console.log(userAdd)
+      listDelete.splice(indexUserInList,1)
+      setDataView(listDelete)
 
-    listDelete.splice(indexUserInList,1)
-    setDataView(listDelete)
+      listAdd.splice(listAdd.length,0,userAdd)
+      setDataModel(listAdd)  
 
-    listAdd.splice(listAdd.length,0,userAdd)
-     setDataModel(listAdd)  
+      //Send to server data
+      const deleteUserToData = () => usersDelete( boardId , currentIdDelete )
+      deleteUserToData()
   }
 
 // Add func //////////////////////////
@@ -70,7 +80,7 @@ function ListUsers() {
     const indexUserInList = dataModel.findIndex(
       (currentUser) => (currentUser._id === currentId))
 
-    console.log(indexUserInList)
+    console.log("This is id" + currentId)
 
     const userAdd = dataModel[indexUserInList]
     console.log(userAdd)
@@ -79,7 +89,13 @@ function ListUsers() {
     setDataModel(listDelete)
 
     listAdd.splice(listAdd.length,0,userAdd)
-    setDataView(listAdd)     
+    setDataView(listAdd)    
+    
+     //Send to server data
+    const addUserToData = () => usersAdd( boardId , currentId )
+    addUserToData()
+
+
   }
 
   //Functions list!!!! view 1)
@@ -143,9 +159,11 @@ function ListUsers() {
 
   return (
     <Grid>
+
       <HeaderUsers listUsers={viewListModel(dataModel)}  />
 
       {viewList(dataView)}
+      
     </Grid>
   );
 }

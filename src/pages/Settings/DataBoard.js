@@ -1,9 +1,10 @@
 import axios from "axios";
+import {api , token} from "../../api/posts";
 
-
-const jsonUrlDataBoard = `${import.meta.env.VITE_SERVER_URL}/board/`;
+const myToken = token
+const jsonUrlDataBoard = `${api}/board/`;
 const headers = {
-  Authorization: "Happy",
+  'Authorization': myToken,
   "Content-Type": "application/json; charset=utf-8",
 };
 
