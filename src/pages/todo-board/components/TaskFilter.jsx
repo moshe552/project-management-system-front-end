@@ -14,9 +14,9 @@ export default function TaskFilter() {
   const [selectAssignee, setSelectAssignee] = useState(["All"]);
   const [selectDate, setSelectDate] = useState("All");
 
+  
   const usersId = projects.find(p => p._id === boardId).users
   const myUsers = users.filter((u) => usersId.includes(u._id))
- 
 
   const handleAssigneeSelectChange = (event) => {
    let selectedList = event.target.value
@@ -32,13 +32,13 @@ export default function TaskFilter() {
     }  
    }  
     setSelectAssignee(selectedList)
-    // assigneeFilter(selectedList)
 
   };
   const assigneeFilter = (selectUsers, tasks) => {
     const taskList = tasks && tasks.filter((task) => task.user && selectUsers.includes(task.user))
       return taskList
   }
+
   const dateFilter = (selectDate, tasks) => {
     const currentDate = new Date();
     const calculateStartDate = (daysAgo) => {
@@ -54,8 +54,11 @@ export default function TaskFilter() {
     );
     const taskList = tasks.filter((t) => {
       const taskCeartionDate = new Date(t.creationDate);
+      
       return taskCeartionDate >= myDay && taskCeartionDate <= currentDate;
+
     })
+    
     return taskList
   }
 
@@ -65,17 +68,15 @@ export default function TaskFilter() {
 
     if (!selectAssignee.includes('All')) {
       tasks = assigneeFilter(selectAssignee, tasks) 
-      // console.log(tasks, 1, selectAssignee)
     }
     if (!selectDate.includes('All')) {
+      // console.log(selectDate)
       tasks = dateFilter(selectDate, tasks)
-      // console.log(tasks, 2, selectDate)
+      // console.log(tasks)
     }
     
     updatedProject.tasks = tasks
-
     dispatchProjects({type: 'UPDATE_PROJECT', payload: updatedProject})
-    // console.log(updatedProject)
   }
   const renderSelectAssignee = (selected) => {
     if (selectAssignee.includes('All')) {
@@ -105,97 +106,7 @@ export default function TaskFilter() {
     setSelectAssignee(['All'])
     setSelectDate('All')
   },[boardId])
-
-  // const assigneeFilter = (selectAssignee) => {
-  //   let updatedProject = ''
-  //   if (selectDate.includes('All')) {
-      
-  //     updatedProject = {...previousState}
-  //   } else {
-  //     console.log(selectDate)
-  //     updatedProject = myProject
-  //   }
-    
-  //   if (selectAssignee.includes('All')) {
-  //     if (selectDate.includes('All')) {
-  //       return dispatchProjects({type: 'UPDATE_PROJECT', payload: previousState})
-  //     } else {
-  //       // console.log(updatedProject)
-  //       const currentDate = new Date();
-  //       const calculateStartDate = (daysAgo) => {
-  //         const startDate = new Date(currentDate);
-  //         startDate.setDate(currentDate.getDate() - daysAgo)
-  //         return startDate
-  //       };
-  //       const myDay = calculateStartDate(
-  //         selectDate.includes('Last day') ? 1
-  //         : selectDate.includes('3 days ago') ? 3
-  //         : selectDate.includes('One week ago') ? 7
-  //         : 0
-  //        );
-    
-  //         const updatedTasks = updatedProject.tasks.filter((t) => {
-  //         const taskCeartionDate = new Date(t.creationDate);
-  //         return taskCeartionDate >= myDay && taskCeartionDate <= currentDate;
-  //       })
-    
-  //         updatedProject.tasks = updatedTasks
-  //         // console.log(updatedProject)
-  //       return dispatchProjects({type: 'UPDATE_PROJECT', payload: updatedProject})
-  //     } 
-  //   }
-
-    
-  //   const taskList = updatedProject.tasks.filter((task) => 
-  //     task.user && selectAssignee.includes(task.user) )
-
-  //   updatedProject.tasks = taskList
-  //   return dispatchProjects({type: 'UPDATE_PROJECT', payload: updatedProject })
-  //   }
-  
-  // const dateFilter = (selectDate) => {
-  //   const currentDate = new Date();
-  //   let updatedProject = {...previousState}
-
-  //   const calculateStartDate = (daysAgo) => {
-  //     const startDate = new Date(currentDate);
-  //     startDate.setDate(currentDate.getDate() - daysAgo)
-  //     return startDate
-  //   };
-
-  //   if (selectDate.includes('All')) {
-  //     if (selectAssignee.includes('All') || selectAssignee.length === 0) {
-  //       return dispatchProjects({type: 'UPDATE_PROJECT', payload: previousState})
-  //     } else {
-  //         const taskList = updatedProject.tasks.filter((task) => 
-  //         task.user && selectAssignee.includes(task.user) )
-  //         updatedProject.tasks = taskList
-  //         return dispatchProjects({type: 'UPDATE_PROJECT', payload: updatedProject })
-  //     }
-  //   }
-    
-  //   if (!selectAssignee.includes('All')) {
-  //     updatedProject = myProject
-  //   }
-
-  //    const myDay = calculateStartDate(
-  //     selectDate.includes('Last day') ? 1
-  //     : selectDate.includes('3 days ago') ? 3
-  //     : selectDate.includes('One week ago') ? 7
-  //     : 0
-  //    );
-
-  //     const updatedTasks = updatedProject.tasks.filter((t) => {
-  //     const taskCeartionDate = new Date(t.creationDate);
-  //     return taskCeartionDate >= myDay && taskCeartionDate <= currentDate;
-  //   })
-
-  //     updatedProject.tasks = updatedTasks
-  //     return dispatchProjects({type: 'UPDATE_PROJECT', payload: updatedProject })
-    
-  // };
-
-  
+ 
 
   const assignee = {
     type: "Assignee",

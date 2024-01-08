@@ -1,14 +1,13 @@
-import { Box, Card, TextareaAutosize, Typography } from "@mui/material";
+import { Box, Card, TextareaAutosize, Typography, Button } from "@mui/material";
 import { useState } from "react";
 import SaveIcon from '@mui/icons-material/Save';
-import Button from '@mui/material/Button';
 import { NavLink, useParams, useNavigate } from "react-router-dom";
 
 import Header from "../../Porjects/components/header";
 import { Project } from "../../Porjects/components/Project";
 import axios from "axios";
 import { headers, api, token, userID, UrlDataBoard } from "../../../api/posts";
-import { Button } from "@mui/material";
+
 import DialogProfect from "../../Porjects/components/Dialog";
 
 

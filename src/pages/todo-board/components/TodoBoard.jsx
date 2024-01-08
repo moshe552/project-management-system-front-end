@@ -41,20 +41,13 @@ export default function TodoBoard() {
   const [boardData, setBoardData] = useState(null);
   const [tasks, setTasks] = useState([]);
 
-  // const token =  { token }
-  // const headers = { headers }
-  const token = localStorage.getItem("authToken");
-
   const navigate = useNavigate();
   const { projects, dispatchProjects } = useProjectsContext();
   const { previousState, setPreviousState } = useProjectsContext();
   const { users } = useUsersContext();
+  
   const myProject = projects.find((p) => p._id === boardId)
 
-  const headers = {
-    "Content-Type": "application/json",
-    Authorization: token,
-  };
   const fetchData = async (boardId) => {
     const selectedProject = projects.find(p => p._id === boardId);
     if (selectedProject) {
@@ -96,7 +89,7 @@ export default function TodoBoard() {
 
   const handleClose = (p) => {
     setAnchorEl(null);
-    if (p._id !== boardId) {
+    if (p._id && p._id !== boardId) {
       dispatchProjects({type:'UPDATE_PROJECT', payload: previousState})
       navigate(`../Projects/todo-board/${p._id}`)
     }

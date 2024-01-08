@@ -12,13 +12,6 @@ export default function HeaderBar() {
 
   const {boardId} = useParams()
   
-  const [nameTitle, setNameTitle] = useState("The page is loading..")
-  
-  setTimeout(
-    function() {
-      setNameTitle("")
-    }, 500)
-  
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="sticky" sx={{color: "#F6C927", background: "#121231" }}>
@@ -29,11 +22,7 @@ export default function HeaderBar() {
             <ArrowBackIosNewIcon sx={{ color: "#F6C927" }} fontSize="large" />
           </IconButton>
         </NavLink>
-          
-          <Typography variant="h6" color="inherit" component="div" >
-          {nameTitle}
-          </Typography>
-
+      
         </Toolbar>
       </AppBar>
     </Box>

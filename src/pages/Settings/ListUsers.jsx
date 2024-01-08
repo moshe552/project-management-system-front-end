@@ -1,17 +1,17 @@
 import { useState , useEffect } from "react";
 import * as React from "react";
-
+import { useParams } from "react-router-dom";
 import HeaderUsers from "./HeaderUsers";
 import ItemUser from "./ItemUser";
 
-import dataAllUsers from "./DataAllUsers";
+import { dataUsersEx , dataUsersIn , usersAdd , usersDelete } from "./DataUsers";
 
 import List from "@mui/material/List";
 import Grid from "@mui/material/Grid";
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import AddCircleSharpIcon from "@mui/icons-material/AddCircleSharp";
 import { useProjectsContext } from '../../context/useProjectContext'
-import { useParams } from "react-router-dom";
+
 
 const styleList = {
           width: "100%",
@@ -26,41 +26,50 @@ const styleList = {
 
 function ListUsers() {
   const { boardId } = useParams();
-  const { projects, dispatchProjects } = useProjectsContext();
   const [dataModel, setDataModel] = useState([])
-
   const [dataView, setDataView] = useState([])
-  
+
+  // projects context
+  const { projects } = useProjectsContext();
   const myProject = projects && projects.find((p) => p._id === boardId)
+  
   // console.log(myProject)
   useEffect(() => {
     async function getUsers() {
-      const users =  await dataAllUsers();
-      setDataModel(users)
+      const usersIn =  await dataUsersIn(boardId);
+      const usersEx =  await dataUsersEx(boardId);
+
+      setDataView(usersIn)
+      setDataModel(usersEx)
     }
     getUsers()
   },[])
  
 
+// Delete func //////////////////////////
   function deleteUser(currentIdDelete) {
     const  listAdd = [...dataModel]
     const listDelete = [...dataView]
     
-    // alert("Your add user")
+    // alert("Your delete user")
     
     const indexUserInList = dataView.findIndex(
       (currentUser) => (currentUser._id === currentIdDelete))
-      console.log(currentIdDelete)
-    console.log(indexUserInList)
+      
+      const userAdd = dataView[indexUserInList]
+      // console.log(userAdd)
 
-    const userAdd = dataView[indexUserInList]
-    console.log(userAdd)
+      listDelete.splice(indexUserInList,1)
+      setDataView(listDelete)
 
-    listDelete.splice(indexUserInList,1)
-    setDataView(listDelete)
+      listAdd.splice(listAdd.length,0,userAdd)
+      setDataModel(listAdd)  
 
-    listAdd.splice(listAdd.length,0,userAdd)
-     setDataModel(listAdd)  
+      //Send to server data
+      const deleteUserToData = () => usersDelete( boardId , currentIdDelete )
+      deleteUserToData()
+      myProject.users = myProject.users.filter((u) => u !== currentIdDelete)
+      // console.log(listDelete)
   }
 
 // Add func //////////////////////////
@@ -69,14 +78,10 @@ function ListUsers() {
     const listDelete = [...dataModel]
     
     // alert("Your add user")
-    myProject.users = listAdd.map((u) => u._id)
-    // console.log(myProject)
-    dispatchProjects({type: 'UPDATE_PROJECT', payload: myProject })
-    // console.log(myProject)
     const indexUserInList = dataModel.findIndex(
       (currentUser) => (currentUser._id === currentId))
 
-    // console.log(indexUserInList)
+    // console.log("This is id" + currentId)
 
     const userAdd = dataModel[indexUserInList]
     // console.log(userAdd)
@@ -85,7 +90,16 @@ function ListUsers() {
     setDataModel(listDelete)
 
     listAdd.splice(listAdd.length,0,userAdd)
-    setDataView(listAdd)     
+    setDataView(listAdd)    
+    
+     //Send to server data
+    const addUserToData = () => usersAdd( boardId , currentId )
+    addUserToData()
+    myProject.users = [...myProject.users, currentId]
+    // console.log(listAdd)
+    
+
+
   }
 
   //Functions list!!!! view 1)
@@ -149,9 +163,11 @@ function ListUsers() {
 
   return (
     <Grid>
+
       <HeaderUsers listUsers={viewListModel(dataModel)}  />
 
       {viewList(dataView)}
+      
     </Grid>
   );
 }

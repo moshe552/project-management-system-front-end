@@ -11,7 +11,7 @@ import IconButton from '@mui/material/IconButton';
 import SendIcon from '@mui/icons-material/Send';
 
 
-function HeaderTitleEdit() {
+function HeaderTitle() {
   const {boardId} = useParams()
   
   const [titelPage, setTitelPage] = useState("");
@@ -112,4 +112,4 @@ function HeaderTitleEdit() {
   );
 }
 
-export default HeaderTitleEdit;
+export default HeaderTitle;
