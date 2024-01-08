@@ -49,6 +49,7 @@ export default function TodoBoard() {
   const { projects, dispatchProjects } = useProjectsContext();
   const { previousState, setPreviousState } = useProjectsContext();
   const { users } = useUsersContext();
+  const myProject = projects.find((p) => p._id === boardId)
 
   const headers = {
     "Content-Type": "application/json",
@@ -72,7 +73,7 @@ export default function TodoBoard() {
     const droppedCard = tasks.find((task) => task._id === cardId);
     droppedCard.status.name = targetListStatus;
     setTasks([...tasks]);
-    dispatchProjects({type:'UPDATE_PROJECT', payload: boardData})
+    dispatchProjects({type:'UPDATE_PROJECT', payload: myProject})
     
     const petchData = async () => {
       try {
@@ -95,8 +96,8 @@ export default function TodoBoard() {
 
   const handleClose = (p) => {
     setAnchorEl(null);
-    dispatchProjects({type:'UPDATE_PROJECT', payload: previousState})
-    if (p._id) {
+    if (p._id !== boardId) {
+      dispatchProjects({type:'UPDATE_PROJECT', payload: previousState})
       navigate(`../Projects/todo-board/${p._id}`)
     }
    

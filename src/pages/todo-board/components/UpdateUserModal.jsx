@@ -16,7 +16,10 @@ export default function UpdateUserModal({
   setTasks
 }) {
 
+  
   const { previousState, setPreviousState } = useProjectsContext();
+  const { dispatchProjects } = useProjectsContext();
+
   // console.log(users)
   const handleCloseModal = () => {
     setIsModalOpen(false);
@@ -42,6 +45,9 @@ export default function UpdateUserModal({
           const updetedTasks = previousState.tasks.map((task) => task._id === response.data._id ? response.data : task);
           newProject.tasks = updetedTasks
           setPreviousState(newProject)
+          dispatchProjects({type: 'UPDATE_PROJECT', payload: newProject})
+
+
           // console.log(response.data)
         }
       } catch (error) {

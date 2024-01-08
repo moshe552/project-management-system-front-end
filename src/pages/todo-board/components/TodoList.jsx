@@ -45,6 +45,7 @@ export default function TodoList({
   });
   const myTasks = projects.find((p) => p._id === boardId).tasks
   const filteredTasks = myTasks.filter((task) => task.status.name === status);
+  // console.log(filteredTasks)
   return (
     <Container
       ref={drop}
@@ -100,7 +101,7 @@ export default function TodoList({
               setTasks={setTasks}
               users={users}
               headers={headers}
-              user={user}
+              user={task.user}
             />
           ))}
         <AddTaskModal

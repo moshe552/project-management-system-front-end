@@ -1,7 +1,7 @@
 import { createContext, useReducer, useState } from "react";
 
 
-export const UsersProjectContext = createContext();
+export const UsersContext = createContext();
 
 export const usersReducer = (state, action) => {
     switch (action.type) {
@@ -9,7 +9,7 @@ export const usersReducer = (state, action) => {
             return {
                 users: action.payload
             }
-        case 'ADD_USER':
+        case 'CREATE_USER':
             return {
                 users: [action.payload, ...state.users]
             }
@@ -30,10 +30,10 @@ export const UsersContextProvider = ({ children }) => {
     const [state, dispatchUsers] = useReducer(usersReducer, {
         users: []
     })
-    const [allUsers, setAllUsers] = useState([])
+    // const [allUsers, setAllUsers] = useState([])
     return (
-        <UsersProjectContext.Provider value={{...state, dispatchUsers, allUsers, setAllUsers }}>
+        <UsersContext.Provider value={{...state, dispatchUsers }}>
             { children }
-        </UsersProjectContext.Provider>
+        </UsersContext.Provider>
     )
 }

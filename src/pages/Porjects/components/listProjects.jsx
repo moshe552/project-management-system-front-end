@@ -24,7 +24,7 @@ const UrlDataBoard = `${api}/board/user/${userID}/read`;
 
 export default function ListProject() {
     const { projects, dispatchProjects } = useProjectsContext();
-    const { setAllUsers } = useUsersContext();
+    const { users, dispatchUsers } = useUsersContext();
 
     const [projectsList, setProjectsList] = useState([]);
     const [editingProject, setEditingProject] = useState(null);
@@ -49,8 +49,8 @@ export default function ListProject() {
     const fetchUsers = async () => {
         try {
             const response = await axios.get(`${api}/users/all`,  headers )
-            setAllUsers(response.data.result)
-
+            dispatchUsers({type: 'SET_USERS', payload: response.data.result})
+            // console.log(users)
         } catch (error) {
             console.error('Error fetching JSON file:', error);
         }

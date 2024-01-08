@@ -10,7 +10,8 @@ import List from "@mui/material/List";
 import Grid from "@mui/material/Grid";
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import AddCircleSharpIcon from "@mui/icons-material/AddCircleSharp";
-
+import { useProjectsContext } from '../../context/useProjectContext'
+import { useParams } from "react-router-dom";
 
 const styleList = {
           width: "100%",
@@ -24,12 +25,14 @@ const styleList = {
 
 
 function ListUsers() {
-
+  const { boardId } = useParams();
+  const { projects, dispatchProjects } = useProjectsContext();
   const [dataModel, setDataModel] = useState([])
 
   const [dataView, setDataView] = useState([])
   
-    
+  const myProject = projects && projects.find((p) => p._id === boardId)
+  // console.log(myProject)
   useEffect(() => {
     async function getUsers() {
       const users =  await dataAllUsers();
@@ -66,14 +69,17 @@ function ListUsers() {
     const listDelete = [...dataModel]
     
     // alert("Your add user")
-    
+    myProject.users = listAdd.map((u) => u._id)
+    // console.log(myProject)
+    dispatchProjects({type: 'UPDATE_PROJECT', payload: myProject })
+    // console.log(myProject)
     const indexUserInList = dataModel.findIndex(
       (currentUser) => (currentUser._id === currentId))
 
-    console.log(indexUserInList)
+    // console.log(indexUserInList)
 
     const userAdd = dataModel[indexUserInList]
-    console.log(userAdd)
+    // console.log(userAdd)
 
     listDelete.splice(indexUserInList,1)
     setDataModel(listDelete)
