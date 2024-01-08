@@ -7,22 +7,28 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import ListProject from "./pages/Porjects/components/listProjects.jsx";
 import CreateProject from "./pages/create-project/components/createProject.jsx";
 import Settings from "./pages/Settings/Settings.jsx"
+import { ProjectsContextProvider } from './context/projectContext';
+import { UsersContextProvider } from './context/usersContext';
 
 export default function App() {
   return (
     <BrowserRouter>
       <ThemeProvider theme={theme}>
-        <DndProvider backend={HTML5Backend}>
-          <CssBaseline />
-          <main>
-            <Routes>
-              <Route path="/Projects/todo-board/:boardId" element={<TodoBoard />} />
-              <Route path="/Projects/todo-board/settings/:boardId" element={<Settings />} />
-              <Route path="/Projects" element={<ListProject/>} />
-              <Route path="/Projects/creatProject" element={<CreateProject/>} />
-            </Routes>
-          </main>
-        </DndProvider>
+        <ProjectsContextProvider>
+          <UsersContextProvider>
+            <DndProvider backend={HTML5Backend}>
+              <CssBaseline />
+              <main>
+                <Routes>
+                  <Route path="/Projects/todo-board/:boardId" element={<TodoBoard />} />
+                  <Route path="/Projects/todo-board/settings/:boardId" element={<Settings />} />
+                  <Route path="/Projects" element={<ListProject/>} />
+                  <Route path="/Projects/creatProject" element={<CreateProject/>} />
+                </Routes>
+              </main>
+            </DndProvider>
+          </UsersContextProvider>
+        </ProjectsContextProvider>
       </ThemeProvider>
     </BrowserRouter>
   );
