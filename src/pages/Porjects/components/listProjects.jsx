@@ -101,7 +101,7 @@ export default function ListProject() {
                     <AddIcon />
                 </Button>
             </NavLink>
-            {projectsList.map((item, index) => (
+            {projectsList.slice().reverse().map((item, index) => (
                 <Project
                     NavLink={`/Projects/todo-board/${item._id}`}
                     key={item._id}
