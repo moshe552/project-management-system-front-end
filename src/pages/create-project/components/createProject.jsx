@@ -1,18 +1,23 @@
-import { Box, Card, TextareaAutosize, Typography } from "@mui/material";
+import { Box, Card, TextareaAutosize, Typography, Button } from "@mui/material";
 import { useState } from "react";
 import SaveIcon from '@mui/icons-material/Save';
-import { NavLink } from "react-router-dom";
+import { NavLink, useParams, useNavigate } from "react-router-dom";
+
 import Header from "../../Porjects/components/header";
 import { Project } from "../../Porjects/components/Project";
 import axios from "axios";
 import { headers, api, token, userID, UrlDataBoard } from "../../../api/posts";
-import { Button } from "@mui/material";
+
 import DialogProfect from "../../Porjects/components/Dialog";
 
 
 const UrlDataCreateBoard = `${api}/board/create`;
 
 export default function CreateProject() {
+    
+    const { id } = useParams();
+    // console.log(id);
+    const navigate = useNavigate();
 
     const [isSaved, setSaved] = useState(false)
 
@@ -60,7 +65,10 @@ export default function CreateProject() {
                     setContect(response.data)
                     console.log("response.data:  ", response.data)
                     setSaved(true)
-                    // history.push('/todo-board');
+
+                    navigate('/projects');
+
+
                 })
                 .catch(error => {
                     console.error('Error creating project:', error);

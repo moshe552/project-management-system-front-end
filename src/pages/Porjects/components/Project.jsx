@@ -14,8 +14,8 @@ import { NavLink } from "react-router-dom";
 
 
 
+
 function Project(props) {
-    // console.log('props:', props)
 
     return (
         <Card sx={{ m: 2 }}>

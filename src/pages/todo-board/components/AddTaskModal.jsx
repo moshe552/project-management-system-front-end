@@ -11,6 +11,8 @@ import { useState } from "react";
 import axios from "axios";
 import CloseIcon from "@mui/icons-material/Close";
 import {api} from "../../../api/posts";
+import { useProjectsContext } from "../../../context/useProjectContext";
+
 
 export default function AddTaskModal({
   isModalOpen,
@@ -20,8 +22,8 @@ export default function AddTaskModal({
 }) {
   const [nameError, setNameError] = useState(false);
   const [descriptionError, setDescriptionError] = useState(false);
-  const [addTaskButton, setAddTaskButton] = useState("ADD TASK")
-
+  const { projects, dispatchProjects} = useProjectsContext();
+  const { setPreviousState } = useProjectsContext();
   const [newTask, setNewTask] = useState({
     name: '',
     description: '',
@@ -35,6 +37,7 @@ export default function AddTaskModal({
     setNewTask({
       name: '',
       description: '',
+      user: '',
     });
   };
 
@@ -57,7 +60,6 @@ export default function AddTaskModal({
       setDescriptionError(!newTask.description);
       return;
     }
-    setAddTaskButton("ADDING TASK...")
     const headers = {
       "Content-Type": "application/json",
       Authorization: "Bearer YOUR_ACCESS_TOKEN",
@@ -69,17 +71,20 @@ export default function AddTaskModal({
           newTask,
           { headers }
         );
+        
         if (response.data) {
-          handleCloseModal();
-          setAddTaskButton("ADD TASK")
           setTasks((prevTasks) => [...prevTasks, response.data]);
+          const updatedProject = projects.find((p) => p._id === boardId)
+          updatedProject.tasks = [...updatedProject.tasks, response.data]
+          dispatchProjects({type:'UPDATE_PROJECT', payload: updatedProject})
+          setPreviousState(updatedProject)
         }
       } catch (error) {
         console.error("Error could not fetch JSON file", error);
       }
     };
     addTask();
-    
+    handleCloseModal();
   };
 
   return (
@@ -135,8 +140,8 @@ export default function AddTaskModal({
             helperText={descriptionError ? "Description is required" : ""}
             sx={{ mb: 3 }}
           />
-          <Button variant="contained" onClick={handleAddTask}>
-            {addTaskButton}
+         <Button variant="contained" onClick={handleAddTask}>
+            Add Task
           </Button>
         </Box>
       </Fade>

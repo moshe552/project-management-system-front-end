@@ -7,6 +7,7 @@ import Input from "@mui/material/Input";
 import InputLabel from "@mui/material/InputLabel";
 import { useState } from "react";
 import {api} from "../../../api/posts";
+import { useProjectsContext } from "../../../context/useProjectContext";
 
 export default function TaskDetailsModal({
   isModalOpen,
@@ -19,6 +20,8 @@ export default function TaskDetailsModal({
   tasks,
   setTasks,
 }) {
+  const { projects, dispatchProjects } = useProjectsContext();
+  const { setPreviousState } = useProjectsContext();
   const [isFormModified, setIsFormModified] = useState(false);
   const [deleteButton, setDeleteButton] = useState("")
   const [task, setTask] = useState({
@@ -57,6 +60,10 @@ export default function TaskDetailsModal({
             ...tasks.filter((task) => task._id !== taskId),
             response.data,
           ]);
+          const updatedProject = projects.find((p) => p._id === boardId)
+          updatedProject.tasks = [...updatedProject.tasks.filter((task) => task._id !== taskId), response.data]
+          dispatchProjects({type:'UPDATE_PROJECT', payload: updatedProject})
+
         }
       } catch (error) {
         console.error("Error could not patch JSON file", error);
@@ -77,6 +84,10 @@ export default function TaskDetailsModal({
         if (response) {
           handleCloseModal()
           setTasks(() => [...tasks.filter((task) => task._id !== taskId)]);
+          const updatedProject = projects.find((p) => p._id === boardId)
+          updatedProject.tasks = [...updatedProject.tasks.filter((task) => task._id !== taskId)]
+          dispatchProjects({type:'UPDATE_PROJECT', payload: updatedProject})
+          setPreviousState(updatedProject)
         }
       } catch (error) {
         console.error("Error could not delete task", error);

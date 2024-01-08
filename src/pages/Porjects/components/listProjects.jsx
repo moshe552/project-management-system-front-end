@@ -6,45 +6,53 @@ import { NavLink } from "react-router-dom";
 import Header from "./header";
 import { Grid } from "@mui/material";
 import axios from "axios";
-import { UrlDataBoard, headers, api, token , userID} from "../../../api/posts";
-import DialogProfect from "./Dialog";
-// import { handleDeleteItem } from "../../../api/get";
-
-console.log('UrlDataBoard lp:', UrlDataBoard)
+import { useProjectsContext } from '../../../context/useProjectContext'
+import { useUsersContext } from '../../../context/useUsersContext'
+import { api, token, headers, UrlDataBoard } from "../../../api/posts";
 
 export default function ListProject() {
+    const { dispatchProjects } = useProjectsContext();
+    const { dispatchUsers } = useUsersContext();
+
     const [projectsList, setProjectsList] = useState([]);
     const [editingProject, setEditingProject] = useState(null);
     const [editDialogOpen, setEditDialogOpen] = useState(false);
 
     useEffect(() => {
         fetchProjects();
+        fetchUsers();
     }, [])
 
     const fetchProjects = () => {
-        axios.get(UrlDataBoard, { headers })
+        axios.get(UrlDataBoard)
             .then(response => {
-                setProjectsList(response.data);
-                console.log("response.data:  ", response.data)
+                setProjectsList(response.data)
+                dispatchProjects({type: 'SET_PROJECTS', payload: response.data})
+
+            })
+            .catch(error => {
+                console.error('Error fetching JSON file:', error);
+            })
+    };
+    const fetchUsers = async () => {
+        try {
+            const response = await axios.get(`${api}/users/all`,  headers )
+            dispatchUsers({type: 'SET_USERS', payload: response.data.result})
+            // console.log(users)
+        } catch (error) {
+            console.error('Error fetching JSON file:', error);
+        }
+    }
+
+    const handleDeleteItem = (id) => {
+        axios.delete(`${api}/board/${id}/delete`)
+            .then(() => {
+                fetchProjects();
             })
             .catch(error => {
                 console.error('Error fetching JSON file:', error);
             })
     }
-
-    const handleDeleteItem = (id) => {
-        const isConfirmed = window.confirm('Are you sure you want to delete the project?');
-
-        if (isConfirmed) {
-            axios.delete(`${api}/board/${id}/delete`, { headers })
-                .then(() => {
-                    fetchProjects();
-                })
-                .catch(error => {
-                    console.error('Error fetching JSON file:', error);
-                });
-        }
-    };
 
     const handleEditItem = (project) => {
         setEditingProject(project);
@@ -93,7 +101,7 @@ export default function ListProject() {
                     <AddIcon />
                 </Button>
             </NavLink>
-            {[...projectsList].reverse().map((item, index) => (
+            {projectsList.map((item, index) => (
                 <Project
                     NavLink={`/Projects/todo-board/${item._id}`}
                     key={item._id}
@@ -105,13 +113,31 @@ export default function ListProject() {
                     editItem={() => handleEditItem(item)}
                 />
             ))}
-    <DialogProfect
-                editDialogOpen={editDialogOpen}
-            handleCloseEditDialog={handleCloseEditDialog}
-            editingProject={editingProject}
-            setEditingProject={setEditingProject}
-            handleSaveEdit={() => handleSaveEdit(editingProject?._id, editingProject?.name, editingProject?.description)}
-            />
+            <Dialog open={editDialogOpen} onClose={handleCloseEditDialog}>
+                <DialogTitle>Edit Project</DialogTitle>
+                <DialogContent>
+                    <TextField
+                        label="Project Name"
+                        value={editingProject?.name || ""}
+                        onChange={(e) => setEditingProject(prev => ({ ...prev, name: e.target.value }))}
+                        fullWidth
+                    />
+                    <TextField
+                        label="Description"
+                        value={editingProject?.description || ""}
+                        onChange={(e) => setEditingProject(prev => ({ ...prev, description: e.target.value }))}
+                        fullWidth
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseEditDialog} color="primary">
+                        Cancel
+                    </Button>
+                    <Button onClick={() => handleSaveEdit(editingProject?._id, editingProject?.name, editingProject?.description)} color="primary">
+                        Save
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </Grid>
     );
 }

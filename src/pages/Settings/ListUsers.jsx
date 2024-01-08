@@ -1,8 +1,6 @@
 import { useState , useEffect } from "react";
 import * as React from "react";
 import { useParams } from "react-router-dom";
-
-
 import HeaderUsers from "./HeaderUsers";
 import ItemUser from "./ItemUser";
 
@@ -12,6 +10,7 @@ import List from "@mui/material/List";
 import Grid from "@mui/material/Grid";
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import AddCircleSharpIcon from "@mui/icons-material/AddCircleSharp";
+import { useProjectsContext } from '../../context/useProjectContext'
 
 
 const styleList = {
@@ -26,14 +25,15 @@ const styleList = {
 
 
 function ListUsers() {
-
-  const {boardId} = useParams()
-
+  const { boardId } = useParams();
   const [dataModel, setDataModel] = useState([])
-
   const [dataView, setDataView] = useState([])
+
+  // projects context
+  const { projects } = useProjectsContext();
+  const myProject = projects && projects.find((p) => p._id === boardId)
   
-    
+  // console.log(myProject)
   useEffect(() => {
     async function getUsers() {
       const usersIn =  await dataUsersIn(boardId);
@@ -57,7 +57,7 @@ function ListUsers() {
       (currentUser) => (currentUser._id === currentIdDelete))
       
       const userAdd = dataView[indexUserInList]
-      console.log(userAdd)
+      // console.log(userAdd)
 
       listDelete.splice(indexUserInList,1)
       setDataView(listDelete)
@@ -68,6 +68,8 @@ function ListUsers() {
       //Send to server data
       const deleteUserToData = () => usersDelete( boardId , currentIdDelete )
       deleteUserToData()
+      myProject.users = myProject.users.filter((u) => u !== currentIdDelete)
+      // console.log(listDelete)
   }
 
 // Add func //////////////////////////
@@ -76,14 +78,13 @@ function ListUsers() {
     const listDelete = [...dataModel]
     
     // alert("Your add user")
-    
     const indexUserInList = dataModel.findIndex(
       (currentUser) => (currentUser._id === currentId))
 
-    console.log("This is id" + currentId)
+    // console.log("This is id" + currentId)
 
     const userAdd = dataModel[indexUserInList]
-    console.log(userAdd)
+    // console.log(userAdd)
 
     listDelete.splice(indexUserInList,1)
     setDataModel(listDelete)
@@ -94,6 +95,9 @@ function ListUsers() {
      //Send to server data
     const addUserToData = () => usersAdd( boardId , currentId )
     addUserToData()
+    myProject.users = [...myProject.users, currentId]
+    // console.log(listAdd)
+    
 
 
   }

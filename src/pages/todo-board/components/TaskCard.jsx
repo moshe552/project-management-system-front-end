@@ -11,6 +11,9 @@ import itemTypes from "../../../../utils/itemType";
 import TaskDetailsModal from "./TaskDetailsModal";
 import { useState } from "react";
 import UpdateUserModal from "./UpdateUserModal";
+import { useUsersContext } from '../../../context/useUsersContext'
+import { useProjectsContext } from "../../../context/useProjectContext";
+
 
 export default function TaskCard({
   _id,
@@ -21,12 +24,21 @@ export default function TaskCard({
   boardID,
   tasks,
   setTasks,
-  users,
+  // users,
   headers
 }) {
+  const { users } = useUsersContext();
+  const { projects } = useProjectsContext();
+  
   const [isDetModalOpen, setDetIsModalOpen] = useState(false);
   const [isUsersModalOpen, setIsUsersModalOpen] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  
+  const projectUsersId = projects.find((p) => p._id === boardID).users
+  // console.log(projectUsersId)
+  const myUsers = users.filter((u) => projectUsersId.includes(u._id))
+  const myUser = users.find((u) => u._id === user)
+  // console.log(myUser)
 
   const handleOpenDetModal = () => {
     setDetIsModalOpen(true);
@@ -74,7 +86,7 @@ export default function TaskCard({
         title={
           <>
             <Typography variant="p" sx={{ color: "#F6C927", fontSize: "2vh" }}>
-              {user && user.firstName + " " + user.lastName}
+              {myUser && myUser.firstName + " " + myUser.lastName}
             </Typography>
             <br />
             <Typography
@@ -126,7 +138,7 @@ export default function TaskCard({
         setIsModalOpen={setIsUsersModalOpen}
         boardID={boardID}
         taskId={_id}
-        users={users}
+        users={myUsers}
         headers={headers}
         tasks={tasks}
         setTasks={setTasks}
