@@ -1,5 +1,6 @@
 import axios from "axios";
 import {api} from "../../api/posts";
+console.log("banana")
 
 const myToken = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFAYS5jb20iLCJ0aW1lc3RhbXAiOjE3MDE1OTI1NjA5MjEsImlhdCI6MTcwMTU5MjU2MCwiZXhwIjo4NjU3MDE1OTI1NjB9.4o47zJ1r8215n0j8baBktRYqgMCMPlIBf-iSxRLkpII`
 const urlAllUsers = `${api}/users/all`

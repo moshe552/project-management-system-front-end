@@ -8,19 +8,8 @@ import { Grid } from "@mui/material";
 import axios from "axios";
 import { useProjectsContext } from '../../../context/useProjectContext'
 import { useUsersContext } from '../../../context/useUsersContext'
-import { api, token, headers } from "../../../api/posts";
-
-let userID = ''
-
-try {
-    const response = await axios.get(`${api}/users/self`, headers )
-    userID = response.data.result[0]._id;
-}
-catch (error) {
-    console.error('error: ', error);
-};
-
-const UrlDataBoard = `${api}/board/user/${userID}/read`;
+import { UrlDataBoard, headers, api, token , userID} from "../../../api/posts";
+import DialogProfect from "./Dialog";
 
 export default function ListProject() {
     const { projects, dispatchProjects } = useProjectsContext();
@@ -36,7 +25,7 @@ export default function ListProject() {
     }, [])
 
     const fetchProjects = () => {
-        axios.get(UrlDataBoard)
+        axios.get(UrlDataBoard, { headers })
             .then(response => {
                 setProjectsList(response.data)
                 dispatchProjects({type: 'SET_PROJECTS', payload: response.data})
@@ -57,14 +46,19 @@ export default function ListProject() {
     }
 
     const handleDeleteItem = (id) => {
-        axios.delete(`${api}/board/${id}/delete`)
-            .then(() => {
-                fetchProjects();
-            })
-            .catch(error => {
-                console.error('Error fetching JSON file:', error);
-            })
-    }
+        const isConfirmed = window.confirm('Are you sure you want to delete the project?');
+
+        if (isConfirmed) {
+            axios.delete(`${api}/board/${id}/delete`, { headers })
+                .then(() => {
+                    fetchProjects();
+                })
+                .catch(error => {
+                    console.error('Error fetching JSON file:', error);
+                });
+        }
+    };
+
 
     const handleEditItem = (project) => {
         setEditingProject(project);
@@ -113,7 +107,7 @@ export default function ListProject() {
                     <AddIcon />
                 </Button>
             </NavLink>
-            {projectsList.map((item, index) => (
+            {[...projectsList].reverse().map((item, index) => (
                 <Project
                     NavLink={`/Projects/todo-board/${item._id}`}
                     key={item._id}
@@ -125,31 +119,13 @@ export default function ListProject() {
                     editItem={() => handleEditItem(item)}
                 />
             ))}
-            <Dialog open={editDialogOpen} onClose={handleCloseEditDialog}>
-                <DialogTitle>Edit Project</DialogTitle>
-                <DialogContent>
-                    <TextField
-                        label="Project Name"
-                        value={editingProject?.name || ""}
-                        onChange={(e) => setEditingProject(prev => ({ ...prev, name: e.target.value }))}
-                        fullWidth
-                    />
-                    <TextField
-                        label="Description"
-                        value={editingProject?.description || ""}
-                        onChange={(e) => setEditingProject(prev => ({ ...prev, description: e.target.value }))}
-                        fullWidth
-                    />
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleCloseEditDialog} color="primary">
-                        Cancel
-                    </Button>
-                    <Button onClick={() => handleSaveEdit(editingProject?._id, editingProject?.name, editingProject?.description)} color="primary">
-                        Save
-                    </Button>
-                </DialogActions>
-            </Dialog>
+    <DialogProfect
+                editDialogOpen={editDialogOpen}
+            handleCloseEditDialog={handleCloseEditDialog}
+            editingProject={editingProject}
+            setEditingProject={setEditingProject}
+            handleSaveEdit={() => handleSaveEdit(editingProject?._id, editingProject?.name, editingProject?.description)}
+            />
         </Grid>
     );
 }
