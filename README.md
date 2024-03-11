@@ -1,4 +1,4 @@
-# Project-Task Management Application
+# Task Management Application
 
 ## Introduction
 
