@@ -1,11 +1,4 @@
-import {
-  Card,
-  Typography,
-  Container,
-  Stack,
-  Box,
-  Grid,
-} from "@mui/material";
+import { Card, Typography, Container, Stack, Box, Grid } from "@mui/material";
 import TaskCard from "./TaskCard";
 import { useDrop } from "react-dnd";
 import itemTypes from "../../../../utils/itemType";
@@ -16,16 +9,11 @@ import { useProjectsContext } from "../../../context/useProjectContext";
 import { useParams } from "react-router-dom";
 
 export default function TodoList({
-  boardId,
   status,
   color,
   onCardDrop,
-  setTasks,
-  tasks,
-  users,
-  headers
 }) {
-  const user = useParams();
+  const { boardId } = useParams();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { projects, dispatchProjects } = useProjectsContext();
 
@@ -43,9 +31,8 @@ export default function TodoList({
       isOver: monitor.isOver(),
     }),
   });
-  const myTasks = projects.find((p) => p._id === boardId).tasks
+  const myTasks = projects.find((p) => p._id === boardId).tasks;
   const filteredTasks = myTasks.filter((task) => task.status.name === status);
-  // console.log(filteredTasks)
   return (
     <Container
       ref={drop}
@@ -96,20 +83,12 @@ export default function TodoList({
             <TaskCard
               key={task._id}
               {...task}
-              boardID={boardId}
-              tasks={tasks}
-              setTasks={setTasks}
-              users={users}
-              headers={headers}
-              user={task.user}
+              userId={task.user}
             />
           ))}
         <AddTaskModal
           isModalOpen={isModalOpen}
           setIsModalOpen={setIsModalOpen}
-          listStatus={status}
-          boardId={boardId}
-          setTasks={setTasks}
         />
       </Stack>
     </Container>

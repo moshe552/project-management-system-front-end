@@ -6,8 +6,10 @@ import FormControl from "@mui/material/FormControl";
 import Input from "@mui/material/Input";
 import InputLabel from "@mui/material/InputLabel";
 import { useState } from "react";
-import {api} from "../../../api/posts";
+import {api, headers} from "../../../api/posts";
 import { useProjectsContext } from "../../../context/useProjectContext";
+import { useParams } from "react-router-dom";
+
 
 export default function TaskDetailsModal({
   isModalOpen,
@@ -16,12 +18,10 @@ export default function TaskDetailsModal({
   title,
   description,
   taskId,
-  boardId,
-  tasks,
-  setTasks,
 }) {
   const { projects, dispatchProjects } = useProjectsContext();
   const { setPreviousState } = useProjectsContext();
+  const { boardId } = useParams();
   const [isFormModified, setIsFormModified] = useState(false);
   const [deleteButton, setDeleteButton] = useState("")
   const [task, setTask] = useState({
@@ -31,11 +31,6 @@ export default function TaskDetailsModal({
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
-  };
-
-  const headers = {
-    "Content-Type": "application/json",
-    Authorization: "Bearer YOUR_ACCESS_TOKEN",
   };
 
   const handleTaskDetailsChange = (field, value) => {
@@ -56,14 +51,9 @@ export default function TaskDetailsModal({
         );
         if (response.data) {
           handleCloseModal();
-          setTasks(() => [
-            ...tasks.filter((task) => task._id !== taskId),
-            response.data,
-          ]);
           const updatedProject = projects.find((p) => p._id === boardId)
           updatedProject.tasks = [...updatedProject.tasks.filter((task) => task._id !== taskId), response.data]
           dispatchProjects({type:'UPDATE_PROJECT', payload: updatedProject})
-
         }
       } catch (error) {
         console.error("Error could not patch JSON file", error);
@@ -83,7 +73,6 @@ export default function TaskDetailsModal({
         );
         if (response) {
           handleCloseModal()
-          setTasks(() => [...tasks.filter((task) => task._id !== taskId)]);
           const updatedProject = projects.find((p) => p._id === boardId)
           updatedProject.tasks = [...updatedProject.tasks.filter((task) => task._id !== taskId)]
           dispatchProjects({type:'UPDATE_PROJECT', payload: updatedProject})

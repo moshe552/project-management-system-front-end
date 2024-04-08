@@ -1,16 +1,21 @@
-import { Box, Button, Grid, IconButton, Typography, Menu, MenuItem } from "@mui/material";
+import {
+  Button,
+  Grid,
+  IconButton,
+  Typography,
+  Menu,
+  MenuItem,
+} from "@mui/material";
 import TodoList from "./TodoList";
 import SettingsTwoToneIcon from "@mui/icons-material/SettingsTwoTone";
-import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
-import { useState, useEffect } from "react";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import TaskFilter from "./TaskFilter";
 import axios from "axios";
 import { useParams } from "react-router-dom/dist";
-import {api, headers, token} from "../../../api/posts";
-import { useProjectsContext } from '../../../context/useProjectContext'
-import { useUsersContext } from "../../../context/useUsersContext";
-
+import { api, headers } from "../../../api/posts";
+import { useProjectsContext } from "../../../context/useProjectContext";
 
 const listsData = [
   {
@@ -36,39 +41,18 @@ const listsData = [
 ];
 
 export default function TodoBoard() {
-
   const { boardId } = useParams();
-  const [boardData, setBoardData] = useState(null);
-  const [tasks, setTasks] = useState([]);
 
   const navigate = useNavigate();
   const { projects, dispatchProjects } = useProjectsContext();
-  const { previousState, setPreviousState } = useProjectsContext();
-  const { users } = useUsersContext();
-  
-  const myProject = projects.find((p) => p._id === boardId)
 
-  const fetchData = async (boardId) => {
-    const selectedProject = projects.find(p => p._id === boardId);
-    if (selectedProject) {
-      setBoardData(selectedProject);
-      setTasks(selectedProject.tasks);
-      
-    }};
-
-  useEffect(() => {
-    fetchData(boardId);
-   
-    setPreviousState(projects.find(p => p._id === boardId))
-  }, [boardId]);
+  const myProject = projects.find((p) => p._id === boardId);
 
   const handelCardDrop = (cardId, targetListStatus) => {
-    const droppedCard = tasks.find((task) => task._id === cardId);
+    const droppedCard = myProject.tasks.find((task) => task._id === cardId);
     droppedCard.status.name = targetListStatus;
-    setTasks([...tasks]);
-    dispatchProjects({type:'UPDATE_PROJECT', payload: myProject})
-    
-    const petchData = async () => {
+    dispatchProjects({ type: "UPDATE_PROJECT", payload: myProject });
+    const updateTaskStatus = async () => {
       try {
         await axios.patch(
           `${api}/board/${boardId}/task/${cardId}/update/status`,
@@ -79,21 +63,20 @@ export default function TodoBoard() {
         console.error("Error could not petch JSON file", error);
       }
     };
-    petchData();
+    updateTaskStatus();
   };
-  const [anchorEl, setAnchorEl] = useState(null);
 
-  const handleButtonClick = (event) => {
+  const [anchorEl, setAnchorEl] = useState(false);
+
+  const handleOpeningProjectsList = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleClose = (p) => {
-    setAnchorEl(null);
-    if (p._id && p._id !== boardId) {
-      dispatchProjects({type:'UPDATE_PROJECT', payload: previousState})
-      navigate(`../Projects/todo-board/${p._id}`)
+  const handleChoosingProject = (project) => {
+    setAnchorEl(false);
+    if (project._id && project._id !== boardId) {
+      navigate(`../Projects/todo-board/${project._id}`);
     }
-   
   };
 
   return (
@@ -112,7 +95,6 @@ export default function TodoBoard() {
           </IconButton>
         </NavLink>
       </Grid>
-
       <Grid
         sx={{ bgcolor: "secondary.main", borderRadius: 3, ml: 2 }}
         container
@@ -123,44 +105,48 @@ export default function TodoBoard() {
       >
         <Grid ml={2}>
           <Typography variant="h6" sx={{ m: 2, color: "#FFF" }}>
-            {boardData ? boardData.name : "Loading..."}
+            {myProject ? myProject.name : "Loading..."}
+            {/* <Typography>{" " + myProject.description}</Typography> */}
           </Typography>
         </Grid>
         <Grid mr={2}>
-          <Typography variant="h6" sx={{ m: 1, color: "#FFF" }}>
-            <Button onClick={handleButtonClick} style={{ background: 'none', border: 'none', cursor: 'pointer', color:'#ffffff' }}>
-            Board
-              <FilterAltOutlinedIcon
+          <Typography sx={{ m: 1, color: "#FFF" }}>
+            <Button
+              onClick={handleOpeningProjectsList}
+              style={{
+                color: "#FFF",
+              }}
+            >
+              Projects
+              <KeyboardArrowDownIcon
                 fontSize="large"
-                sx={{ color: "#D3D3D3" }}
+                sx={{ color: "#FFF" }}
               />
             </Button>
           </Typography>
           <Menu
             anchorEl={anchorEl}
             open={Boolean(anchorEl)}
-            onClose={handleClose}
+            onClose={() => setAnchorEl(false)}
           >
             {projects && projects.map((p) => (
-              <MenuItem key={p._id} onClick={() => handleClose(p)}>{p.name}</MenuItem>
+              <MenuItem
+                sx={{width: 140}}
+                key={p._id}
+                onClick={() => handleChoosingProject(p)}>
+                {p.name}
+              </MenuItem>
             ))}
-        </Menu>
+          </Menu>
         </Grid>
       </Grid>
       <TaskFilter />
-      {boardData &&
-        users &&
-        tasks &&
+      {myProject &&
         listsData.map((list) => (
           <Grid item key={list.id} pb={4} xs={12} sm={6} lg={3}>
             <TodoList
               {...list}
-              boardId={boardId}
-              setTasks={setTasks}
-              tasks={tasks}
               onCardDrop={handelCardDrop}
-              fetchData={fetchData}
-              users={users}
             />
           </Grid>
         ))}

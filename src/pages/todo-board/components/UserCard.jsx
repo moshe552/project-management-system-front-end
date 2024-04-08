@@ -7,7 +7,7 @@ export default function UserCard({
   profilePicture,
 }) {
   return (
-    <Card sx={{ mt: 1, mb: 2, bgcolor: "primary.main" }}>
+    <Card sx={{ mt: 0.2, width: "100%", bgcolor: "primary.main" }}>
       <CardHeader
         title={
           <>

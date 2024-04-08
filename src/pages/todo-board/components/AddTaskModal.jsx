@@ -10,24 +10,24 @@ import {
 import { useState } from "react";
 import axios from "axios";
 import CloseIcon from "@mui/icons-material/Close";
-import {api} from "../../../api/posts";
+import { api, headers } from "../../../api/posts";
 import { useProjectsContext } from "../../../context/useProjectContext";
+import { useParams } from "react-router-dom";
 
 
 export default function AddTaskModal({
   isModalOpen,
   setIsModalOpen,
-  boardId,
-  setTasks,
 }) {
   const [nameError, setNameError] = useState(false);
   const [descriptionError, setDescriptionError] = useState(false);
-  const { projects, dispatchProjects} = useProjectsContext();
-  const { setPreviousState } = useProjectsContext();
+  const { projects, dispatchProjects } = useProjectsContext();
+  const { previousState, setPreviousState } = useProjectsContext();
+  const { boardId } = useParams();
   const [newTask, setNewTask] = useState({
-    name: '',
-    description: '',
-    user: '',
+    name: "",
+    description: "",
+    user: "",
   });
 
   const handleCloseModal = () => {
@@ -35,9 +35,9 @@ export default function AddTaskModal({
     setDescriptionError(false);
     setNameError(false);
     setNewTask({
-      name: '',
-      description: '',
-      user: '',
+      name: "",
+      description: "",
+      user: "",
     });
   };
 
@@ -50,7 +50,7 @@ export default function AddTaskModal({
       setNameError(false);
     }
     if (field === "description") {
-      setDescriptionError(false)
+      setDescriptionError(false);
     }
   };
 
@@ -60,10 +60,6 @@ export default function AddTaskModal({
       setDescriptionError(!newTask.description);
       return;
     }
-    const headers = {
-      "Content-Type": "application/json",
-      Authorization: "Bearer YOUR_ACCESS_TOKEN",
-    };
     const addTask = async () => {
       try {
         const response = await axios.post(
@@ -71,13 +67,13 @@ export default function AddTaskModal({
           newTask,
           { headers }
         );
-        
+
         if (response.data) {
-          setTasks((prevTasks) => [...prevTasks, response.data]);
-          const updatedProject = projects.find((p) => p._id === boardId)
-          updatedProject.tasks = [...updatedProject.tasks, response.data]
-          dispatchProjects({type:'UPDATE_PROJECT', payload: updatedProject})
-          setPreviousState(updatedProject)
+          const updatedProject = projects.find((p) => p._id === boardId);
+          updatedProject.tasks = [...updatedProject.tasks, response.data];
+          dispatchProjects({ type: "UPDATE_PROJECT", payload: updatedProject });
+          previousState.tasks = [...previousState.tasks, response.data];
+          setPreviousState(previousState);
         }
       } catch (error) {
         console.error("Error could not fetch JSON file", error);
@@ -140,7 +136,7 @@ export default function AddTaskModal({
             helperText={descriptionError ? "Description is required" : ""}
             sx={{ mb: 3 }}
           />
-         <Button variant="contained" onClick={handleAddTask}>
+          <Button variant="contained" onClick={handleAddTask}>
             Add Task
           </Button>
         </Box>

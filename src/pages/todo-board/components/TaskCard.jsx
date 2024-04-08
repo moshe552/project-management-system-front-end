@@ -12,33 +12,21 @@ import TaskDetailsModal from "./TaskDetailsModal";
 import { useState } from "react";
 import UpdateUserModal from "./UpdateUserModal";
 import { useUsersContext } from '../../../context/useUsersContext'
-import { useProjectsContext } from "../../../context/useProjectContext";
 
 
 export default function TaskCard({
   _id,
   name,
-  user,
+  userId,
   description,
   creationDate,
-  boardID,
-  tasks,
-  setTasks,
-  // users,
-  headers
 }) {
   const { users } = useUsersContext();
-  const { projects } = useProjectsContext();
-  
   const [isDetModalOpen, setDetIsModalOpen] = useState(false);
   const [isUsersModalOpen, setIsUsersModalOpen] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   
-  const projectUsersId = projects.find((p) => p._id === boardID).users
-  // console.log(projectUsersId)
-  const myUsers = users.filter((u) => projectUsersId.includes(u._id))
-  const myUser = users.find((u) => u._id === user)
-  // console.log(myUser)
+  const myUser = users.find((u) => u._id === userId)
 
   const handleOpenDetModal = () => {
     setDetIsModalOpen(true);
@@ -118,7 +106,7 @@ export default function TaskCard({
         }
         avatar={
           <IconButton onClick={handleOpenUsersModal}>
-            <Avatar sx={{ width: 56, height: 56 }} src={user && user.profilePicture} alt="Avatar image" />
+            <Avatar sx={{ width: 56, height: 56 }} src={myUser && myUser.profilePicture} alt="Avatar image" />
           </IconButton>
         }
       />
@@ -128,20 +116,12 @@ export default function TaskCard({
         title={name}
         description={description}
         taskId={_id}
-        boardId={boardID}
-        tasks={tasks}
-        setTasks={setTasks}
-        user={user}
+        user={myUser}
       />
       <UpdateUserModal
         isModalOpen={isUsersModalOpen}
         setIsModalOpen={setIsUsersModalOpen}
-        boardID={boardID}
         taskId={_id}
-        users={myUsers}
-        headers={headers}
-        tasks={tasks}
-        setTasks={setTasks}
       />
     </Card>
   );
