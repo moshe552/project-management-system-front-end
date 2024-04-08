@@ -28,7 +28,12 @@ This frontend application is designed for efficient project and task management.
    ```bash
    pnpm install
    ```
-3. To start the development server, run:
+3. Create a .env file in the root directory of the project and add the server address as follows:
+   ```
+   VITE_SERVER_URL=https://bb-projects-db-api-mego-program1.vercel.app
+   ```
+   This URL is used to connect to the backend API for fetching and managing project data.
+4. To start the development server, run:
     ```bash
     pnpm run dev
     ```
