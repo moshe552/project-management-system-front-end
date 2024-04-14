@@ -13,6 +13,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { api, headers } from "../../../api/posts";
 import { useProjectsContext } from "../../../context/useProjectContext";
 import { useParams } from "react-router-dom";
+import {  } from "react";
 
 
 export default function AddTaskModal({
@@ -114,6 +115,7 @@ export default function AddTaskModal({
           <TextField
             required
             label="Task Name"
+            autoFocus  
             fullWidth
             value={newTask.name}
             onChange={(e) => handleTaskDetailsChange("name", e.target.value)}

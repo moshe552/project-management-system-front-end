@@ -5,6 +5,7 @@ import {
   Typography,
   Menu,
   MenuItem,
+  styled
 } from "@mui/material";
 import TodoList from "./TodoList";
 import SettingsTwoToneIcon from "@mui/icons-material/SettingsTwoTone";
@@ -80,42 +81,25 @@ export default function TodoBoard() {
   };
 
   return (
-    <Grid container height={"100%"} padding={5} spacing={2}>
-      <Grid
-        container
-        direction="row"
-        justifyContent="flex-end"
-        alignItems="flex-start"
-        height={"5%"}
-        mb={2}
-      >
+    <StyledGrid container spacing={2}>
+      <SettingsGrid container >
         <NavLink to={`/Projects/todo-board/settings/${boardId}`}>
           <IconButton>
-            <SettingsTwoToneIcon sx={{ color: "#D3D3D3" }} fontSize="mid" />
+            <SettingsTwoToneIcon sx={settingIconStyle} fontSize="mid" />
           </IconButton>
         </NavLink>
-      </Grid>
-      <Grid
-        sx={{ bgcolor: "secondary.main", borderRadius: 3, ml: 2 }}
-        container
-        direction="row"
-        justifyContent="space-between"
-        alignItems="flex-start"
-        height={"10%"}
-      >
-        <Grid ml={2}>
-          <Typography variant="h6" sx={{ m: 2, color: "#FFF" }}>
+      </SettingsGrid>
+      <StyledTopGrid container sx={projectGridStyle}>
+        <Grid>
+          <Typography variant="h6" sx={projectTextStyle}>
             {myProject ? myProject.name : "Loading..."}
-            {/* <Typography>{" " + myProject.description}</Typography> */}
           </Typography>
         </Grid>
-        <Grid mr={2}>
-          <Typography sx={{ m: 1, color: "#FFF" }}>
+        <Grid>
+          <Typography>
             <Button
               onClick={handleOpeningProjectsList}
-              style={{
-                color: "#FFF",
-              }}
+              sx={{color: "#FFF"}}
             >
               Projects
               <KeyboardArrowDownIcon
@@ -139,7 +123,7 @@ export default function TodoBoard() {
             ))}
           </Menu>
         </Grid>
-      </Grid>
+      </StyledTopGrid>
       <TaskFilter />
       {myProject &&
         listsData.map((list) => (
@@ -150,6 +134,29 @@ export default function TodoBoard() {
             />
           </Grid>
         ))}
-    </Grid>
+    </StyledGrid>
   );
 }
+
+const settingIconStyle = { color: "#D3D3D3" };
+const projectGridStyle = { bgcolor: "secondary.main", borderRadius: 3, ml: 2 };
+const projectTextStyle = { m: 2, color: "#FFF" }
+
+const StyledGrid = styled(Grid)(({ theme }) => ({
+  height: '100%',
+  padding: theme.spacing(5),
+}));
+
+const SettingsGrid = styled(Grid)(({ theme }) => ({
+  justifyContent: "flex-end",
+  marginBottom: theme.spacing(2),
+}));
+
+const StyledTopGrid = styled(Grid)(() => ({
+  justifyContent: "space-between",
+  alignItems: "center"
+}));
+
+const TodoListItem = styled(Grid)(({ theme }) => ({
+  paddingBottom: theme.spacing(4),
+}));
