@@ -5,7 +5,7 @@ import {
   Typography,
   Menu,
   MenuItem,
-  styled
+  styled,
 } from "@mui/material";
 import TodoList from "./TodoList";
 import SettingsTwoToneIcon from "@mui/icons-material/SettingsTwoTone";
@@ -16,7 +16,8 @@ import TaskFilter from "./TaskFilter";
 import axios from "axios";
 import { useParams } from "react-router-dom/dist";
 import { api, headers } from "../../../api/posts";
-import { useProjectsContext } from "../../../context/useProjectContext";
+import { UseContext } from "../../../context/UseContext";
+import { ProjectsContext } from "../../../context/projectContext";
 
 const listsData = [
   {
@@ -45,9 +46,9 @@ export default function TodoBoard() {
   const { boardId } = useParams();
 
   const navigate = useNavigate();
-  const { projects, dispatchProjects } = useProjectsContext();
+  const { projects, dispatchProjects } = UseContext(ProjectsContext);
 
-  const myProject = projects.find((p) => p._id === boardId);
+  const myProject = projects && projects.find((p) => p._id === boardId);
 
   const handelCardDrop = (cardId, targetListStatus) => {
     const droppedCard = myProject.tasks.find((task) => task._id === cardId);
@@ -82,7 +83,7 @@ export default function TodoBoard() {
 
   return (
     <StyledGrid container spacing={2}>
-      <SettingsGrid container >
+      <SettingsGrid container>
         <NavLink to={`/Projects/todo-board/settings/${boardId}`}>
           <IconButton>
             <SettingsTwoToneIcon sx={settingIconStyle} fontSize="mid" />
@@ -97,15 +98,9 @@ export default function TodoBoard() {
         </Grid>
         <Grid>
           <Typography>
-            <Button
-              onClick={handleOpeningProjectsList}
-              sx={colorWhite}
-            >
+            <Button onClick={handleOpeningProjectsList} sx={colorWhite}>
               Projects
-              <KeyboardArrowDownIcon
-                fontSize="large"
-                sx={colorWhite}
-              />
+              <KeyboardArrowDownIcon fontSize="large" sx={colorWhite} />
             </Button>
           </Typography>
           <Menu
@@ -113,14 +108,16 @@ export default function TodoBoard() {
             open={Boolean(anchorEl)}
             onClose={() => setAnchorEl(false)}
           >
-            {projects && projects.map((p) => (
-              <MenuItem
-                sx={menuWidth}
-                key={p._id}
-                onClick={() => handleChoosingProject(p)}>
-                {p.name}
-              </MenuItem>
-            ))}
+            {projects &&
+              projects.map((p) => (
+                <MenuItem
+                  sx={menuWidth}
+                  key={p._id}
+                  onClick={() => handleChoosingProject(p)}
+                >
+                  {p.name}
+                </MenuItem>
+              ))}
           </Menu>
         </Grid>
       </StyledTopGrid>
@@ -128,10 +125,7 @@ export default function TodoBoard() {
       {myProject &&
         listsData.map((list) => (
           <Grid item key={list.id} pb={4} xs={12} sm={6} lg={3}>
-            <TodoList
-              {...list}
-              onCardDrop={handelCardDrop}
-            />
+            <TodoList {...list} onCardDrop={handelCardDrop} />
           </Grid>
         ))}
     </StyledGrid>
@@ -140,12 +134,12 @@ export default function TodoBoard() {
 
 const settingIconStyle = { color: "#D3D3D3" };
 const projectGridStyle = { bgcolor: "secondary.main", borderRadius: 3, ml: 2 };
-const projectTextStyle = { m: 2, color: "white" }
-const colorWhite = {color: "#FFF"}
-const menuWidth = {width: 140}
+const projectTextStyle = { m: 2, color: "white" };
+const colorWhite = { color: "#FFF" };
+const menuWidth = { width: 140 };
 
 const StyledGrid = styled(Grid)(({ theme }) => ({
-  height: '100%',
+  height: "100%",
   padding: theme.spacing(5),
 }));
 
@@ -156,9 +150,5 @@ const SettingsGrid = styled(Grid)(({ theme }) => ({
 
 const StyledTopGrid = styled(Grid)(() => ({
   justifyContent: "space-between",
-  alignItems: "center"
-}));
-
-const TodoListItem = styled(Grid)(({ theme }) => ({
-  paddingBottom: theme.spacing(4),
+  alignItems: "center",
 }));

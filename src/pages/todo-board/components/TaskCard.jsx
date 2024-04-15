@@ -11,8 +11,8 @@ import itemTypes from "../../../../utils/itemType";
 import TaskDetailsModal from "./TaskDetailsModal";
 import { useState } from "react";
 import UpdateUserModal from "./UpdateUserModal";
-import { useUsersContext } from '../../../context/useUsersContext'
-
+import { UseContext } from "../../../context/UseContext";
+import { UsersContext } from "../../../context/usersContext";
 
 export default function TaskCard({
   _id,
@@ -21,12 +21,12 @@ export default function TaskCard({
   description,
   creationDate,
 }) {
-  const { users } = useUsersContext();
+  const { users } = UseContext(UsersContext);
   const [isDetModalOpen, setDetIsModalOpen] = useState(false);
   const [isUsersModalOpen, setIsUsersModalOpen] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
-  
-  const myUser = users.find((u) => u._id === userId)
+
+  const myUser = users.find((u) => u._id === userId);
 
   const handleOpenDetModal = () => {
     setDetIsModalOpen(true);
@@ -106,7 +106,11 @@ export default function TaskCard({
         }
         avatar={
           <IconButton onClick={handleOpenUsersModal}>
-            <Avatar sx={{ width: 56, height: 56 }} src={myUser && myUser.profilePicture} alt="Avatar image" />
+            <Avatar
+              sx={{ width: 56, height: 56 }}
+              src={myUser && myUser.profilePicture}
+              alt="Avatar image"
+            />
           </IconButton>
         }
       />

@@ -5,17 +5,14 @@ import itemTypes from "../../../../utils/itemType";
 import AddTaskModal from "./AddTaskModal";
 import { useState } from "react";
 import CircleIcon from "@mui/icons-material/Circle";
-import { useProjectsContext } from "../../../context/useProjectContext";
+import { UseContext } from "../../../context/UseContext";
 import { useParams } from "react-router-dom";
+import { ProjectsContext } from "../../../context/projectContext";
 
-export default function TodoList({
-  status,
-  color,
-  onCardDrop,
-}) {
+export default function TodoList({ status, color, onCardDrop }) {
   const { boardId } = useParams();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { projects, dispatchProjects } = useProjectsContext();
+  const { projects } = UseContext(ProjectsContext);
 
   const handleOpenModal = () => {
     setIsModalOpen(true);
@@ -43,7 +40,7 @@ export default function TodoList({
         justifyContent: "flex-start",
         alignItems: "center",
         height: "100vh",
-        overflowY: "auto"
+        overflowY: "auto",
       }}
     >
       <Stack>
@@ -61,9 +58,9 @@ export default function TodoList({
               justifyContent="flex-start"
               alignItems="center"
             >
-              <CircleIcon fontSize="small" sx={{mr:1, color: color}}/>
+              <CircleIcon fontSize="small" sx={{ mr: 1, color: color }} />
               <Typography variant="body1" sx={{ color: "#FFF" }}>
-                {status} 
+                {status}
               </Typography>
             </Grid>
           </Grid>
@@ -80,11 +77,7 @@ export default function TodoList({
         )}
         {filteredTasks &&
           filteredTasks.map((task) => (
-            <TaskCard
-              key={task._id}
-              {...task}
-              userId={task.user}
-            />
+            <TaskCard key={task._id} {...task} userId={task.user} />
           ))}
         <AddTaskModal
           isModalOpen={isModalOpen}

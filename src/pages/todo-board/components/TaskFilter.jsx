@@ -1,22 +1,30 @@
-import { Select, MenuItem, Grid, Typography, InputAdornment } from "@mui/material";
+import {
+  Select,
+  MenuItem,
+  Grid,
+  Typography,
+  InputAdornment,
+} from "@mui/material";
 import { useEffect, useState } from "react";
-import { useUsersContext } from "../../../context/useUsersContext";
-import { useProjectsContext } from "../../../context/useProjectContext";
+import { UseContext } from "../../../context/UseContext";
 import { useParams } from "react-router-dom";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-
+import { UsersContext } from "../../../context/usersContext";
+import { ProjectsContext } from "../../../context/projectContext";
 
 export default function TaskFilter() {
-  const { users } = useUsersContext();
-  const { projects, dispatchProjects } = useProjectsContext();
-  const { previousState, setPreviousState } = useProjectsContext();
+  const { users } = UseContext(UsersContext);
+  const { projects, dispatchProjects } = UseContext(ProjectsContext);
+  const { previousState, setPreviousState } = UseContext(ProjectsContext);
   const { boardId } = useParams();
 
   const [selectAssignee, setSelectAssignee] = useState(["All"]);
   const [selectDate, setSelectDate] = useState("All");
 
-  const projectUsersId = projects.find((p) => p._id === boardId).users;
-  const projectUsers = users.filter((u) => projectUsersId.includes(u._id));
+  const project = projects && projects.find((p) => p._id === boardId);
+  const projectUsersId = project ? project.users : [];
+  const projectUsers =
+    users && users.filter((u) => projectUsersId.includes(u._id));
 
   const handleAssigneeSelectChange = (event) => {
     let selectedList = event.target.value;
@@ -57,10 +65,12 @@ export default function TaskFilter() {
         ? 7
         : 0
     );
-    const taskList = tasks.filter((t) => {
-      const taskCeartionDate = new Date(t.creationDate);
-      return taskCeartionDate >= myDay && taskCeartionDate <= currentDate;
-    });
+    const taskList =
+      tasks &&
+      tasks.filter((t) => {
+        const taskCeartionDate = new Date(t.creationDate);
+        return taskCeartionDate >= myDay && taskCeartionDate <= currentDate;
+      });
     return taskList;
   };
 
@@ -71,9 +81,7 @@ export default function TaskFilter() {
       tasks = assigneeFilter(selectAssignee, tasks);
     }
     if (!selectDate.includes("All")) {
-      // console.log(selectDate)
       tasks = dateFilter(selectDate, tasks);
-      // console.log(tasks)
     }
     updatedProject.tasks = tasks;
     dispatchProjects({ type: "UPDATE_PROJECT", payload: updatedProject });
@@ -108,12 +116,14 @@ export default function TaskFilter() {
   }, [selectAssignee, selectDate]);
 
   useEffect(() => {
-    setPreviousState(projects.find((p) => p._id === boardId));
-    setSelectAssignee(["All"]);
-    setSelectDate("All");
+    if (projects) {
+      setPreviousState(projects.find((p) => p._id === boardId));
+      setSelectAssignee(["All"]);
+      setSelectDate("All");
+    }
   }, [boardId]);
 
-  const assignee = {
+  const assignee = projectUsers && {
     type: "Assignee",
     selected: ["All", ...projectUsers],
     value: "All",
@@ -133,9 +143,12 @@ export default function TaskFilter() {
       alignItems="flex-start"
       height={"10%"}
     >
-      <Grid item xs={12} sm={6} lg={3} sx={{pr: 1.3}}>
-        <Typography variant="h6" sx={{ mt: 1.3,ml: 1, color: "#FFF", width: "95%" }}>
-          {assignee.type}
+      <Grid item xs={12} sm={6} lg={3} sx={{ pr: 1.3 }}>
+        <Typography
+          variant="h6"
+          sx={{ mt: 1.3, ml: 1, color: "#FFF", width: "95%" }}
+        >
+          {assignee && assignee.type}
         </Typography>
         <Select
           multiple
@@ -150,15 +163,19 @@ export default function TaskFilter() {
             </InputAdornment>
           )}
         >
-          {assignee.selected.map((u, index) => (
-            <MenuItem key={index} value={u === "All" ? "All" : u._id}>
-              {u === "All" ? "All" : `${u.firstName} ${u.lastName}`}
-            </MenuItem>
-          ))}
+          {assignee &&
+            assignee.selected.map((u, index) => (
+              <MenuItem key={index} value={u === "All" ? "All" : u._id}>
+                {u === "All" ? "All" : `${u.firstName} ${u.lastName}`}
+              </MenuItem>
+            ))}
         </Select>
       </Grid>
       <Grid item xs={12} sm={6} lg={3} sx={{ pr: 1, pl: 0.6 }}>
-        <Typography variant="h6" sx={{ mt: 1.3, ml: 1, color: "#FFF", width: "95%" }}>
+        <Typography
+          variant="h6"
+          sx={{ mt: 1.3, ml: 1, color: "#FFF", width: "95%" }}
+        >
           {date.type}
         </Typography>
         <Select

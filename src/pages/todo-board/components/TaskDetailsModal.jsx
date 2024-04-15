@@ -5,11 +5,11 @@ import CloseIcon from "@mui/icons-material/Close";
 import FormControl from "@mui/material/FormControl";
 import Input from "@mui/material/Input";
 import InputLabel from "@mui/material/InputLabel";
+import { UseContext } from "../../../context/UseContext";
 import { useState } from "react";
-import {api, headers} from "../../../api/posts";
-import { useProjectsContext } from "../../../context/useProjectContext";
+import { api, headers } from "../../../api/posts";
 import { useParams } from "react-router-dom";
-
+import { ProjectsContext } from "../../../context/projectContext";
 
 export default function TaskDetailsModal({
   isModalOpen,
@@ -19,11 +19,11 @@ export default function TaskDetailsModal({
   description,
   taskId,
 }) {
-  const { projects, dispatchProjects } = useProjectsContext();
-  const { setPreviousState } = useProjectsContext();
+  const { projects, dispatchProjects } = UseContext(ProjectsContext);
+  const { setPreviousState } = UseContext(ProjectsContext);
   const { boardId } = useParams();
   const [isFormModified, setIsFormModified] = useState(false);
-  const [deleteButton, setDeleteButton] = useState("")
+  const [deleteButton, setDeleteButton] = useState("");
   const [task, setTask] = useState({
     name: title,
     description: description,
@@ -51,9 +51,12 @@ export default function TaskDetailsModal({
         );
         if (response.data) {
           handleCloseModal();
-          const updatedProject = projects.find((p) => p._id === boardId)
-          updatedProject.tasks = [...updatedProject.tasks.filter((task) => task._id !== taskId), response.data]
-          dispatchProjects({type:'UPDATE_PROJECT', payload: updatedProject})
+          const updatedProject = projects.find((p) => p._id === boardId);
+          updatedProject.tasks = [
+            ...updatedProject.tasks.filter((task) => task._id !== taskId),
+            response.data,
+          ];
+          dispatchProjects({ type: "UPDATE_PROJECT", payload: updatedProject });
         }
       } catch (error) {
         console.error("Error could not patch JSON file", error);
@@ -64,7 +67,7 @@ export default function TaskDetailsModal({
   };
 
   const handelDeleteTask = () => {
-    setDeleteButton("Deleting... ");  
+    setDeleteButton("Deleting... ");
     const deleteFromDB = async () => {
       try {
         const response = await axios.delete(
@@ -72,11 +75,13 @@ export default function TaskDetailsModal({
           { headers }
         );
         if (response) {
-          handleCloseModal()
-          const updatedProject = projects.find((p) => p._id === boardId)
-          updatedProject.tasks = [...updatedProject.tasks.filter((task) => task._id !== taskId)]
-          dispatchProjects({type:'UPDATE_PROJECT', payload: updatedProject})
-          setPreviousState(updatedProject)
+          handleCloseModal();
+          const updatedProject = projects.find((p) => p._id === boardId);
+          updatedProject.tasks = [
+            ...updatedProject.tasks.filter((task) => task._id !== taskId),
+          ];
+          dispatchProjects({ type: "UPDATE_PROJECT", payload: updatedProject });
+          setPreviousState(updatedProject);
         }
       } catch (error) {
         console.error("Error could not delete task", error);
@@ -110,7 +115,9 @@ export default function TaskDetailsModal({
               <CloseIcon />
             </Button>
           </Grid>
-          <Typography variant="h7">Assignees: {user && user.firstName + " " + user.lastName}</Typography>
+          <Typography variant="h7">
+            Assignees: {user && user.firstName + " " + user.lastName}
+          </Typography>
           <br />
           <Box
             component="form"
@@ -155,10 +162,10 @@ export default function TaskDetailsModal({
             alignItems="flex-end"
           >
             <Button
-              variant="contained" 
+              variant="contained"
               onClick={handleUpdatingTask}
               disabled={!isFormModified}
-              >
+            >
               Update Task
             </Button>
             <Button variant="contained" onClick={handelDeleteTask}>
