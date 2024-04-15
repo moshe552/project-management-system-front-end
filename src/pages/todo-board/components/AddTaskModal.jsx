@@ -11,19 +11,16 @@ import { useState } from "react";
 import axios from "axios";
 import CloseIcon from "@mui/icons-material/Close";
 import { api, headers } from "../../../api/posts";
-import { useProjectsContext } from "../../../context/useProjectContext";
+import { UseContext } from "../../../context/UseContext";
 import { useParams } from "react-router-dom";
-import {  } from "react";
+import {} from "react";
+import { ProjectsContext } from "../../../context/projectContext";
 
-
-export default function AddTaskModal({
-  isModalOpen,
-  setIsModalOpen,
-}) {
+export default function AddTaskModal({ isModalOpen, setIsModalOpen }) {
   const [nameError, setNameError] = useState(false);
   const [descriptionError, setDescriptionError] = useState(false);
-  const { projects, dispatchProjects } = useProjectsContext();
-  const { previousState, setPreviousState } = useProjectsContext();
+  const { projects, dispatchProjects } = UseContext(ProjectsContext);
+  const { previousState, setPreviousState } = UseContext(ProjectsContext);
   const { boardId } = useParams();
   const [newTask, setNewTask] = useState({
     name: "",
@@ -115,7 +112,7 @@ export default function AddTaskModal({
           <TextField
             required
             label="Task Name"
-            autoFocus  
+            autoFocus
             fullWidth
             value={newTask.name}
             onChange={(e) => handleTaskDetailsChange("name", e.target.value)}

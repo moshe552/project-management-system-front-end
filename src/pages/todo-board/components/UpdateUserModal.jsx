@@ -12,19 +12,19 @@ import axios from "axios";
 import CloseIcon from "@mui/icons-material/Close";
 import { api, headers } from "../../../api/posts";
 import UserCard from "./UserCard";
-import { useProjectsContext } from "../../../context/useProjectContext";
-import { useUsersContext } from "../../../context/useUsersContext";
+import { UseContext } from "../../../context/UseContext";
 import { useParams } from "react-router-dom";
-
+import { ProjectsContext } from "../../../context/projectContext";
+import { UsersContext } from "../../../context/usersContext";
 
 export default function UpdateUserModal({
   isModalOpen,
   setIsModalOpen,
   taskId,
 }) {
-  const { previousState, setPreviousState } = useProjectsContext();
-  const { projects, dispatchProjects } = useProjectsContext();
-  const { users } = useUsersContext();
+  const { setPreviousState } = UseContext(ProjectsContext);
+  const { projects, dispatchProjects } = UseContext(ProjectsContext);
+  const { users } = UseContext(UsersContext);
   const { boardId } = useParams();
 
   const myProject = projects.find((p) => p._id === boardId);
