@@ -143,7 +143,7 @@ export default function TaskFilter() {
           value={selectAssignee}
           onChange={handleAssigneeSelectChange}
           renderValue={() => renderSelectAssignee(selectAssignee)}
-          sx={{ background: "#121231", color: "#ffffff" }}
+          sx={{ background: "#121231", color: "#fff" }}
           IconComponent={() => (
             <InputAdornment position="end">
               <KeyboardArrowDownIcon sx={{ color: "#fff", m: 1 }} />

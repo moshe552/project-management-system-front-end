@@ -99,12 +99,12 @@ export default function TodoBoard() {
           <Typography>
             <Button
               onClick={handleOpeningProjectsList}
-              sx={{color: "#FFF"}}
+              sx={colorWhite}
             >
               Projects
               <KeyboardArrowDownIcon
                 fontSize="large"
-                sx={{ color: "#FFF" }}
+                sx={colorWhite}
               />
             </Button>
           </Typography>
@@ -115,7 +115,7 @@ export default function TodoBoard() {
           >
             {projects && projects.map((p) => (
               <MenuItem
-                sx={{width: 140}}
+                sx={menuWidth}
                 key={p._id}
                 onClick={() => handleChoosingProject(p)}>
                 {p.name}
@@ -140,7 +140,9 @@ export default function TodoBoard() {
 
 const settingIconStyle = { color: "#D3D3D3" };
 const projectGridStyle = { bgcolor: "secondary.main", borderRadius: 3, ml: 2 };
-const projectTextStyle = { m: 2, color: "#FFF" }
+const projectTextStyle = { m: 2, color: "white" }
+const colorWhite = {color: "#FFF"}
+const menuWidth = {width: 140}
 
 const StyledGrid = styled(Grid)(({ theme }) => ({
   height: '100%',
