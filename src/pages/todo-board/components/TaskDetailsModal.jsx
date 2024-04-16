@@ -7,7 +7,7 @@ import Input from "@mui/material/Input";
 import InputLabel from "@mui/material/InputLabel";
 import { UseContext } from "../../../context/UseContext";
 import { useState } from "react";
-import { api, headers } from "../../../api/posts";
+import { api, headers } from "../../../api/getUserId";
 import { useParams } from "react-router-dom";
 import { ProjectsContext } from "../../../context/projectContext";
 

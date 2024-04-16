@@ -1,6 +1,6 @@
 import axios from "axios";
 import { UseContext } from "../../context/UseContext";
-import { api, token } from "../../api/posts";
+import { api, token } from "../../api/getUserId";
 import { ProjectsContext } from "../../context/projectContext";
 
 const myToken = token;

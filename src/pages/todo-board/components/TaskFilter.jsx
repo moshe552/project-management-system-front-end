@@ -5,7 +5,7 @@ import {
   Typography,
   InputAdornment,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { UseContext } from "../../../context/UseContext";
 import { useParams } from "react-router-dom";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
@@ -16,15 +16,21 @@ export default function TaskFilter() {
   const { users } = UseContext(UsersContext);
   const { projects, dispatchProjects } = UseContext(ProjectsContext);
   const { previousState, setPreviousState } = UseContext(ProjectsContext);
+  console.log("previousState", previousState);
   const { boardId } = useParams();
 
   const [selectAssignee, setSelectAssignee] = useState(["All"]);
   const [selectDate, setSelectDate] = useState("All");
 
-  const project = projects && projects.find((p) => p._id === boardId);
-  const projectUsersId = project ? project.users : [];
-  const projectUsers =
-    users && users.filter((u) => projectUsersId.includes(u._id));
+  const correntProject = useMemo(() => {
+    console.log("usrMemo");
+    return projects && projects.find((p) => p._id === boardId);
+  }, [ boardId]);
+
+  const projectUsersId = correntProject ? correntProject.users : [];
+  const projectUsers = useMemo(() => {
+    return users.filter(u => projectUsersId.includes(u._id));
+  }, [users, projectUsersId]);
 
   const handleAssigneeSelectChange = (event) => {
     let selectedList = event.target.value;
@@ -116,12 +122,12 @@ export default function TaskFilter() {
   }, [selectAssignee, selectDate]);
 
   useEffect(() => {
-    if (projects) {
-      setPreviousState(projects.find((p) => p._id === boardId));
+    if (correntProject && JSON.stringify(correntProject) !== JSON.stringify(previousState)) {
+      setPreviousState(correntProject);
       setSelectAssignee(["All"]);
       setSelectDate("All");
     }
-  }, [boardId]);
+  }, [correntProject]);
 
   const assignee = projectUsers && {
     type: "Assignee",

@@ -10,10 +10,9 @@ import {
 import { useState } from "react";
 import axios from "axios";
 import CloseIcon from "@mui/icons-material/Close";
-import { api, headers } from "../../../api/posts";
+import { api, headers } from "../../../api/getUserId";
 import { UseContext } from "../../../context/UseContext";
 import { useParams } from "react-router-dom";
-import {} from "react";
 import { ProjectsContext } from "../../../context/projectContext";
 
 export default function AddTaskModal({ isModalOpen, setIsModalOpen }) {
@@ -70,6 +69,8 @@ export default function AddTaskModal({ isModalOpen, setIsModalOpen }) {
           const updatedProject = projects.find((p) => p._id === boardId);
           updatedProject.tasks = [...updatedProject.tasks, response.data];
           dispatchProjects({ type: "UPDATE_PROJECT", payload: updatedProject });
+          console.log(previousState);
+
           previousState.tasks = [...previousState.tasks, response.data];
           setPreviousState(previousState);
         }

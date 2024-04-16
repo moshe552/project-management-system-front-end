@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import CloseIcon from "@mui/icons-material/Close";
-import { api, headers } from "../../../api/posts";
+import { api, headers } from "../../../api/getUserId";
 import UserCard from "./UserCard";
 import { UseContext } from "../../../context/UseContext";
 import { useParams } from "react-router-dom";

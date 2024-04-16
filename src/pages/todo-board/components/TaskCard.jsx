@@ -13,6 +13,7 @@ import { useState } from "react";
 import UpdateUserModal from "./UpdateUserModal";
 import { UseContext } from "../../../context/UseContext";
 import { UsersContext } from "../../../context/usersContext";
+import formatDate from "../../../../utils/date/formatDate";
 
 export default function TaskCard({
   _id,
@@ -51,15 +52,6 @@ export default function TaskCard({
       isDragging: !!monitor.isDragging(),
     }),
   }));
-
-  const formatDate = (dateString) => {
-    const options = { year: "numeric", month: "long", day: "numeric" };
-    const formattedDate = new Date(dateString).toLocaleDateString(
-      "en-US",
-      options
-    );
-    return formattedDate;
-  };
 
   return isDragging ? (
     <div ref={preview} />

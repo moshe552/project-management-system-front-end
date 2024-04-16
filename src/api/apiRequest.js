@@ -10,10 +10,8 @@ const headers = {
   },
 };
 
-// Generic API request function
 const makeApiRequest = async (endpoint, method, data = {}, params = {}) => {
   const url = `${BASE_URL}/${endpoint}`; 
-  console.log("url", url);
   try {
     const response = await axios({
       url,
