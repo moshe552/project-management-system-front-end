@@ -15,7 +15,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import TaskFilter from "./TaskFilter";
 import axios from "axios";
 import { useParams } from "react-router-dom/dist";
-import { api, headers } from "../../../api/posts";
+import { api, headers } from "../../../api/getUserId";
 import { UseContext } from "../../../context/UseContext";
 import { ProjectsContext } from "../../../context/projectContext";
 

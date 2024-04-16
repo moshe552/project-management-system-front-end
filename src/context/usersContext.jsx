@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { createContext, useReducer } from "react";
-import { api, headers } from "../api/posts";
-import axios from "axios";
+import makeApiRequest from "../api/apiRequest";
 
 export const UsersContext = createContext();
 
@@ -35,16 +34,17 @@ export const UsersContextProvider = ({ children }) => {
     users: [],
   });
 
-  const fetchUsers = async () => {
-    try {
-      const response = await axios.get(`${api}/users/all`, headers);
-      dispatchUsers({ type: "SET_USERS", payload: response.data.result });
-    } catch (error) {
-      console.error("Error fetching JSON file:", error);
-    }
-  };
-
   useEffect(() => {
+    async function fetchUsers() {
+      try {
+        const data = await makeApiRequest("users/all", "GET");
+        if (data && data.result) {
+          dispatchUsers({ type: "SET_USERS", payload: data.result });
+        }
+      } catch (error) {
+        console.error("Couldn't get all users:", error.message);
+      }
+    }
     fetchUsers();
   }, []);
 

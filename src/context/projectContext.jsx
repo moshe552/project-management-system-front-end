@@ -1,7 +1,7 @@
-import axios from "axios";
 import { useEffect } from "react";
 import { createContext, useReducer, useState } from "react";
-import { UrlDataBoard } from "../api/posts";
+import { userID } from "../api/getUserId";
+import makeApiRequest from "../api/apiRequest";
 
 export const ProjectsContext = createContext();
 
@@ -31,22 +31,28 @@ export const projectsReducer = (state, action) => {
 };
 
 export const ProjectsContextProvider = ({ children }) => {
-  const [state, dispatchProjects] = useReducer(projectsReducer, { projects: [] });
+  const [state, dispatchProjects] = useReducer(projectsReducer, {
+    projects: [],
+  });
   const [previousState, setPreviousState] = useState([]);
 
   useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const boardData = await makeApiRequest(
+          `board/user/${userID}/read`,
+          "GET"
+        );
+        if (boardData) {
+          dispatchProjects({ type: "SET_PROJECTS", payload: boardData });
+        }
+      } catch (error) {
+        console.error("Error fetching JSON file:", error);
+      }
+    };
     fetchProjects();
   }, []);
 
-  const fetchProjects = async () => {
-    try {
-      const response = await axios.get(UrlDataBoard);
-      dispatchProjects({ type: "SET_PROJECTS", payload: response.data });
-    } catch (error) {
-      console.error("Error fetching JSON file:", error);
-    }
-  };
-  
   return (
     <ProjectsContext.Provider
       value={{ ...state, dispatchProjects, previousState, setPreviousState }}
